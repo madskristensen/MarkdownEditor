@@ -10,7 +10,7 @@ namespace MarkdownEditor
     [Order(After = PredefinedMarginNames.RightControl)]
     [MarginContainer(PredefinedMarginNames.Right)]
     [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
-    [TextViewRole(PredefinedTextViewRoles.Document)]
+    [TextViewRole(PredefinedTextViewRoles.Debuggable)] // This is to prevent the margin from loading in the diff view
     public class BrowserMarginProvider : IWpfTextViewMarginProvider
     {
         [Import]

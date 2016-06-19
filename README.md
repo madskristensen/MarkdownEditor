@@ -55,7 +55,7 @@ Live preview can be disabled in the [settings](#settings).
 Drag an image directly from Solution Explorer onto the document to
 insert the appropriate markdown that will render the image.
 
-### Paste images from clipboard
+### Paste images
 This is really helpful for copying images from a browser or for
 inserting screenshots. Simply copy an image into the clipboard and
 paste it directly into the document. This will prompt you for a file
