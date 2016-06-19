@@ -151,7 +151,7 @@ namespace MarkdownEditor
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0 || _doc == null)
+            if (spans.Count == 0 || _doc == null || !MarkdownEditorPackage.Options.EnableOutlining)
                 yield break;
 
             var descendants = _doc.Descendants();

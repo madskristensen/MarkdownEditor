@@ -1,6 +1,5 @@
 # Roadmap
 
-- [x] Outlining for code blocks
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Error handling
@@ -17,7 +16,7 @@ on the official Visual Studio extension gallery.
 
 ## 1.0
 
-**2016-06-18**
+**2016-06-19**
 
 - [x] Syntax highligting
 - [x] Preview window
@@ -31,3 +30,5 @@ on the official Visual Studio extension gallery.
 - [x] Use [Prism](http://prismjs.com/) for code block syntax highlighting
 - [x] Write documention in [README.md](README.md)
 - [x] Clicking links to local markdown documents in preview should open them
+- [x] Outlining for code blocks
+- [x] Setting to disable outlining

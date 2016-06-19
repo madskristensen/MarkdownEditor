@@ -16,5 +16,11 @@ namespace MarkdownEditor
         [Description("The width of the preview window in pixels. Default is 600")]
         [DefaultValue(600)]
         public double PreviewWindowWidth { get; set; } = 600;
+
+        [Category("Outlining")]
+        [DisplayName("Enable outlining")]
+        [Description("Determines if outlining (code folding) should be enabled for multiline HTML and code blocks")]
+        [DefaultValue(true)]
+        public bool EnableOutlining { get; set; } = true;
     }
 }
