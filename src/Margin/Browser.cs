@@ -25,10 +25,8 @@ namespace MarkdownEditor
         public Browser(string file)
         {
             var builder = new MarkdownPipelineBuilder()
-                .UseAdvancedExtensions()
                 .UseEmojiAndSmiley()
-                .UseSmartyPants()
-                .UseMathematics();
+                .UseAdvancedExtensions();
 
             _pipeline = builder.Build();
             _zoomFactor = GetZoomFactor();
