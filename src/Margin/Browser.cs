@@ -24,8 +24,14 @@ namespace MarkdownEditor
 
         public Browser(string file)
         {
-            var builder = new MarkdownPipelineBuilder().UseAdvancedExtensions();
+            var builder = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions()
+                .UseEmojiAndSmiley()
+                .UseSmartyPants()
+                .UseMathematics();
+
             _pipeline = builder.Build();
+
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
 
@@ -85,7 +91,7 @@ namespace MarkdownEditor
             var baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
             string folder = GetFolder();
             string cssPath = Path.Combine(folder, "margin\\highlight.css");
-            string scriptPath = Path.Combine(folder, "margin\\highlight.js");
+            string scriptPath = Path.Combine(folder, "margin\\prism.js");
 
             return $@"<!DOCTYPE html>
 <html lang=""en"">

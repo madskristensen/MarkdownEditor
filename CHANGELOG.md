@@ -9,8 +9,11 @@
 - [x] Markdown file icons in Solution Explorer
 - [x] Drag 'n drop of image
 - [x] Paste image from clipboard directly to editor
-- [ ] Write documention in [README.md](README.md)
+- [x] Use [Prism](http://prismjs.com/) for code block syntax highlighting
+- [x] Write documention in [README.md](README.md)
 - [ ] Outlining for code blocks
+- [ ] Option to load preview window beneath editor
+- [ ] Generate .html files nested under the markdown file
 
 Features that have a checkmark are complete and available for
 download in the

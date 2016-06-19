@@ -49,7 +49,7 @@ namespace MarkdownEditor
         {
             var list = new List<ClassificationSpan>();
 
-            if (_doc == null || _isProcessing)
+            if (_doc == null || _isProcessing || span.IsEmpty)
                 return list;
 
             var e = _doc.Descendants();
@@ -62,15 +62,23 @@ namespace MarkdownEditor
 
                 var blockSpan = new Span(mdobj.Span.Start, mdobj.Span.Length);
 
-                if (span.IntersectsWith(blockSpan))
+                try
                 {
-                    var all = GetClassificationTypes(mdobj, span);
-
-                    foreach (var range in all.Keys)
+                    if (span.IntersectsWith(blockSpan))
                     {
-                        var snapspan = new SnapshotSpan(span.Snapshot, range);
-                        list.Add(new ClassificationSpan(snapspan, all[range]));
+                        var all = GetClassificationTypes(mdobj, span);
+
+                        foreach (var range in all.Keys)
+                        {
+                            var snapspan = new SnapshotSpan(span.Snapshot, range);
+                            list.Add(new ClassificationSpan(snapspan, all[range]));
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    // For some reason span.IntersectsWith throws in some cases. 
+                    System.Diagnostics.Debug.Write(ex);
                 }
             }
 

@@ -100,7 +100,7 @@
     <Content Include="Margin\highlight.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Margin\highlight.js">
+    <Content Include="Margin\prism.js">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Icon.png">
