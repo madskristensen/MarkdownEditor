@@ -17,7 +17,7 @@ namespace MarkdownEditor
         private HTMLDocument _htmlDocument;
         private MarkdownPipeline _pipeline;
         private string _htmlTemplate;
-        private static int _zoomFactor = GetZoomFactor();
+        private int _zoomFactor;
         private double _cachedPosition = 0,
                        _cachedHeight = 0,
                        _positionPercentage = 0;
@@ -31,7 +31,7 @@ namespace MarkdownEditor
                 .UseMathematics();
 
             _pipeline = builder.Build();
-
+            _zoomFactor = GetZoomFactor();
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
 
@@ -84,7 +84,14 @@ namespace MarkdownEditor
                 var baseLine = 96;
                 var dpi = g.DpiX;
 
-                return (int)(dpi - baseLine) / baseLine + 1 * 100 + 100;
+                if (baseLine == dpi)
+                    return 100;
+
+                // 150% scaling => 225
+                // 250% scaling => 400
+
+                double scale = dpi * ((dpi - baseLine) / baseLine + 1);
+                return Convert.ToInt32(Math.Ceiling(scale / 25)) * 25; // round up to nearest 25
             }
         }
 
@@ -127,17 +134,20 @@ namespace MarkdownEditor
         <title>Markdown Preview</title>
         <!-- Here is where the custom style sheet is inserted as well as highlight.js setup code. -->
         <link rel=""stylesheet"" href=""{cssPath}"" />
-        <script src=""{scriptPath}""></script>
 </head>
     <body class=""markdown-body"">
         {{0}}
+        <script src=""{scriptPath}""></script>
     </body>
 </html>";
         }
 
 
-        private void Zoom(int iZoom)
+        private void Zoom(int zoomFactor)
         {
+            if (zoomFactor == 100)
+                return;
+
             dynamic OLECMDEXECOPT_DODEFAULT = 0;
             dynamic OLECMDID_OPTICAL_ZOOM = 63;
             FieldInfo fiComWebBrowser = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -153,7 +163,7 @@ namespace MarkdownEditor
             objComWebBrowser.GetType().InvokeMember("ExecWB", BindingFlags.InvokeMethod, null, objComWebBrowser, new object[] {
                 OLECMDID_OPTICAL_ZOOM,
                 OLECMDEXECOPT_DODEFAULT,
-                iZoom,
+                zoomFactor,
                 IntPtr.Zero
             });
         }
