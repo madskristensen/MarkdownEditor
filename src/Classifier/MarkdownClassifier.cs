@@ -118,7 +118,6 @@ namespace MarkdownEditor
             {
                 var block = mdobj as HtmlBlock;
 
-                // There are issues with comment spans in the current version of Markdig
                 if (block != null && block.Type == HtmlBlockType.Comment)
                     spans.Add(mdobj.ToSimpleSpan(), _comment);
                 else
@@ -172,11 +171,14 @@ namespace MarkdownEditor
             }
 
             // HTML Blocks
-            // There are issues with comment spans in the current version of Markdig
-            var htmlBlocks = descendants.OfType<HtmlBlock>().Where(h => h.Type != HtmlBlockType.Comment);
+            var htmlBlocks = descendants.OfType<HtmlBlock>();
 
             foreach (var block in htmlBlocks)
             {
+                // This prevents outlining for single line comments
+                if (block.Lines.Count == 1)
+                    continue;
+
                 string text = "HTML Block";
                 string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
 

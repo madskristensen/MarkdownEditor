@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Multiline comment outlining
+- [x] Convert tabs to spaces
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Error handling
