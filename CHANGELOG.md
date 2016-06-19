@@ -7,7 +7,7 @@
 - [x] Options to disable preview window
 - [x] Zooming dependant on OS DPI settings
 - [x] Markdown file icons in Solution Explorer
-- [ ] Drag 'n drop of image
+- [x] Drag 'n drop of image
 - [ ] Paste image from clipboard directly to editor
 
 Features that have a checkmark are complete and available for

@@ -61,6 +61,8 @@
     <Compile Include="Classifier\MarkdownClassifier.cs" />
     <Compile Include="Classifier\MarkdownClassificationTypes.cs" />
     <Compile Include="Classifier\MarkdownClassifierProvider.cs" />
+    <Compile Include="DragDrop\IgnoreDropHandler.cs" />
+    <Compile Include="DragDrop\IgnoreDropHandlerProvider.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Margin\Browser.cs" />
