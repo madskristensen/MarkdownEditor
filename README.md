@@ -1,7 +1,6 @@
 # Markdown Editor
 
-<!-- Replace this badge with your own-->
-[![Build status](https://ci.appveyor.com/api/projects/status/hv6uyc059rqbc6fj?svg=true)](https://ci.appveyor.com/project/madskristensen/extensibilitytools)
+[![Build status](https://ci.appveyor.com/api/projects/status/m07cnunnni8w82o5?svg=true)](https://ci.appveyor.com/project/madskristensen/markdowneditor)
 
 <!-- Update the VS Gallery link after you upload the VSIX-->
 Download this extension from the [VS Gallery](https://visualstudiogallery.msdn.microsoft.com/[GuidFromGallery])
@@ -29,7 +28,7 @@ Describe feature 2. Add screenshots/code samples etc.
 Describe sub feature. Add screenshots/code samples etc.
 
 ## Contribute
-Check out the [contribution guidelines](CONTRIBUTING.md)
+Check out the [contribution guidelines](.github/CONTRIBUTING.md)
 if you want to contribute to this project.
 
 For cloning and building this project yourself, make sure
