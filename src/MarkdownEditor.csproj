@@ -57,14 +57,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandTargetBase.cs" />
+    <Compile Include="Commands\PasteImageCommandTarget.cs" />
+    <Compile Include="Commands\WebEditorsCreationListener.cs" />
     <Compile Include="ContentType\MarkdownContentTypeDefinition.cs" />
     <Compile Include="Classifier\MarkdownClassifier.cs" />
     <Compile Include="Classifier\MarkdownClassificationTypes.cs" />
     <Compile Include="Classifier\MarkdownClassifierProvider.cs" />
-    <Compile Include="DragDrop\IgnoreDropHandler.cs" />
-    <Compile Include="DragDrop\IgnoreDropHandlerProvider.cs" />
+    <Compile Include="DragDrop\MarkdownDropHandler.cs" />
+    <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="Margin\Browser.cs" />
     <Compile Include="Margin\BrowserMargin.cs" />
     <Compile Include="Margin\BrowserMarginProvider.cs" />
@@ -138,6 +142,10 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.14.2.25123\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Editor, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Editor.14.2.25123\lib\net45\Microsoft.VisualStudio.Editor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

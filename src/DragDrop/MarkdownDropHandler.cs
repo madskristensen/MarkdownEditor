@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.DragDrop;
-using System.Text.RegularExpressions;
-using System.Globalization;
 
 namespace MarkdownEditor
 {
@@ -28,33 +25,28 @@ namespace MarkdownEditor
 
         public DragDropPointerEffects HandleDataDropped(DragDropInfo dragDropInfo)
         {
-            var position = dragDropInfo.VirtualBufferPosition.Position;
-            string relative = PackageUtilities.MakeRelative(_documentFileName, _draggedFileName)
-                                          .Replace("\\", "/");
-
-            string altText = PrettifyAltText(_draggedFileName);
-            string image = string.Format(_markdownTemplate, altText, relative);
-
-            using (var edit = _view.TextBuffer.CreateEdit())
+            try
             {
-                edit.Insert(position, image);
-                edit.Apply();
+                var position = dragDropInfo.VirtualBufferPosition.Position;
+                string relative = PackageUtilities.MakeRelative(_documentFileName, _draggedFileName)
+                                              .Replace("\\", "/");
+
+                string altText = _draggedFileName.ToFriendlyName();
+                string image = string.Format(_markdownTemplate, altText, relative);
+
+                using (var edit = _view.TextBuffer.CreateEdit())
+                {
+                    edit.Insert(position, image);
+                    edit.Apply();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
 
             return DragDropPointerEffects.Copy;
         }
-
-        private static string PrettifyAltText(string fileName)
-        {
-            var text = Path.GetFileNameWithoutExtension(fileName)
-                            .Replace("-", " ")
-                            .Replace("_", " ");
-
-            text = Regex.Replace(text, "(\\B[A-Z])", " $1");
-
-            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text);
-        }
-
 
         public void HandleDragCanceled()
         { }

@@ -8,7 +8,7 @@
 - [x] Zooming dependant on OS DPI settings
 - [x] Markdown file icons in Solution Explorer
 - [x] Drag 'n drop of image
-- [ ] Paste image from clipboard directly to editor
+- [x] Paste image from clipboard directly to editor
 
 Features that have a checkmark are complete and available for
 download in the
