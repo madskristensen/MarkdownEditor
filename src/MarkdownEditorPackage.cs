@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -15,27 +14,12 @@ namespace MarkdownEditor
     {
         private const string _packageGuidString = "9ca64947-e9ca-4543-bfb8-6cce9be19fd6";
         private static Guid _guid = new Guid(_packageGuidString);
-        private static Options _options;
 
-        public static Options Options
-        {
-            get
-            {
-                if (_options == null)
-                {
-                    // Load the package when options are needed
-                    var shell = (IVsShell)GetGlobalService(typeof(SVsShell));
-                    IVsPackage package;
-                    ErrorHandler.ThrowOnFailure(shell.LoadPackage(ref _guid, out package));
-                }
-
-                return _options;
-            }
-        }
+        public static Options Options { get; private set; }
 
         protected override void Initialize()
         {
-            _options = (Options)GetDialogPage(typeof(Options));
+            Options = (Options)GetDialogPage(typeof(Options));
 
             Logger.Initialize(this, Vsix.Name);
             base.Initialize();
