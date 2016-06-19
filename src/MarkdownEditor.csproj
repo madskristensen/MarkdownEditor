@@ -88,6 +88,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ContentType\icons.pkgdef">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Margin\highlight.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
