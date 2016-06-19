@@ -14,6 +14,7 @@
 - [ ] Outlining for code blocks
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
+- [ ] Error handling
 
 Features that have a checkmark are complete and available for
 download in the
