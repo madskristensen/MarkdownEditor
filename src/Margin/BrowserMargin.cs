@@ -23,7 +23,7 @@ namespace MarkdownEditor
         }
 
         public bool Enabled => true;
-        public double MarginSize => 400;
+        public double MarginSize => MarkdownEditorPackage.Options.PreviewWindowWidth;
         public FrameworkElement VisualElement => this;
 
         private void DocumentUpdated(object sender, TextDocumentFileActionEventArgs e)

@@ -40,7 +40,7 @@ namespace MarkdownEditor
             bool textFormat = formats.Any(x => new[] { "Text", "Rich Text Format" }.Contains(x));
             bool hasBitmap = data.GetDataPresent("System.Drawing.Bitmap") || data.GetDataPresent(DataFormats.FileDrop);
 
-            if (!hasBitmap || !trueBitmap || textFormat)
+            if (!hasBitmap && !trueBitmap || textFormat)
                 return false;
 
             string existingFile = null;
@@ -130,7 +130,7 @@ namespace MarkdownEditor
             {
                 edit.Insert(position, image);
                 edit.Apply();
-            }            
+            }
         }
 
         public void SaveClipboardImageToFile(IDataObject data, string existingFile)

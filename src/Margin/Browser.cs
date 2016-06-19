@@ -137,7 +137,7 @@ namespace MarkdownEditor
 </head>
     <body class=""markdown-body"">
         {{0}}
-        <script src=""{scriptPath}""></script>
+        <script src=""{scriptPath}"" async></script>
     </body>
 </html>";
         }
