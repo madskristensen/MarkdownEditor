@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 
 namespace MarkdownEditor
@@ -20,6 +15,6 @@ namespace MarkdownEditor
         [DisplayName("Width")]
         [Description("The width of the preview window in pixels. Default is 600")]
         [DefaultValue(600)]
-        public double PreviewWindowWidth { get; set; } = 600;        
+        public double PreviewWindowWidth { get; set; } = 600;
     }
 }

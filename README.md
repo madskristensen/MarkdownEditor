@@ -47,6 +47,8 @@ window. Here's an example of JavaScript code rendered.
 
 ![Code Colorizing](art/code-colorizing.png)
 
+Live preview can be disabled in the [settings](#settings).
+
 > The syntax highligter is powered by [Prism](http://prismjs.com/)
 
 ### Drag 'n drop images
@@ -62,6 +64,12 @@ markdown.
 
 It will even parse the file name and make a friendly name to use
 for the alt text.
+
+### Settings
+Control the settings for this extension under
+**Tools -> Options -> Text Editor -> Markdown**
+
+![Options](art/options.png)
 
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)
