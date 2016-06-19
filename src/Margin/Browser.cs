@@ -17,6 +17,7 @@ namespace MarkdownEditor
         private HTMLDocument _htmlDocument;
         private MarkdownPipeline _pipeline;
         private string _htmlTemplate;
+        private static int _zoomFactor = GetZoomFactor();
         private double _cachedPosition = 0,
                        _cachedHeight = 0,
                        _positionPercentage = 0;
@@ -39,19 +40,22 @@ namespace MarkdownEditor
             Control.HorizontalAlignment = HorizontalAlignment.Stretch;
             Control.LoadCompleted += (s, e) =>
             {
+                Zoom(_zoomFactor);
                 _htmlDocument = Control.Document as HTMLDocument;
                 _cachedHeight = _htmlDocument.body.offsetHeight;
                 _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
-
-                using (Graphics g = Graphics.FromHwnd(Process.GetCurrentProcess().MainWindowHandle))
-                {
-                    var baseLine = 96;
-                    var dpi = g.DpiX;
-
-                    var zoomFactor = (dpi - baseLine) / baseLine + 1;
-                    _htmlDocument.parentWindow.execScript("document.body.style.zoom=" + zoomFactor.ToString().Replace(",", "."));
-                }
             };
+        }
+
+        private static int GetZoomFactor()
+        {
+            using (Graphics g = Graphics.FromHwnd(Process.GetCurrentProcess().MainWindowHandle))
+            {
+                var baseLine = 96;
+                var dpi = g.DpiX;
+
+                return (int)(dpi - baseLine) / baseLine + 1 * 100 + 100;
+            }
         }
 
         public void UpdateBrowser(string markdown)
@@ -83,7 +87,7 @@ namespace MarkdownEditor
             string cssPath = Path.Combine(folder, "margin\\highlight.css");
             string scriptPath = Path.Combine(folder, "margin\\highlight.js");
 
-            string template = $@"<!DOCTYPE html>
+            return $@"<!DOCTYPE html>
 <html lang=""en"">
     <head>
         <meta http-equiv=""X-UA-Compatible"" content=""IE=Edge"" />
@@ -95,12 +99,33 @@ namespace MarkdownEditor
         <link rel=""stylesheet"" href=""{cssPath}"" />
         <script src=""{scriptPath}""></script>
 </head>
-    <body>
+    <body class=""markdown-body"">
         {{0}}
     </body>
 </html>";
+        }
 
-            return template;
+
+        private void Zoom(int iZoom)
+        {
+            dynamic OLECMDEXECOPT_DODEFAULT = 0;
+            dynamic OLECMDID_OPTICAL_ZOOM = 63;
+            FieldInfo fiComWebBrowser = typeof(WebBrowser).GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            if (fiComWebBrowser == null)
+                return;
+
+            object objComWebBrowser = fiComWebBrowser.GetValue(Control);
+
+            if (objComWebBrowser == null)
+                return;
+
+            objComWebBrowser.GetType().InvokeMember("ExecWB", BindingFlags.InvokeMethod, null, objComWebBrowser, new object[] {
+                OLECMDID_OPTICAL_ZOOM,
+                OLECMDEXECOPT_DODEFAULT,
+                iZoom,
+                IntPtr.Zero
+            });
         }
 
         public void Dispose()

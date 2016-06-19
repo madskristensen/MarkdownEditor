@@ -2,7 +2,10 @@
 
 - [x] Syntax highligting
 - [x] Preview window
-- [ ] Store width of preview window
+- [x] Added GitHub stylesheet
+- [x] Store width of preview window
+- [x] Options to disable preview window
+- [x] Zooming dependant on OS DPI settings
 - [ ] Drag 'n drop of image
 - [ ] Paste image from clipboard directly to editor
 

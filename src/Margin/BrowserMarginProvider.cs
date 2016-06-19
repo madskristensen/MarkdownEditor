@@ -18,6 +18,9 @@ namespace MarkdownEditor
 
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer)
         {
+            if (!MarkdownEditorPackage.Options.EnablePreviewWindow)
+                return null;
+
             ITextDocument document;
 
             if (!TextDocumentFactoryService.TryGetTextDocument(wpfTextViewHost.TextView.TextDataModel.DocumentBuffer, out document))

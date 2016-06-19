@@ -51,7 +51,7 @@ namespace MarkdownEditor
 
         protected virtual void CreateMarginControls()
         {
-            int width = 400;
+            var width = MarkdownEditorPackage.Options.PreviewWindowWidth;
 
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0, GridUnitType.Star) });
@@ -79,11 +79,10 @@ namespace MarkdownEditor
 
         void splitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            if (double.IsNaN(_browser.Control.ActualWidth)) return;
-            //using (var key = WebEssentialsPackage.Instance.UserRegistryRoot)
-            //{
-            //    key.SetValue("WE_" + _settingsKey, _previewControl.ActualWidth, RegistryValueKind.DWord);
-            //}
+            if (!double.IsNaN(_browser.Control.ActualWidth))
+            {
+                MarkdownEditorPackage.Options.PreviewWindowWidth = _browser.Control.ActualWidth;
+            }
         }
 
         public void Dispose()
