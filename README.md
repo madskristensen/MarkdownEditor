@@ -20,6 +20,7 @@ See the [changelog](CHANGELOG.md) for changes and roadmap.
 - High-DPI support
 - Drag 'n drop of images supported
 - Paste image from clipboard directly onto document
+- Outlining/folding of code blocks
 - Lightning fast
 
 ### Syntax highlighting
@@ -64,6 +65,15 @@ markdown.
 
 It will even parse the file name and make a friendly name to use
 for the alt text.
+
+### Outlining
+Any fenced code and HTML blocks can be collapsed, so that tihs:
+
+![Outlining Expanded](art/outlining-expanded.png)
+
+...can be collapsed into this:
+
+![Outlining Collapsed](art/outlining-collapsed.png)
 
 ### Settings
 Control the settings for this extension under

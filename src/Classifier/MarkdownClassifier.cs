@@ -10,12 +10,14 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Markdig.Syntax.Inlines;
 using Markdig;
+using Microsoft.VisualStudio.Text.Tagging;
+using System.Windows.Controls;
 
 namespace MarkdownEditor
 {
-    internal class MarkdownClassifier : IClassifier
+    internal class MarkdownClassifier : IClassifier, ITagger<IOutliningRegionTag>
     {
-        private readonly IClassificationType _code, _header, _quote, _bold, _italic, _link, _html;
+        private readonly IClassificationType _code, _header, _quote, _bold, _italic, _link, _html, _comment;
         private readonly ITextBuffer _buffer;
         private MarkdownDocument _doc;
         private bool _isProcessing;
@@ -31,10 +33,11 @@ namespace MarkdownEditor
             _italic = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownItalic);
             _link = registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword);
             _html = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownHtml);
+            _comment = registry.GetClassificationType(PredefinedClassificationTypeNames.Comment);
 
             var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
             _pipeline = pipelineBuilder.Build();
-            
+
             ParseDocument();
 
             _buffer.Changed += bufferChanged;
@@ -77,7 +80,7 @@ namespace MarkdownEditor
                 }
                 catch (Exception ex)
                 {
-                    // For some reason span.IntersectsWith throws in some cases. 
+                    // For some reason span.IntersectsWith throws in some cases.
                     System.Diagnostics.Debug.Write(ex);
                 }
             }
@@ -113,7 +116,13 @@ namespace MarkdownEditor
             }
             else if (mdobj is HtmlBlock || mdobj is HtmlInline || mdobj is HtmlEntityInline)
             {
-                spans.Add(mdobj.ToSimpleSpan(), _html);
+                var block = mdobj as HtmlBlock;
+
+                // There are issues with comment spans in the current version of Markdig
+                if (block != null && block.Type == HtmlBlockType.Comment)
+                    spans.Add(mdobj.ToSimpleSpan(), _comment);
+                else
+                    spans.Add(mdobj.ToSimpleSpan(), _html);
             }
 
             return spans;
@@ -132,12 +141,53 @@ namespace MarkdownEditor
                 _doc = MarkdownParser.Parse(rawText, _pipeline);
 
                 SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
+
                 ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
+                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
 
                 _isProcessing = false;
             });
         }
 
+        public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
+        {
+            if (spans.Count == 0 || _doc == null)
+                yield break;
+
+            var descendants = _doc.Descendants();
+            var snapshot = spans.First().Snapshot;
+
+            // Code blocks
+            var codeBlocks = descendants.OfType<FencedCodeBlock>();
+
+            foreach (var block in codeBlocks)
+            {
+                string text = $"{block.Info.ToUpperInvariant()} Code Block".Trim();
+                string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
+
+                var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
+                var tag = new OutliningRegionTag(false, false, text, tooltip);
+
+                yield return new TagSpan<IOutliningRegionTag>(span, tag);
+            }
+
+            // HTML Blocks
+            // There are issues with comment spans in the current version of Markdig
+            var htmlBlocks = descendants.OfType<HtmlBlock>().Where(h => h.Type != HtmlBlockType.Comment);
+
+            foreach (var block in htmlBlocks)
+            {
+                string text = "HTML Block";
+                string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
+
+                var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
+                var tag = new OutliningRegionTag(false, false, text, tooltip);
+
+                yield return new TagSpan<IOutliningRegionTag>(span, tag);
+            }
+        }
+
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
+        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
     }
 }

@@ -15,10 +15,10 @@ namespace MarkdownEditor
         }
 
         public static DTE2 DTE { get; }
-        
+
         public static void AddFileToProject(this Project project, string file)
         {
-            if (project.IsKind(ProjectTypes.ASPNET_5, ProjectTypes.SSDT, ProjectTypes.MISC))
+            if (project.IsKind(ProjectTypes.ASPNET_5, ProjectTypes.SSDT, ProjectTypes.MISC, ProjectTypes.SOLUTION_FOLDER))
                 return;
 
             if (DTE.Solution.FindProjectItem(file) == null)
@@ -48,7 +48,7 @@ namespace MarkdownEditor
 
                 Guid reason = VSConstants.NewDocumentStateReason.Navigation;
                 newDocumentStateContext = openDoc3.SetNewDocumentState((uint)__VSNEWDOCUMENTSTATE.NDS_Provisional, ref reason);
-                
+
                 DTE.ItemOperations.OpenFile(file);
             }
             finally
@@ -67,5 +67,6 @@ namespace MarkdownEditor
         public const string NODE_JS = "{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}";
         public const string SSDT = "{00d1a9c2-b5f0-4af3-8072-f6c62b433612}";
         public const string MISC = "{66A2671D-8FB5-11D2-AA7E-00C04F688DDE}";
+        public const string SOLUTION_FOLDER = "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}";
     }
 }

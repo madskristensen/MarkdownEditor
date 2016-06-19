@@ -14,7 +14,7 @@ namespace MarkdownEditor
 {
     internal class PasteImage : CommandTargetBase<VSConstants.VSStd97CmdID>
     {
-        private string _format  = "![{1}]({0})";
+        private string _format = "![{1}]({0})";
         private static string _lastPath;
         private string _fileName;
 
@@ -151,7 +151,7 @@ namespace MarkdownEditor
                 }
             }
 
-            var project =ProjectHelpers.DTE.Solution?.FindProjectItem(_fileName)?.ContainingProject;
+            var project = ProjectHelpers.DTE.Solution?.FindProjectItem(_fileName)?.ContainingProject;
             project.AddFileToProject(existingFile);
         }
 
