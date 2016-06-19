@@ -16,6 +16,7 @@
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Error handling
+- [ ] Validate local image and link paths
 
 Features that have a checkmark are complete and available for
 download in the
