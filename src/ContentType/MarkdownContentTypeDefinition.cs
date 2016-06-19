@@ -5,7 +5,7 @@ namespace MarkdownEditor
 {
     public class MarkdownContentTypeDefinition
     {
-        public const string MarkdownContentType = "Markdown2";
+        public const string MarkdownContentType = "Markdown";
 
         [Export(typeof(ContentTypeDefinition))]
         [Name(MarkdownContentType)]
