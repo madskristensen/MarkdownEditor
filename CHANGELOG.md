@@ -11,6 +11,7 @@
 - [x] Paste image from clipboard directly to editor
 - [x] Use [Prism](http://prismjs.com/) for code block syntax highlighting
 - [x] Write documention in [README.md](README.md)
+- [x] Clicking links to local markdown documents in preview should open them
 - [ ] Outlining for code blocks
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file

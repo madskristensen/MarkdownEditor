@@ -50,6 +50,30 @@ namespace MarkdownEditor
                 _htmlDocument = Control.Document as HTMLDocument;
                 _cachedHeight = _htmlDocument.body.offsetHeight;
                 _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
+
+                foreach (IHTMLElement link in _htmlDocument.links)
+                {
+                    HTMLAnchorElement anchor = link as HTMLAnchorElement;
+                    if (anchor == null || anchor.protocol != "file:")
+                        continue;
+
+                    HTMLAnchorEvents_Event handler = anchor as HTMLAnchorEvents_Event;
+                    if (handler == null)
+                        continue;
+
+                    string file = anchor.pathname.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                    if (!File.Exists(file))
+                    {
+                        anchor.title = "The file does not exist";
+                        return;
+                    }
+
+                    handler.onclick += new HTMLAnchorEvents_onclickEventHandler(delegate ()
+                    {
+                        ProjectHelpers.OpenFileInPreviewTab(file);
+                        return true;
+                    });
+                }
             };
         }
 

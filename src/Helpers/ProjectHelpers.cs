@@ -1,7 +1,9 @@
 using System;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MarkdownEditor
 {
@@ -34,6 +36,26 @@ namespace MarkdownEditor
             }
 
             return false;
+        }
+
+        public static void OpenFileInPreviewTab(string file)
+        {
+            IVsNewDocumentStateContext newDocumentStateContext = null;
+
+            try
+            {
+                var openDoc3 = Package.GetGlobalService(typeof(SVsUIShellOpenDocument)) as IVsUIShellOpenDocument3;
+
+                Guid reason = VSConstants.NewDocumentStateReason.Navigation;
+                newDocumentStateContext = openDoc3.SetNewDocumentState((uint)__VSNEWDOCUMENTSTATE.NDS_Provisional, ref reason);
+                
+                DTE.ItemOperations.OpenFile(file);
+            }
+            finally
+            {
+                if (newDocumentStateContext != null)
+                    newDocumentStateContext.Restore();
+            }
         }
     }
 
