@@ -21,7 +21,7 @@ http://google.com
 - Drag 'n drop of images supported
 - Paste image from clipboard directly onto document
 - Outlining/folding of code blocks
-- Hotkeys for easy add bold and italic text
+- Keyboard shortcuts
 - Brace completion with type-through
 - Lightning fast
 
@@ -77,7 +77,7 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 
 ![Outlining Collapsed](art/outlining-collapsed.png)
 
-### Hotkeys
+### Keyboard shortcuts
 Hotkeys are available for making text bold and italic. Select the
 text and hit **Ctrl+B** for bold and **Ctrl+I** for italic.
 
