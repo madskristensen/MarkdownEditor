@@ -203,10 +203,9 @@ namespace MarkdownEditor
                 // TODO: use a pool for List<Block>
                 // Collect all blocks for sync navigation
                 var blocks = new List<Block>();
-                if (MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
-                {
-                    DumpBlocks(doc, blocks);
-                }
+                // This is used by live sync navigation, but we always generate them so that 
+                // we can enable/disable the sync navigation and it will work correctly
+                DumpBlocks(doc, blocks); 
                 _markdownBlocks = blocks;
             }
             catch (Exception ex)
