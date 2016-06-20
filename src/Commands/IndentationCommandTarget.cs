@@ -14,7 +14,17 @@ namespace MarkdownEditor
 
         protected override bool Execute(VSConstants.VSStd2KCmdID commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            var position = _view.Caret.ContainingTextViewLine.Extent.Start.Position;
+            var extend = _view.Caret.ContainingTextViewLine.Extent;
+
+            if (extend.IsEmpty)
+                return false;
+
+            var text = _view.Caret.ContainingTextViewLine.Extent.GetText();
+
+            if (!SmartIndentCommandTarget._regex.IsMatch(text))
+                return false;
+
+            var position = extend.Start.Position;
 
             if (commandId == VSConstants.VSStd2KCmdID.TAB)
             {
@@ -26,8 +36,6 @@ namespace MarkdownEditor
             }
             else if (commandId == VSConstants.VSStd2KCmdID.BACKTAB)
             {
-                var text = _view.Caret.ContainingTextViewLine.Extent.GetText();
-
                 if (!CanDecrease(text))
                     return false;
 
@@ -46,12 +54,7 @@ namespace MarkdownEditor
             if (text.Length <= 2)
                 return false;
 
-            if (SmartIndentCommandTarget._regex.IsMatch(text))
-            {
-                return string.IsNullOrWhiteSpace(text.Substring(0, 2));
-            }
-
-            return false;
+            return string.IsNullOrWhiteSpace(text.Substring(0, 2));
         }
 
         protected override bool IsEnabled()

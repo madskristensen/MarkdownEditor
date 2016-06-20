@@ -273,7 +273,7 @@ namespace MarkdownEditor
         <div id='___markdown-content___'>
           {{0}}
         </div>
-        <script src=""{scriptPath}"" async defer></script>
+        <script src=""{scriptPath}"" async></script>
     </body>
 </html>";
         }
