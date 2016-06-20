@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -23,6 +24,7 @@ namespace MarkdownEditor
         private int _zoomFactor;
 
         private MarkdownDocument _markdownDoc;
+        private List<Block> _markdownBlocks;
 
         private MarkdownPipelineBuilder _pipelineBuilder;
 
@@ -109,14 +111,15 @@ namespace MarkdownEditor
 
         private int FindClosestLine(int line)
         {
-            var doc = _markdownDoc;
+            var elements = _markdownBlocks;
             var lowerIndex = 0;
-            var upperIndex = doc.Count - 1;
+            var upperIndex = elements.Count - 1;
 
+            // binary search on lines
             while (lowerIndex <= upperIndex)
             {
                 int midIndex = (upperIndex - lowerIndex) / 2 + lowerIndex;
-                int comparison = doc[midIndex].Line.CompareTo(line);
+                int comparison = elements[midIndex].Line.CompareTo(line);
                 if (comparison == 0)
                 {
                     return line;
@@ -127,7 +130,18 @@ namespace MarkdownEditor
                     upperIndex = midIndex - 1;
             }
 
-            return lowerIndex >= 0 && lowerIndex < doc.Count ? doc[lowerIndex].Line : 0;
+            // If we are between two lines, try to find the best spot
+            if (lowerIndex >= 0 && lowerIndex < elements.Count)
+            {
+                // we calculate the position of the current line relative to the line found and previous line
+                var previousLineIndex = lowerIndex > 0 ? elements[lowerIndex - 1].Line : 0;
+                var nextLineIndex = elements[lowerIndex].Line;
+                var middle = (line - previousLineIndex) * 1.0 /(nextLineIndex - previousLineIndex);
+                // If  relative position < 0.5, we select the previous line, otherwise we select the line found
+                return middle < 0.5 ? previousLineIndex : nextLineIndex;
+            }
+
+            return 0;
         }
 
         public void UpdatePosition(int line)
@@ -135,8 +149,6 @@ namespace MarkdownEditor
             if (_htmlDocument != null)
             {
                 var closestLine = FindClosestLine(line);
-
-                Trace.WriteLine($"Found closest line: {closestLine}");
 
                 var element = _htmlDocument.getElementById("pragma-line-" + closestLine);
                 if (element != null)
@@ -164,6 +176,11 @@ namespace MarkdownEditor
 
             _markdownDoc = doc;
 
+            // TODO: use a pool for List<Block>
+            var blocks = new List<Block>();
+            DumpBlocks(_markdownDoc, blocks);
+            _markdownBlocks = blocks;
+
             if (_htmlDocument != null)
             {
                 var content = _htmlDocument.getElementById("___markdown-content___");
@@ -173,6 +190,19 @@ namespace MarkdownEditor
             {
                 var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
                 Control.NavigateToString(template);
+            }
+        }
+
+        private void DumpBlocks(Block block, List<Block> blocks)
+        {
+            blocks.Add(block);
+            var container = block as ContainerBlock;
+            if (container != null)
+            {
+                foreach (var subBlock in container)
+                {
+                    blocks.Add(subBlock);
+                }
             }
         }
 
