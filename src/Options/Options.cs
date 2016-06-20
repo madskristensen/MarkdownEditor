@@ -33,6 +33,7 @@ namespace MarkdownEditor
         [DisplayName("Width")]
         [Description("The width of the preview window in pixels. Default is 600")]
         [DefaultValue(600)]
+        [Browsable(false)]
         public double PreviewWindowWidth { get; set; } = 600;
     }
 }
