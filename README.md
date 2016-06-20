@@ -11,7 +11,7 @@ A full featured Markdown editor with live preview and syntax highligting.
 Supports GitHub flavored Markdown.
 
 See the [changelog](CHANGELOG.md) for changes and roadmap.
-
+http://google.com
 ## Features
 
 - Powered by [Markdig](https://github.com/lunet-io/markdig) - the best markdown parser
