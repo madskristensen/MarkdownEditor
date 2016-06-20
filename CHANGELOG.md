@@ -18,7 +18,7 @@ on the official Visual Studio extension gallery.
 
 ## 1.1
 
-**2016-06-18**
+**2016-06-19**
 
 - [x] Multiline comment outlining
 - [x] Convert tabs to spaces
