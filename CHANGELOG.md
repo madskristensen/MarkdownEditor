@@ -1,6 +1,8 @@
 # Roadmap
 
-- [x] Opening remote links in default browser
+- [x] Open remote links in default browser
+- [ ] Button in editor to _Copy as HTML_
+- [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
