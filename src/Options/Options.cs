@@ -17,6 +17,12 @@ namespace MarkdownEditor
         [DefaultValue(true)]
         public bool EnableTypeThrough { get; set; } = true;
 
+        [Category("General")]
+        [DisplayName("Enable hotkeys")]
+        [Description("Enables CTRL+B for bold and CTRL+I for italic.")]
+        [DefaultValue(true)]
+        public bool EnableHotKeys { get; set; } = true;
+
         [Category("Preview Window")]
         [DisplayName("Enabled")]
         [Description("Determines if the preview window should be shown")]

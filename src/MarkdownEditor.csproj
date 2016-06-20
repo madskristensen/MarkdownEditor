@@ -57,7 +57,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />
+    <Compile Include="Commands\BoldCommandTarget.cs" />
     <Compile Include="Commands\UncommentCommandTarget.cs" />
     <Compile Include="Commands\CommentCommandTarget.cs" />
     <Compile Include="Commands\PasteImageCommandTarget.cs" />
