@@ -20,7 +20,7 @@ namespace MarkdownEditor
 
         public override string DisplayText
         {
-            get { return "Convert To Blockqoute"; }
+            get { return "Convert To Blockquote"; }
         }
 
         public override ImageMoniker IconMoniker
