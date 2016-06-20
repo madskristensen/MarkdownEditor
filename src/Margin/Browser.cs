@@ -5,12 +5,10 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
 using Markdig;
-using mshtml;
-using Markdig.Helpers;
 using Markdig.Renderers;
 using Markdig.Syntax;
+using mshtml;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using WebBrowser = System.Windows.Controls.WebBrowser;
 
@@ -203,9 +201,9 @@ namespace MarkdownEditor
                 // TODO: use a pool for List<Block>
                 // Collect all blocks for sync navigation
                 var blocks = new List<Block>();
-                // This is used by live sync navigation, but we always generate them so that 
+                // This is used by live sync navigation, but we always generate them so that
                 // we can enable/disable the sync navigation and it will work correctly
-                DumpBlocks(doc, blocks); 
+                DumpBlocks(doc, blocks);
                 _markdownBlocks = blocks;
             }
             catch (Exception ex)
@@ -311,6 +309,7 @@ namespace MarkdownEditor
                 Control.Dispose();
 
             _htmlDocument = null;
+            _pipeline = null;
         }
     }
 }

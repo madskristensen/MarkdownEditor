@@ -1,5 +1,9 @@
 # Roadmap
 
+- [x] Auto-update preview window while typing
+- [x] Sync scroll position
+- [ ] Enter key maintains left whitespace matching previous line
+- [ ] Hotkeys for h1-6 using _Ctrl+1-6_
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
