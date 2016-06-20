@@ -201,7 +201,7 @@ namespace MarkdownEditor
             {
                 foreach (var subBlock in container)
                 {
-                    blocks.Add(subBlock);
+                    DumpBlocks(subBlock, blocks);
                 }
             }
         }
