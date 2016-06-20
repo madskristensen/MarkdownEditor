@@ -25,7 +25,7 @@ namespace MarkdownEditor
 
         [Category("General")]
         [DisplayName("Enable smart indent")]
-        [Description("Maintains the indentation from the previous line when hitting the Enter key.")]
+        [Description("Automatically adds new list items on Enter.")]
         [DefaultValue(true)]
         public bool EnableSmartIndent { get; set; } = true;
 
