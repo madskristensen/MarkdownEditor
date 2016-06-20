@@ -21,6 +21,8 @@ See the [changelog](CHANGELOG.md) for changes and roadmap.
 - Drag 'n drop of images supported
 - Paste image from clipboard directly onto document
 - Outlining/folding of code blocks
+- Hotkeys for easy add bold and italic text
+- Brace completion with type-through
 - Lightning fast
 
 ### Syntax highlighting
@@ -74,6 +76,28 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 ...can be collapsed into this:
 
 ![Outlining Collapsed](art/outlining-collapsed.png)
+
+### Hotkeys
+Hotkeys are available for making text bold and italic. Select the
+text and hit **Ctrl+b** for bold and **Ctrl+i** for italic.
+
+Bold will surround the selected text with `**` and italic surrounds
+with `_`.
+
+This feature overrides build in commands such as
+_Incremental Search_ so they hotkeys can be disabled in the
+[settings](#settings).
+
+### Brace completion with type-through
+This makes typing faster. Whenever you type opening braces,
+paranthesis or brackets, a corrosponding closing character is
+inserted. It is smart about when it adds the closing character
+so it doesn't become annoying.
+
+It also inserts `*` and `_` characters to make typing bold and
+italic text as fast as possible.
+
+This feature can be disabled in the [settings](#settings).
 
 ### Settings
 Control the settings for this extension under

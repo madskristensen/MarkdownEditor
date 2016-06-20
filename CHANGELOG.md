@@ -1,11 +1,5 @@
 # Roadmap
 
-- [x] Multiline comment outlining
-- [x] Convert tabs to spaces
-- [x] Comment and uncomment support
-- [x] Brace completion with typethrough
-- [x] `CTRL+B` makes text bold
-- [x] `CTRL+I` makes text italic
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
@@ -22,7 +16,18 @@ on the official Visual Studio extension gallery.
 
 ## 1.0
 
-**2016-06-19**
+**2016-06-18**
+
+- [x] Multiline comment outlining
+- [x] Convert tabs to spaces
+- [x] Comment and uncomment support
+- [x] Brace completion with typethrough
+- [x] `CTRL+B` makes text bold
+- [x] `CTRL+I` makes text italic
+
+## 1.0
+
+**2016-06-18**
 
 - [x] Syntax highligting
 - [x] Preview window
