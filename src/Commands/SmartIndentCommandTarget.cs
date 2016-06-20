@@ -16,13 +16,27 @@ namespace MarkdownEditor
 
         protected override bool Execute(VSConstants.VSStd2KCmdID commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            var text = _view.Caret.ContainingTextViewLine.Extent.GetText();
+            var extend = _view.Caret.ContainingTextViewLine.Extent;
+            var text = extend.GetText();
             var match = _regex.Match(text);
 
             if (!match.Success)
                 return false;
 
             var newline = Environment.NewLine;
+
+            if (string.IsNullOrWhiteSpace(_regex.Replace(text, "")))
+            {
+                using (var edit = _view.TextBuffer.CreateEdit())
+                {
+                    edit.Delete(extend);
+                    edit.Insert(extend.Start, newline);
+                    edit.Apply();
+                }
+
+                return true;
+            }
+
             var position = _view.Caret.Position.BufferPosition;
 
             string insertionText = ParseInput(match);

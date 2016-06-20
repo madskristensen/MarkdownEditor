@@ -117,6 +117,10 @@ namespace MarkdownEditor
 
         private int FindClosestLine(int line)
         {
+            // Forces the preview window to scroll to the top of the document
+            if (line == 0)
+                return 1;
+
             var elements = _markdownBlocks;
             var lowerIndex = 0;
             var upperIndex = elements.Count - 1;
@@ -163,7 +167,12 @@ namespace MarkdownEditor
         {
             if (MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
             {
-                if (_currentViewLine >= 0)
+                if (_currentViewLine == 1)
+                {
+                    // Forces the preview window to scroll to the top of the document
+                    _htmlDocument.documentElement.setAttribute("scrollTop", 0);
+                }
+                else if (_currentViewLine >= 0)
                 {
                     var element = _htmlDocument.getElementById("pragma-line-" + _currentViewLine);
                     if (element != null)
@@ -273,7 +282,7 @@ namespace MarkdownEditor
         <div id='___markdown-content___'>
           {{0}}
         </div>
-        <script src=""{scriptPath}"" async></script>
+        <script src=""{scriptPath}""></script>
     </body>
 </html>";
         }

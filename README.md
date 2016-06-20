@@ -79,10 +79,16 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 
 ### Hotkeys
 Hotkeys are available for making text bold and italic. Select the
-text and hit **Ctrl+b** for bold and **Ctrl+i** for italic.
+text and hit **Ctrl+B** for bold and **Ctrl+I** for italic.
 
 Bold will surround the selected text with `**` and italic surrounds
 with `_`.
+
+Comments can be inserted by hitting **Ctrl+K,C** and you can remove
+comments by hitting **Ctrl+K,U**.
+
+Hitting **Tab** while on a list item will increase its indentation
+and **Ctrl+Tab** will decrease it.
 
 This feature overrides build in commands such as
 _Incremental Search_ so they hotkeys can be disabled in the
