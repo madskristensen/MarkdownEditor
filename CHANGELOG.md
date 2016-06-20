@@ -1,6 +1,5 @@
 # Roadmap
 
-- [x] Open remote links in default browser
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
@@ -27,6 +26,7 @@ on the official Visual Studio extension gallery.
 - [x] Brace completion with typethrough
 - [x] `CTRL+B` makes text bold
 - [x] `CTRL+I` makes text italic
+- [x] Open remote links in default browser
 
 ## 1.0
 
