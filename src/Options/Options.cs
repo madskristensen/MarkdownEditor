@@ -30,6 +30,12 @@ namespace MarkdownEditor
         public bool EnablePreviewWindow { get; set; } = true;
 
         [Category("Preview Window")]
+        [DisplayName("Sync Navigation")]
+        [Description("Determines if the preview should synchronize while navigating into the document")]
+        [DefaultValue(true)]
+        public bool EnablePreviewSyncNavigation { get; set; } = true;
+
+        [Category("Preview Window")]
         [DisplayName("Width")]
         [Description("The width of the preview window in pixels. Default is 600")]
         [DefaultValue(600)]

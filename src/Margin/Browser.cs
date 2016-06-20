@@ -1,13 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using Markdig;
 using mshtml;
+using Markdig.Helpers;
+using Markdig.Renderers;
+using Markdig.Syntax;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using WebBrowser = System.Windows.Controls.WebBrowser;
 
 namespace MarkdownEditor
 {
@@ -22,14 +27,22 @@ namespace MarkdownEditor
                        _cachedHeight = 0,
                        _positionPercentage = 0;
 
+        private List<Block> _markdownBlocks;
+        private int _currentViewLine;
+
+        [ThreadStatic] private static StringWriter htmlWriterStatic;
+
         public Browser(string file)
         {
-            var builder = new MarkdownPipelineBuilder().UseAdvancedExtensions();
+            var builder = new MarkdownPipelineBuilder()
+                .UsePragmaLines()
+                .UseAdvancedExtensions();
 
             _pipeline = builder.Build();
             _zoomFactor = GetZoomFactor();
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
+            _currentViewLine = -1;
 
             InitBrowser();
         }
@@ -40,10 +53,12 @@ namespace MarkdownEditor
         {
             Control = new WebBrowser();
             Control.HorizontalAlignment = HorizontalAlignment.Stretch;
+
             Control.LoadCompleted += (s, e) =>
             {
                 Zoom(_zoomFactor);
-                _htmlDocument = Control.Document as HTMLDocument;
+                _htmlDocument = (HTMLDocument)Control.Document;
+
                 _cachedHeight = _htmlDocument.body.offsetHeight;
                 _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
 
@@ -102,19 +117,135 @@ namespace MarkdownEditor
             }
         }
 
-        public void UpdateBrowser(string markdown)
+        private int FindClosestLine(int line)
         {
-            if (_htmlDocument != null)
+            var elements = _markdownBlocks;
+            var lowerIndex = 0;
+            var upperIndex = elements.Count - 1;
+
+            // binary search on lines
+            while (lowerIndex <= upperIndex)
             {
-                _cachedPosition = _htmlDocument.documentElement.getAttribute("scrollTop");
-                _cachedHeight = Math.Max(1.0, _htmlDocument.body.offsetHeight);
-                _positionPercentage = _cachedPosition * 100 / _cachedHeight;
+                int midIndex = (upperIndex - lowerIndex) / 2 + lowerIndex;
+                int comparison = elements[midIndex].Line.CompareTo(line);
+                if (comparison == 0)
+                {
+                    return line;
+                }
+                if (comparison < 0)
+                    lowerIndex = midIndex + 1;
+                else
+                    upperIndex = midIndex - 1;
             }
 
-            var html = Markdown.ToHtml(markdown, _pipeline);
-            var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
+            // If we are between two lines, try to find the best spot
+            if (lowerIndex >= 0 && lowerIndex < elements.Count)
+            {
+                // we calculate the position of the current line relative to the line found and previous line
+                var previousLineIndex = lowerIndex > 0 ? elements[lowerIndex - 1].Line : 0;
+                var nextLineIndex = elements[lowerIndex].Line;
+                var middle = (line - previousLineIndex) * 1.0 /(nextLineIndex - previousLineIndex);
+                // If  relative position < 0.5, we select the previous line, otherwise we select the line found
+                return middle < 0.5 ? previousLineIndex : nextLineIndex;
+            }
 
-            Control.NavigateToString(template);
+            return 0;
+        }
+
+        public void UpdatePosition(int line)
+        {
+            if (_htmlDocument != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            {
+                _currentViewLine = FindClosestLine(line);
+                SyncNavigation();
+            }
+        }
+
+        private void SyncNavigation()
+        {
+            if (MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            {
+                if (_currentViewLine >= 0)
+                {
+                    var element = _htmlDocument.getElementById("pragma-line-" + _currentViewLine);
+                    if (element != null)
+                    {
+                        element.scrollIntoView(true);
+                    }
+                }
+            }
+            else
+            {
+                _currentViewLine = -1;
+                _cachedPosition = _htmlDocument.documentElement.getAttribute("scrollTop");
+                _cachedHeight = Math.Max(1.0, _htmlDocument.body.offsetHeight);
+                _positionPercentage = _cachedPosition*100/_cachedHeight;
+            }
+        }
+
+        public void UpdateBrowser(string markdown)
+        {
+            // Generate the HTML document
+            string html = null;
+            StringWriter htmlWriter = null;
+            try
+            {
+                var doc = Markdown.Parse(markdown, _pipeline);
+
+                htmlWriter = htmlWriterStatic ?? (htmlWriterStatic = new StringWriter());
+                htmlWriter.GetStringBuilder().Clear();
+                var htmlRenderer = new HtmlRenderer(htmlWriter);
+                _pipeline.Setup(htmlRenderer);
+                htmlRenderer.Render(doc);
+                htmlWriter.Flush();
+                html = htmlWriter.ToString();
+
+                // TODO: use a pool for List<Block>
+                // Collect all blocks for sync navigation
+                var blocks = new List<Block>();
+                // This is used by live sync navigation, but we always generate them so that 
+                // we can enable/disable the sync navigation and it will work correctly
+                DumpBlocks(doc, blocks); 
+                _markdownBlocks = blocks;
+            }
+            catch (Exception ex)
+            {
+                // We could output this to the exception pane of VS?
+                // Though, it's easier to output it directly to the browser
+                html = "<p>An unexpected exception occured:</p><pre>" +
+                       ex.ToString().Replace("<", "&lt;").Replace("&", "&amp;") + "</pre>";
+            }
+            finally
+            {
+                // Free any resources allocated by HtmlWriter
+                htmlWriter?.GetStringBuilder().Clear();
+            }
+
+            if (_htmlDocument != null)
+            {
+                var content = _htmlDocument.getElementById("___markdown-content___");
+                content.innerHTML = html;
+            }
+            else
+            {
+                var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
+                Control.NavigateToString(template);
+            }
+
+            SyncNavigation();
+        }
+
+        private void DumpBlocks(Block block, List<Block> blocks)
+        {
+            blocks.Add(block);
+            var container = block as ContainerBlock;
+            if (container != null)
+            {
+                foreach (var subBlock in container)
+                {
+                    DumpBlocks(subBlock, blocks);
+                }
+            }
         }
 
         private static string GetFolder()
@@ -141,12 +272,13 @@ namespace MarkdownEditor
         <link rel=""stylesheet"" href=""{cssPath}"" />
 </head>
     <body class=""markdown-body"">
-        {{0}}
+        <div id='___markdown-content___'>
+          {{0}}
+        </div>
         <script src=""{scriptPath}"" async defer></script>
     </body>
 </html>";
         }
-
 
         private void Zoom(int zoomFactor)
         {

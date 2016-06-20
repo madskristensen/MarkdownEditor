@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -11,11 +12,30 @@ namespace MarkdownEditor
     {
         private readonly Browser _browser;
         private readonly ITextDocument _document;
+        private readonly DispatcherTimer _updaterDocument;
+        private readonly DispatcherTimer _updaterPosition;
+        private readonly ITextView _textView;
 
-        public BrowserMargin(ITextDocument document)
+        /// <summary>
+        /// The number of seconds to wait before updating the position/document
+        /// TODO: We may want this to be configurable in the settings
+        /// </summary>
+        private const double RefreshAfterSeconds = 0.5;
+
+        public BrowserMargin(ITextView textview, ITextDocument document)
         {
+            _textView = textview;
+
+            _updaterDocument = new DispatcherTimer {Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
+            _updaterDocument.Tick += UpdaterDocumentOnTick;
+
+            _updaterPosition = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
+            _updaterPosition.Tick += UpdaterPositionOnTick;
+
+            _textView.LayoutChanged += LayoutChanged;
+
             _document = document;
-            _document.FileActionOccurred += DocumentUpdated;
+            _document.TextBuffer.Changed += TextBufferChanged;
 
             _browser = new Browser(_document.FilePath);
             CreateMarginControls();
@@ -26,12 +46,38 @@ namespace MarkdownEditor
         public double MarginSize => MarkdownEditorPackage.Options.PreviewWindowWidth;
         public FrameworkElement VisualElement => this;
 
-        private void DocumentUpdated(object sender, TextDocumentFileActionEventArgs e)
+        private void LayoutChanged(object sender, TextViewLayoutChangedEventArgs textViewLayoutChangedEventArgs)
         {
-            if (e.FileActionType == FileActionTypes.ContentSavedToDisk)
+            _updaterPosition.Stop();
+            _updaterPosition.Start();
+        }
+
+        private void UpdaterDocumentOnTick(object sender, EventArgs eventArgs)
+        {
+            _updaterDocument.Stop();
+            UpdateBrowser();
+        }
+
+        private void UpdaterPositionOnTick(object sender, EventArgs eventArgs)
+        {
+            _updaterPosition.Stop();
+            UpdatePosition();
+        }
+
+        private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
+        {
+            _updaterDocument.Stop();
+            _updaterDocument.Start();
+        }
+
+        private async void UpdatePosition()
+        {
+            await Dispatcher.BeginInvoke(new Action(() =>
             {
-                UpdateBrowser();
-            }
+                var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
+                _browser.UpdatePosition(lineNumber);
+
+            }), DispatcherPriority.ApplicationIdle, null);
         }
 
         private async void UpdateBrowser()
@@ -91,8 +137,12 @@ namespace MarkdownEditor
             if (_browser != null)
                 _browser.Dispose();
 
-            if (_document != null)
-                _document.FileActionOccurred -= DocumentUpdated;
+            if (_textView != null)
+                _textView.LayoutChanged -= LayoutChanged;
+
+            var textBuffer = _document?.TextBuffer;
+            if (textBuffer != null)
+                textBuffer.Changed -= TextBufferChanged;
         }
     }
 }
