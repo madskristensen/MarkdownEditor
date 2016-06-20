@@ -87,6 +87,13 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="SuggestedActions\Actions\BaseSuggestedAction.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToCodeBlockAction.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToQuoteAction.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToImageAction.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToLinkAction.cs" />
+    <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
+    <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
     <Compile Include="TypeThrough\TypeThroughControllerProvider.cs" />
     <Compile Include="TypeThrough\ProvisionalText.cs" />
     <Compile Include="TypeThrough\TypeThroughController.cs" />
@@ -162,10 +169,19 @@
       <Private>True</Private>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ImageCatalog, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.ImageCatalog.14.2.25123\lib\net45\Microsoft.VisualStudio.ImageCatalog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.14.2.25123\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
       <Private>True</Private>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.14.2.25123\lib\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Language.Intellisense.14.2.25123\lib\net45\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>

@@ -28,7 +28,8 @@ namespace MarkdownEditor
         private List<Block> _markdownBlocks;
         private int _currentViewLine;
 
-        [ThreadStatic] private static StringWriter htmlWriterStatic;
+        [ThreadStatic]
+        private static StringWriter htmlWriterStatic;
 
         public Browser(string file)
         {
@@ -118,7 +119,7 @@ namespace MarkdownEditor
         private int FindClosestLine(int line)
         {
             // Forces the preview window to scroll to the top of the document
-            if (line == 0)
+            if (line <= 3)
                 return 1;
 
             var elements = _markdownBlocks;
@@ -146,7 +147,7 @@ namespace MarkdownEditor
                 // we calculate the position of the current line relative to the line found and previous line
                 var previousLineIndex = lowerIndex > 0 ? elements[lowerIndex - 1].Line : 0;
                 var nextLineIndex = elements[lowerIndex].Line;
-                var middle = (line - previousLineIndex) * 1.0 /(nextLineIndex - previousLineIndex);
+                var middle = (line - previousLineIndex) * 1.0 / (nextLineIndex - previousLineIndex);
                 // If  relative position < 0.5, we select the previous line, otherwise we select the line found
                 return middle < 0.5 ? previousLineIndex : nextLineIndex;
             }
@@ -186,7 +187,7 @@ namespace MarkdownEditor
                 _currentViewLine = -1;
                 _cachedPosition = _htmlDocument.documentElement.getAttribute("scrollTop");
                 _cachedHeight = Math.Max(1.0, _htmlDocument.body.offsetHeight);
-                _positionPercentage = _cachedPosition*100/_cachedHeight;
+                _positionPercentage = _cachedPosition * 100 / _cachedHeight;
             }
         }
 

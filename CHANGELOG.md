@@ -3,8 +3,11 @@
 - [x] Auto-update preview window while typing
 - [x] Sync scroll position
 - [x] Enter key maintains left whitespace matching previous line
-- [x] Tab and Shift+Tab increase/decrease indentation of list items
-- [ ] Hotkeys for h1-6 using _Ctrl+1-6_
+- [x] Tab and `Shift+Tab` increase/decrease indentation of list items
+- [x] Light bulbs for converting to image/link/codeblock/quote
+- [ ] Outlining for multiline blockquotes 
+- [ ] `Ctrl+x` on a task list item toggles the checked state
+- [ ] Hotkeys for h1-6 using `Ctrl+1-6`
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
