@@ -4,10 +4,13 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using Markdig;
 using mshtml;
+using Markdig.Renderers;
+using Markdig.Syntax;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using WebBrowser = System.Windows.Controls.WebBrowser;
 
 namespace MarkdownEditor
 {
@@ -18,15 +21,18 @@ namespace MarkdownEditor
         private MarkdownPipeline _pipeline;
         private string _htmlTemplate;
         private int _zoomFactor;
-        private double _cachedPosition = 0,
-                       _cachedHeight = 0,
-                       _positionPercentage = 0;
+
+        private MarkdownDocument _markdownDoc;
+
+        private MarkdownPipelineBuilder _pipelineBuilder;
 
         public Browser(string file)
         {
-            var builder = new MarkdownPipelineBuilder().UseAdvancedExtensions();
+            var builder = new MarkdownPipelineBuilder()
+                .UsePragmaLines()
+                .UseAdvancedExtensions();
 
-            _pipeline = builder.Build();
+            _pipeline = _pipelineBuilder.Build();
             _zoomFactor = GetZoomFactor();
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
@@ -40,12 +46,11 @@ namespace MarkdownEditor
         {
             Control = new WebBrowser();
             Control.HorizontalAlignment = HorizontalAlignment.Stretch;
+
             Control.LoadCompleted += (s, e) =>
             {
                 Zoom(_zoomFactor);
-                _htmlDocument = Control.Document as HTMLDocument;
-                _cachedHeight = _htmlDocument.body.offsetHeight;
-                _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
+                _htmlDocument = (HTMLDocument)Control.Document;
 
                 foreach (IHTMLElement link in _htmlDocument.links)
                 {
@@ -102,19 +107,73 @@ namespace MarkdownEditor
             }
         }
 
-        public void UpdateBrowser(string markdown)
+        private int FindClosestLine(int line)
+        {
+            var doc = _markdownDoc;
+            var lowerIndex = 0;
+            var upperIndex = doc.Count - 1;
+
+            while (lowerIndex <= upperIndex)
+            {
+                int midIndex = (upperIndex - lowerIndex) / 2 + lowerIndex;
+                int comparison = doc[midIndex].Line.CompareTo(line);
+                if (comparison == 0)
+                {
+                    return line;
+                }
+                if (comparison < 0)
+                    lowerIndex = midIndex + 1;
+                else
+                    upperIndex = midIndex - 1;
+            }
+
+            return lowerIndex >= 0 && lowerIndex < doc.Count ? doc[lowerIndex].Line : 0;
+        }
+
+        public void UpdatePosition(int line)
         {
             if (_htmlDocument != null)
             {
-                _cachedPosition = _htmlDocument.documentElement.getAttribute("scrollTop");
-                _cachedHeight = Math.Max(1.0, _htmlDocument.body.offsetHeight);
-                _positionPercentage = _cachedPosition * 100 / _cachedHeight;
+                var closestLine = FindClosestLine(line);
+
+                Trace.WriteLine($"Found closest line: {closestLine}");
+
+                var element = _htmlDocument.getElementById("pragma-line-" + closestLine);
+                if (element != null)
+                {
+                    element.scrollIntoView(true);
+                }
             }
+        }
 
-            var html = Markdown.ToHtml(markdown, _pipeline);
-            var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
+        public void UpdateBrowser(string markdown)
+        {
+            var doc = Markdown.Parse(markdown, _pipeline);
 
-            Control.NavigateToString(template);
+            var htmlWriter = new StringWriter();
+            var htmlRenderer = new HtmlRenderer(htmlWriter);
+
+            // TODO: This is a workaround as we don't have access to the extensions
+            foreach (var extension in _pipelineBuilder.Extensions)
+            {
+                extension.Setup(htmlRenderer);
+            }
+            htmlRenderer.Render(doc);
+            htmlWriter.Flush();
+            var html = htmlWriter.ToString();
+
+            _markdownDoc = doc;
+
+            if (_htmlDocument != null)
+            {
+                var content = _htmlDocument.getElementById("___markdown-content___");
+                content.innerHTML = html;
+            }
+            else
+            {
+                var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
+                Control.NavigateToString(template);
+            }
         }
 
         private static string GetFolder()
@@ -141,12 +200,13 @@ namespace MarkdownEditor
         <link rel=""stylesheet"" href=""{cssPath}"" />
 </head>
     <body class=""markdown-body"">
-        {{0}}
+        <div id='___markdown-content___'>
+          {{0}}
+        </div>
         <script src=""{scriptPath}"" async defer></script>
     </body>
 </html>";
         }
-
 
         private void Zoom(int zoomFactor)
         {

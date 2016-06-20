@@ -26,7 +26,7 @@ namespace MarkdownEditor
             if (!TextDocumentFactoryService.TryGetTextDocument(wpfTextViewHost.TextView.TextDataModel.DocumentBuffer, out document))
                 return null;
 
-            return new BrowserMargin(document);
+            return new BrowserMargin(wpfTextViewHost.TextView, document);
         }
     }
 }
