@@ -75,9 +75,6 @@ namespace MarkdownEditor
             await Dispatcher.BeginInvoke(new Action(() =>
             {
                 var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
-
-                Trace.WriteLine($"Linenumber: {lineNumber}");
-
                 _browser.UpdatePosition(lineNumber);
 
             }), DispatcherPriority.ApplicationIdle, null);

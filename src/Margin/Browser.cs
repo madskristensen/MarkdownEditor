@@ -26,15 +26,13 @@ namespace MarkdownEditor
         private MarkdownDocument _markdownDoc;
         private List<Block> _markdownBlocks;
 
-        private MarkdownPipelineBuilder _pipelineBuilder;
-
         public Browser(string file)
         {
             var builder = new MarkdownPipelineBuilder()
                 .UsePragmaLines()
                 .UseAdvancedExtensions();
 
-            _pipeline = _pipelineBuilder.Build();
+            _pipeline = builder.Build();
             _zoomFactor = GetZoomFactor();
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
@@ -150,6 +148,8 @@ namespace MarkdownEditor
             {
                 var closestLine = FindClosestLine(line);
 
+                //Trace.WriteLine($"Closest line: {line} -> {closestLine}");
+
                 var element = _htmlDocument.getElementById("pragma-line-" + closestLine);
                 if (element != null)
                 {
@@ -164,22 +164,17 @@ namespace MarkdownEditor
 
             var htmlWriter = new StringWriter();
             var htmlRenderer = new HtmlRenderer(htmlWriter);
-
-            // TODO: This is a workaround as we don't have access to the extensions
-            foreach (var extension in _pipelineBuilder.Extensions)
-            {
-                extension.Setup(htmlRenderer);
-            }
+            _pipeline.Setup(htmlRenderer);
             htmlRenderer.Render(doc);
             htmlWriter.Flush();
             var html = htmlWriter.ToString();
 
-            _markdownDoc = doc;
-
             // TODO: use a pool for List<Block>
             var blocks = new List<Block>();
-            DumpBlocks(_markdownDoc, blocks);
+            DumpBlocks(doc, blocks);
+
             _markdownBlocks = blocks;
+            _markdownDoc = doc;
 
             if (_htmlDocument != null)
             {
