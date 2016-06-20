@@ -127,15 +127,13 @@ namespace MarkdownEditor
     <head>
         <meta http-equiv=""X-UA-Compatible"" content=""IE=Edge"" />
         <meta charset=""utf-8"" />
-        <!-- This is to make sure your relative image links show up nicely. -->
         <base href=""file:///{baseHref}/"" />
         <title>Markdown Preview</title>
-        <!-- Here is where the custom style sheet is inserted as well as highlight.js setup code. -->
         <link rel=""stylesheet"" href=""{cssPath}"" />
 </head>
     <body class=""markdown-body"">
         {{0}}
-        <script src=""{scriptPath}"" async></script>
+        <script src=""{scriptPath}"" async defer></script>
     </body>
 </html>";
         }

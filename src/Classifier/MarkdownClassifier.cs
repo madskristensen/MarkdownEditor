@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Threading.Tasks;
+using Markdig;
 using Markdig.Parsers;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Markdig.Syntax.Inlines;
-using Markdig;
 using Microsoft.VisualStudio.Text.Tagging;
-using System.Windows.Controls;
 
 namespace MarkdownEditor
 {

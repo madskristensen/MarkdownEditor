@@ -58,6 +58,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandTargetBase.cs" />
+    <Compile Include="Commands\UncommentCommandTarget.cs" />
+    <Compile Include="Commands\CommentCommandTarget.cs" />
     <Compile Include="Commands\PasteImageCommandTarget.cs" />
     <Compile Include="Commands\CommandRegistration.cs" />
     <Compile Include="ContentType\MarkdownContentTypeDefinition.cs" />

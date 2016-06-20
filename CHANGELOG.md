@@ -2,10 +2,11 @@
 
 - [x] Multiline comment outlining
 - [x] Convert tabs to spaces
+- [x] Comment and uncomment support
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
-- [ ] Error handling
 - [ ] Validate local image and link paths
+- [ ] Intellisense for local image and URL paths
 
 Features that have a checkmark are complete and available for
 download in the
