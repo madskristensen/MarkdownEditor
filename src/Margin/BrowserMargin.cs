@@ -142,8 +142,9 @@ namespace MarkdownEditor
             if (_textView != null)
                 _textView.LayoutChanged -= LayoutChanged;
 
-            if (_document != null)
-                _document.TextBuffer.Changed -= TextBufferChanged;
+            var textBuffer = _document?.TextBuffer;
+            if (textBuffer != null)
+                textBuffer.Changed -= TextBufferChanged;
         }
     }
 }
