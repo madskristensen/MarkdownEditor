@@ -3,7 +3,7 @@
 - [x] Auto-update preview window while typing
 - [x] Sync scroll position
 - [x] Enter key maintains left whitespace matching previous line
-- [ ] Tab and Shift+Tab increase/decrease indentation of list items
+- [x] Tab and Shift+Tab increase/decrease indentation of list items
 - [ ] Hotkeys for h1-6 using _Ctrl+1-6_
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets

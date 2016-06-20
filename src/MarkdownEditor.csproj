@@ -60,6 +60,7 @@
     <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />
     <Compile Include="Commands\BoldCommandTarget.cs" />
+    <Compile Include="Commands\IndentationCommandTarget.cs" />
     <Compile Include="Commands\SmartIndentCommandTarget.cs" />
     <Compile Include="Commands\UncommentCommandTarget.cs" />
     <Compile Include="Commands\CommentCommandTarget.cs" />

@@ -8,7 +8,7 @@ namespace MarkdownEditor
 {
     internal class SmartIndentCommandTarget : CommandTargetBase<VSConstants.VSStd2KCmdID>
     {
-        private Regex _regex = new Regex(@"^(([\s]+)?(?<bullet>-|\*|>|\+|([0-9a-z]).)\s(\[ \]|\[x\])?\s?)", RegexOptions.IgnoreCase);
+        public static Regex _regex = new Regex(@"^(([\s]+)?(?<bullet>-|\*|>|\+|([0-9a-z]).)\s(\[ \]|\[x\])?\s?)", RegexOptions.IgnoreCase);
 
         public SmartIndentCommandTarget(IVsTextView adapter, IWpfTextView textView)
             : base(adapter, textView, VSConstants.VSStd2KCmdID.RETURN)
