@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Markdig;
 using mshtml;
+using Markdig.Helpers;
 using Markdig.Renderers;
 using Markdig.Syntax;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
@@ -22,9 +23,14 @@ namespace MarkdownEditor
         private MarkdownPipeline _pipeline;
         private string _htmlTemplate;
         private int _zoomFactor;
+        private double _cachedPosition = 0,
+                       _cachedHeight = 0,
+                       _positionPercentage = 0;
 
-        private MarkdownDocument _markdownDoc;
         private List<Block> _markdownBlocks;
+        private int _currentViewLine;
+
+        [ThreadStatic] private static StringWriter htmlWriterStatic;
 
         public Browser(string file)
         {
@@ -36,6 +42,7 @@ namespace MarkdownEditor
             _zoomFactor = GetZoomFactor();
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
+            _currentViewLine = -1;
 
             InitBrowser();
         }
@@ -51,6 +58,9 @@ namespace MarkdownEditor
             {
                 Zoom(_zoomFactor);
                 _htmlDocument = (HTMLDocument)Control.Document;
+
+                _cachedHeight = _htmlDocument.body.offsetHeight;
+                _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
 
                 foreach (IHTMLElement link in _htmlDocument.links)
                 {
@@ -144,37 +154,73 @@ namespace MarkdownEditor
 
         public void UpdatePosition(int line)
         {
-            if (_htmlDocument != null)
+            if (_htmlDocument != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
             {
-                var closestLine = FindClosestLine(line);
+                _currentViewLine = FindClosestLine(line);
+                SyncNavigation();
+            }
+        }
 
-                //Trace.WriteLine($"Closest line: {line} -> {closestLine}");
-
-                var element = _htmlDocument.getElementById("pragma-line-" + closestLine);
-                if (element != null)
+        private void SyncNavigation()
+        {
+            if (MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            {
+                if (_currentViewLine >= 0)
                 {
-                    element.scrollIntoView(true);
+                    var element = _htmlDocument.getElementById("pragma-line-" + _currentViewLine);
+                    if (element != null)
+                    {
+                        element.scrollIntoView(true);
+                    }
                 }
+            }
+            else
+            {
+                _currentViewLine = -1;
+                _cachedPosition = _htmlDocument.documentElement.getAttribute("scrollTop");
+                _cachedHeight = Math.Max(1.0, _htmlDocument.body.offsetHeight);
+                _positionPercentage = _cachedPosition*100/_cachedHeight;
             }
         }
 
         public void UpdateBrowser(string markdown)
         {
-            var doc = Markdown.Parse(markdown, _pipeline);
+            // Generate the HTML document
+            string html = null;
+            StringWriter htmlWriter = null;
+            try
+            {
+                var doc = Markdown.Parse(markdown, _pipeline);
 
-            var htmlWriter = new StringWriter();
-            var htmlRenderer = new HtmlRenderer(htmlWriter);
-            _pipeline.Setup(htmlRenderer);
-            htmlRenderer.Render(doc);
-            htmlWriter.Flush();
-            var html = htmlWriter.ToString();
+                htmlWriter = htmlWriterStatic ?? (htmlWriterStatic = new StringWriter());
+                htmlWriter.GetStringBuilder().Clear();
+                var htmlRenderer = new HtmlRenderer(htmlWriter);
+                _pipeline.Setup(htmlRenderer);
+                htmlRenderer.Render(doc);
+                htmlWriter.Flush();
+                html = htmlWriter.ToString();
 
-            // TODO: use a pool for List<Block>
-            var blocks = new List<Block>();
-            DumpBlocks(doc, blocks);
-
-            _markdownBlocks = blocks;
-            _markdownDoc = doc;
+                // TODO: use a pool for List<Block>
+                // Collect all blocks for sync navigation
+                var blocks = new List<Block>();
+                if (MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+                {
+                    DumpBlocks(doc, blocks);
+                }
+                _markdownBlocks = blocks;
+            }
+            catch (Exception ex)
+            {
+                // We could output this to the exception pane of VS?
+                // Though, it's easier to output it directly to the browser
+                html = "<p>An unexpected exception occured:</p><pre>" +
+                       ex.ToString().Replace("<", "&lt;").Replace("&", "&amp;") + "</pre>";
+            }
+            finally
+            {
+                // Free any resources allocated by HtmlWriter
+                htmlWriter?.GetStringBuilder().Clear();
+            }
 
             if (_htmlDocument != null)
             {
@@ -186,6 +232,8 @@ namespace MarkdownEditor
                 var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
                 Control.NavigateToString(template);
             }
+
+            SyncNavigation();
         }
 
         private void DumpBlocks(Block block, List<Block> blocks)
