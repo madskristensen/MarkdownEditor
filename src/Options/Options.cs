@@ -23,6 +23,12 @@ namespace MarkdownEditor
         [DefaultValue(true)]
         public bool EnableHotKeys { get; set; } = true;
 
+        [Category("General")]
+        [DisplayName("Enable smart indent")]
+        [Description("Maintains the indentation from the previous line when hitting the Enter key.")]
+        [DefaultValue(true)]
+        public bool EnableSmartIndent { get; set; } = true;
+
         [Category("Preview Window")]
         [DisplayName("Enabled")]
         [Description("Determines if the preview window should be shown")]

@@ -34,6 +34,7 @@ namespace MarkdownEditor
                 textView.Properties.GetOrCreateSingletonProperty(() => new UncommentCommandTarget(textViewAdapter, textView, ClassifierAggregatorService));
                 textView.Properties.GetOrCreateSingletonProperty(() => new BoldCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ItalicCommandTarget(textViewAdapter, textView));
+                textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndentCommandTarget(textViewAdapter, textView));
             }
         }
     }
