@@ -3,6 +3,10 @@
 - [x] Multiline comment outlining
 - [x] Convert tabs to spaces
 - [x] Comment and uncomment support
+- [x] Brace completion with typethrough
+- [ ] `CTRL+B` makes text bold
+- [ ] `CTRL+I` makes text italic
+- [ ] `CTRL+???` makes text strikethrough
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths

@@ -5,6 +5,18 @@ namespace MarkdownEditor
 {
     public class Options : DialogPage
     {
+        [Category("General")]
+        [DisplayName("Enable outlining")]
+        [Description("Determines if outlining (code folding) should be enabled for multiline HTML and code blocks")]
+        [DefaultValue(true)]
+        public bool EnableOutlining { get; set; } = true;
+
+        [Category("General")]
+        [DisplayName("Enable typethrough")]
+        [Description("Determines if completion of braces, * and _ is enabled")]
+        [DefaultValue(true)]
+        public bool EnableTypeThrough { get; set; } = true;
+
         [Category("Preview Window")]
         [DisplayName("Enabled")]
         [Description("Determines if the preview window should be shown")]
@@ -16,11 +28,5 @@ namespace MarkdownEditor
         [Description("The width of the preview window in pixels. Default is 600")]
         [DefaultValue(600)]
         public double PreviewWindowWidth { get; set; } = 600;
-
-        [Category("Outlining")]
-        [DisplayName("Enable outlining")]
-        [Description("Determines if outlining (code folding) should be enabled for multiline HTML and code blocks")]
-        [DefaultValue(true)]
-        public bool EnableOutlining { get; set; } = true;
     }
 }
