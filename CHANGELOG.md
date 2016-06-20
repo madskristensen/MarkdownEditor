@@ -1,9 +1,10 @@
 # Roadmap
 
+- [x] Opening remote links in default browser
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
-- [ ] Intellisense for local image and URL paths
+- [ ] Intellisense for local image and link paths
 
 Features that have a checkmark are complete and available for
 download in the

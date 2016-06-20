@@ -64,12 +64,23 @@ namespace MarkdownEditor
                         return;
                     }
 
-                    handler.onclick += new HTMLAnchorEvents_onclickEventHandler(delegate ()
+                    handler.onclick += () =>
                     {
                         ProjectHelpers.OpenFileInPreviewTab(file);
                         return true;
-                    });
+                    };
                 }
+            };
+
+            // Open external links in default browser
+            Control.Navigating += (s, e) =>
+            {
+                if (e.Uri == null)
+                    return;
+
+                e.Cancel = true;
+                if (e.Uri.IsAbsoluteUri && e.Uri.Scheme.StartsWith("http"))
+                    Process.Start(e.Uri.ToString());
             };
         }
 

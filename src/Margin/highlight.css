@@ -13,6 +13,7 @@
     font-size: 16px;
     line-height: 1.6;
     word-wrap: break-word;
+    margin: 10px;
 }
 
     .markdown-body a {
