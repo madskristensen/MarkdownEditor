@@ -5,7 +5,7 @@
 - [x] Enter key maintains left whitespace matching previous line
 - [x] Tab and `Shift+Tab` increase/decrease indentation of list items
 - [x] Light bulbs for converting to image/link/codeblock/quote
-- [ ] `Ctrl+x` on a task list item toggles the checked state
+- [x] `Ctrl+Space` on a task list item toggles the checked state
 - [ ] Hotkeys for h1-6 using `Ctrl+1-6`
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets

@@ -42,11 +42,14 @@ namespace MarkdownEditor
         {
             if (pguidCmdGroup == CommandGroup && CommandIds.Contains(nCmdID))
             {
-                bool result = Execute((TCommandEnum)(object)(int)nCmdID, nCmdexecopt, pvaIn, pvaOut);
-
-                if (result)
+                if (IsEnabled())
                 {
-                    return VSConstants.S_OK;
+                    bool result = Execute((TCommandEnum)(object)(int)nCmdID, nCmdexecopt, pvaIn, pvaOut);
+
+                    if (result)
+                    {
+                        return VSConstants.S_OK;
+                    }
                 }
             }
 

@@ -233,6 +233,10 @@ namespace MarkdownEditor
             {
                 var content = _htmlDocument.getElementById("___markdown-content___");
                 content.innerHTML = html;
+
+                // Makes sure that any code blocks get syntax highligted by Prism
+                var win = _htmlDocument.parentWindow;
+                win.execScript("Prism.highlightAll();", "javascript");
             }
             else
             {
