@@ -128,6 +128,7 @@ namespace MarkdownEditor
             if (!double.IsNaN(_browser.Control.ActualWidth))
             {
                 MarkdownEditorPackage.Options.PreviewWindowWidth = _browser.Control.ActualWidth;
+                MarkdownEditorPackage.Options.SaveSettingsToStorage();
             }
         }
 

@@ -159,6 +159,9 @@ namespace MarkdownEditor
 
             foreach (var block in codeBlocks)
             {
+                if (block.IsOpen || block.Lines.Count == 0)
+                    continue;
+
                 string text = $"{block.Info.ToUpperInvariant()} Code Block".Trim();
                 string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
 

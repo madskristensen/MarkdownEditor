@@ -1,6 +1,5 @@
 # Roadmap
 
-- [x] Open remote links in default browser
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
@@ -17,9 +16,9 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
-## 1.0
+## 1.1
 
-**2016-06-18**
+**2016-06-19**
 
 - [x] Multiline comment outlining
 - [x] Convert tabs to spaces
@@ -27,6 +26,7 @@ on the official Visual Studio extension gallery.
 - [x] Brace completion with typethrough
 - [x] `CTRL+B` makes text bold
 - [x] `CTRL+I` makes text italic
+- [x] Open remote links in default browser
 
 ## 1.0
 
