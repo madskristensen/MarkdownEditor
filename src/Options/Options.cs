@@ -42,10 +42,19 @@ namespace MarkdownEditor
         public bool EnablePreviewSyncNavigation { get; set; } = true;
 
         [Category("Preview Window")]
-        [DisplayName("Width")]
-        [Description("The width of the preview window in pixels. Default is 600")]
+        [DisplayName("Show below the document")]
+        [Description("Determines if the preview window should be located below the document or to the right. Reopen the markdown document to take effect.")]
+        [DefaultValue(false)]
+        public bool ShowPreviewWindowBelow { get; set; }
+
+        [Category("Preview Window")]
         [DefaultValue(600)]
         [Browsable(false)]
         public double PreviewWindowWidth { get; set; } = 600;
+
+        [Category("Preview Window")]
+        [DefaultValue(500)]
+        [Browsable(false)]
+        public double PreviewWindowHeight { get; set; } = 500;
     }
 }

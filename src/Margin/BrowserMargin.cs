@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -26,7 +25,7 @@ namespace MarkdownEditor
         {
             _textView = textview;
 
-            _updaterDocument = new DispatcherTimer {Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
+            _updaterDocument = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
             _updaterDocument.Tick += UpdaterDocumentOnTick;
 
             _updaterPosition = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
@@ -38,7 +37,12 @@ namespace MarkdownEditor
             _document.TextBuffer.Changed += TextBufferChanged;
 
             _browser = new Browser(_document.FilePath);
-            CreateMarginControls();
+
+            if (MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
+                CreateBottomMarginControls();
+            else
+                CreateRightMarginControls();
+
             UpdateBrowser();
         }
 
@@ -94,7 +98,7 @@ namespace MarkdownEditor
             return this;
         }
 
-        protected virtual void CreateMarginControls()
+        private void CreateRightMarginControls()
         {
             var width = MarkdownEditorPackage.Options.PreviewWindowWidth;
 
@@ -115,18 +119,55 @@ namespace MarkdownEditor
             splitter.ResizeDirection = GridResizeDirection.Columns;
             splitter.VerticalAlignment = VerticalAlignment.Stretch;
             splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
-            splitter.DragCompleted += splitter_DragCompleted;
+            splitter.DragCompleted += RightDragCompleted;
 
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 1);
             Grid.SetRow(splitter, 0);
         }
 
-        void splitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        private void CreateBottomMarginControls()
+        {
+            var height = MarkdownEditorPackage.Options.PreviewWindowHeight;
+
+            Grid grid = new Grid();
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(5, GridUnitType.Pixel) });
+            grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition());
+
+            grid.Children.Add(_browser.Control);
+            Children.Add(grid);
+
+            Grid.SetColumn(_browser.Control, 0);
+            Grid.SetRow(_browser.Control, 2);
+
+            GridSplitter splitter = new GridSplitter();
+            splitter.Height = 5;
+            splitter.ResizeDirection = GridResizeDirection.Rows;
+            splitter.VerticalAlignment = VerticalAlignment.Stretch;
+            splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
+            splitter.DragCompleted += BottomDragCompleted;
+
+            grid.Children.Add(splitter);
+            Grid.SetColumn(splitter, 0);
+            Grid.SetRow(splitter, 1);
+        }
+
+        void RightDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             if (!double.IsNaN(_browser.Control.ActualWidth))
             {
                 MarkdownEditorPackage.Options.PreviewWindowWidth = _browser.Control.ActualWidth;
+                MarkdownEditorPackage.Options.SaveSettingsToStorage();
+            }
+        }
+
+        void BottomDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            if (!double.IsNaN(_browser.Control.ActualHeight))
+            {
+                MarkdownEditorPackage.Options.PreviewWindowHeight = _browser.Control.ActualHeight;
                 MarkdownEditorPackage.Options.SaveSettingsToStorage();
             }
         }

@@ -1,8 +1,9 @@
 # Roadmap
 
 - [x] Button in editor to _Copy as HTML_
+- [x] Option to load preview window below editor
+- [ ] Option to specify delay for preview window
 - [ ] Support for custom stylesheets
-- [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
 - [ ] Intellisense for local image and link paths
