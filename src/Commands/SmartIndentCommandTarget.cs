@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Markdig;
 using Markdig.Extensions.Footers;
+using Markdig.Extensions.TaskLists;
 using Markdig.Syntax;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
@@ -160,6 +161,15 @@ namespace MarkdownEditor
                     var quoteBlock = (QuoteBlock)child;
                     builder.Append(quoteBlock.QuoteChar);
                     column++;
+                }
+                else if (child is ParagraphBlock)
+                {
+                    var paragraph = (ParagraphBlock)child;
+                    if (paragraph.Inline?.FirstChild is TaskList)
+                    {
+                        builder.Append("[ ] ");
+                        column += "[ ] ".Length;
+                    }
                 }
                 else if (child is FooterBlock)
                 {
