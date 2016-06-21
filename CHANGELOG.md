@@ -1,11 +1,5 @@
 # Roadmap
 
-- [x] Auto-update preview window while typing
-- [x] Sync scroll position
-- [x] Enter key maintains left whitespace matching previous line
-- [x] Tab and `Shift+Tab` increase/decrease indentation of list items
-- [x] Light bulbs for converting to image/link/codeblock/quote
-- [x] `Ctrl+Space` on a task list item toggles the checked state
 - [ ] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
@@ -21,6 +15,17 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.2
+
+**2016-06-20**
+
+- [x] Auto-update preview window while typing
+- [x] Sync scroll position
+- [x] Enter key maintains left whitespace matching previous line
+- [x] Tab and `Shift+Tab` increase/decrease indentation of list items
+- [x] Light bulbs for converting to image/link/codeblock/quote
+- [x] `Ctrl+Space` on a task list item toggles the checked state
 
 ## 1.1
 
