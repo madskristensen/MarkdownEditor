@@ -112,7 +112,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ContentType\icons.pkgdef">
+    <Content Include="ContentType\MarkdownContentType.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Margin\highlight.css">
