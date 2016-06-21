@@ -134,6 +134,12 @@ namespace MarkdownEditor
 
         public void Dispose()
         {
+            // Make sure timers are stopped
+            _updaterDocument.Stop();
+            _updaterPosition.Stop();
+
+            // TODO: concurrency problem between stopping the DispatchTimer above and the following Browser dispose?
+
             if (_browser != null)
                 _browser.Dispose();
 
