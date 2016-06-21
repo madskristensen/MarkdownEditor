@@ -34,6 +34,8 @@ namespace MarkdownEditor
 
         public static bool Match(string text, out MarkdownDocument doc)
         {
+            // Temp workaround for list items: We trim the beginning of the line to be able to parse nested list items.
+            text = text.TrimStart();
             doc = Markdown.Parse(text, DefaultPipeline);
             return doc.Count != 0 && (doc[0] is QuoteBlock || doc[0] is ListBlock | doc[0] is CodeBlock || doc[0] is FooterBlock);
         }
@@ -48,6 +50,20 @@ namespace MarkdownEditor
             if (!Match(text, out doc))
             {
                 return false;
+            }
+
+            // Temp workaround for list items
+            var preSpaces = string.Empty;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (!char.IsWhiteSpace(text[i]))
+                {
+                    if (i > 0)
+                    {
+                        preSpaces = text.Substring(0, i);
+                    }
+                    break;
+                }
             }
 
             // Get the last container and last child
@@ -72,9 +88,9 @@ namespace MarkdownEditor
             if (lastChild == null || ((lastChild as ParagraphBlock)?.Inline?.LastChild is TaskList))
             {
                 // We rebuild the new line up to the last parent container
-                var newLine = lastContainer == firstChild
+                var newLine = preSpaces + (lastContainer == firstChild
                                   ? string.Empty
-                                  : BuildNewLine(firstChild, lastContainer.Parent);
+                                  : BuildNewLine(firstChild, lastContainer.Parent));
 
                 using (var edit = _view.TextBuffer.CreateEdit())
                 {
@@ -85,7 +101,7 @@ namespace MarkdownEditor
             }
             else
             {
-                var newLine = BuildNewLine(firstChild, lastChild);
+                var newLine = preSpaces + BuildNewLine(firstChild, lastChild);
                 var position = _view.Caret.Position.BufferPosition;
 
                 // Make 2 separate edits so the auto-insertion of list items can be undone (ctrl-z)
