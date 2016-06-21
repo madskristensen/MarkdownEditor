@@ -116,17 +116,8 @@ namespace MarkdownEditor
         {
             if (_htmlDocument != null && _currentDocument  != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
             {
-                try
-                {
-                    _currentViewLine = _currentDocument.FindClosestLine(line);
-                    SyncNavigation();
-                }
-                catch (Exception ex)
-                {
-                    // FindClosestLine throws an ArgumentOutOfRangeException some times
-                    // TODO: Fix in Markdig
-                    Logger.Log(ex);
-                }
+                _currentViewLine = _currentDocument.FindClosestLine(line);
+                SyncNavigation();
             }
         }
 
