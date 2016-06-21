@@ -70,7 +70,7 @@ namespace MarkdownEditor
             var markdown = selection.Text;
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-            var html = Markdown.ToHtml(markdown, pipeline);
+            var html = Markdown.ToHtml(markdown, pipeline).Replace("\n", Environment.NewLine);
 
             Clipboard.SetText(html);
 
