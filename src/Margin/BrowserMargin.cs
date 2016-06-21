@@ -84,8 +84,7 @@ namespace MarkdownEditor
         {
             await Dispatcher.BeginInvoke(new Action(() =>
             {
-                var markdown = _document.TextBuffer.CurrentSnapshot.GetText();
-                _browser.UpdateBrowser(markdown);
+                _browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
 
             }), DispatcherPriority.ApplicationIdle, null);
         }

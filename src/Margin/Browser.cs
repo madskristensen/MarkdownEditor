@@ -9,6 +9,8 @@ using Markdig;
 using Markdig.Renderers;
 using Markdig.Syntax;
 using mshtml;
+using MarkdownEditor.Parsing;
+using Microsoft.VisualStudio.Text;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using WebBrowser = System.Windows.Controls.WebBrowser;
 
@@ -18,14 +20,13 @@ namespace MarkdownEditor
     {
         private string _file;
         private HTMLDocument _htmlDocument;
-        private MarkdownPipeline _pipeline;
         private string _htmlTemplate;
         private int _zoomFactor;
         private double _cachedPosition = 0,
                        _cachedHeight = 0,
                        _positionPercentage = 0;
 
-        private List<Block> _markdownBlocks;
+        private MarkdownDocument _currentDocument;
         private int _currentViewLine;
 
         [ThreadStatic]
@@ -33,11 +34,6 @@ namespace MarkdownEditor
 
         public Browser(string file)
         {
-            var builder = new MarkdownPipelineBuilder()
-                .UsePragmaLines()
-                .UseAdvancedExtensions();
-
-            _pipeline = builder.Build();
             _zoomFactor = GetZoomFactor();
             _file = file;
             _htmlTemplate = GetHtmlTemplate();
@@ -116,50 +112,11 @@ namespace MarkdownEditor
             }
         }
 
-        private int FindClosestLine(int line)
-        {
-            // Forces the preview window to scroll to the top of the document
-            if (line <= 3)
-                return 1;
-
-            var elements = _markdownBlocks;
-            var lowerIndex = 0;
-            var upperIndex = elements.Count - 1;
-
-            // binary search on lines
-            while (lowerIndex <= upperIndex)
-            {
-                int midIndex = (upperIndex - lowerIndex) / 2 + lowerIndex;
-                int comparison = elements[midIndex].Line.CompareTo(line);
-                if (comparison == 0)
-                {
-                    return line;
-                }
-                if (comparison < 0)
-                    lowerIndex = midIndex + 1;
-                else
-                    upperIndex = midIndex - 1;
-            }
-
-            // If we are between two lines, try to find the best spot
-            if (lowerIndex >= 0 && lowerIndex < elements.Count)
-            {
-                // we calculate the position of the current line relative to the line found and previous line
-                var previousLineIndex = lowerIndex > 0 ? elements[lowerIndex - 1].Line : 0;
-                var nextLineIndex = elements[lowerIndex].Line;
-                var middle = (line - previousLineIndex) * 1.0 / (nextLineIndex - previousLineIndex);
-                // If  relative position < 0.5, we select the previous line, otherwise we select the line found
-                return middle < 0.5 ? previousLineIndex : nextLineIndex;
-            }
-
-            return 0;
-        }
-
         public void UpdatePosition(int line)
         {
-            if (_htmlDocument != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            if (_htmlDocument != null && _currentDocument  != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
             {
-                _currentViewLine = FindClosestLine(line);
+                _currentViewLine = _currentDocument.FindClosestLine(line);
                 SyncNavigation();
             }
         }
@@ -191,30 +148,22 @@ namespace MarkdownEditor
             }
         }
 
-        public void UpdateBrowser(string markdown)
+        public void UpdateBrowser(ITextSnapshot snapshot)
         {
             // Generate the HTML document
             string html = null;
             StringWriter htmlWriter = null;
             try
             {
-                var doc = Markdown.Parse(markdown, _pipeline);
+                _currentDocument = snapshot.ParseToMarkdown();
 
                 htmlWriter = htmlWriterStatic ?? (htmlWriterStatic = new StringWriter());
                 htmlWriter.GetStringBuilder().Clear();
                 var htmlRenderer = new HtmlRenderer(htmlWriter);
-                _pipeline.Setup(htmlRenderer);
-                htmlRenderer.Render(doc);
+                MarkdownFactory.Pipeline.Setup(htmlRenderer);
+                htmlRenderer.Render(_currentDocument);
                 htmlWriter.Flush();
                 html = htmlWriter.ToString();
-
-                // TODO: use a pool for List<Block>
-                // Collect all blocks for sync navigation
-                var blocks = new List<Block>();
-                // This is used by live sync navigation, but we always generate them so that
-                // we can enable/disable the sync navigation and it will work correctly
-                DumpBlocks(doc, blocks);
-                _markdownBlocks = blocks;
             }
             catch (Exception ex)
             {
@@ -245,19 +194,6 @@ namespace MarkdownEditor
             }
 
             SyncNavigation();
-        }
-
-        private void DumpBlocks(Block block, List<Block> blocks)
-        {
-            blocks.Add(block);
-            var container = block as ContainerBlock;
-            if (container != null)
-            {
-                foreach (var subBlock in container)
-                {
-                    DumpBlocks(subBlock, blocks);
-                }
-            }
         }
 
         private static string GetFolder()
@@ -323,7 +259,6 @@ namespace MarkdownEditor
                 Control.Dispose();
 
             _htmlDocument = null;
-            _pipeline = null;
         }
     }
 }

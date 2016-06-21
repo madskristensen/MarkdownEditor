@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Markdig;
 using Markdig.Extensions.Footers;
 using Markdig.Extensions.TaskLists;
 using Markdig.Syntax;
+using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
@@ -45,52 +47,45 @@ namespace MarkdownEditor
             var extend = _view.Caret.ContainingTextViewLine.Extent;
             var text = extend.GetText();
 
-            MarkdownDocument doc;
-
-            if (!Match(text, out doc))
+            if (!Match(text))
             {
                 return false;
             }
 
-            // Temp workaround for list items
-            var preSpaces = string.Empty;
-            for (int i = 0; i < text.Length; i++)
+            // Parse only until the end of the line after the caret
+            // Because most of the time, a user would have typed characters before typing return
+            // it is not efficient to re-use cached MarkdownDocument from Markdownfactory, as it may be invalid,
+            // and then after the hit return, the browser would have to be updated with a new snapshot
+            var snapshot = _view.TextBuffer.CurrentSnapshot;
+            var textFromTop = snapshot.GetText(0, _view.Caret.ContainingTextViewLine.Extent.Span.End);
+            var doc = Markdown.Parse(textFromTop, MarkdownFactory.Pipeline);
+            var caretPosition = _view.Caret.Position.BufferPosition.Position;
+            var lastChild = doc.FindBlockAtPosition(caretPosition);
+            if (lastChild == null || !lastChild.ContainsPosition(caretPosition))
             {
-                if (!char.IsWhiteSpace(text[i]))
-                {
-                    if (i > 0)
-                    {
-                        preSpaces = text.Substring(0, i);
-                    }
-                    break;
-                }
+                return false;
             }
 
-            // Get the last container and last child
-            ContainerBlock lastContainer = doc;
-            Block firstChild = doc[0];
-            var lastChild = firstChild;
-            while (lastChild != null)
+            // Re-build list of blocks
+            var blocks = new List<Block>();
+            var block = lastChild;
+            while (block != null)
             {
-                var container = lastChild as ContainerBlock;
-                if (container != null)
+                // We don't add ListBlock (as they should have list items)
+                if (block != doc && !(block is ListBlock))
                 {
-                    lastContainer = container;
-                    lastChild = container.LastChild;
+                    blocks.Add(block);
                 }
-                else
-                {
-                    break;
-                }
+                block = block.Parent;
             }
+            blocks.Reverse();
 
             // If last child is null or with have just a task list, we have an empty line, so we can remove it
-            if (lastChild == null || ((lastChild as ParagraphBlock)?.Inline?.LastChild is TaskList))
+            if (!(lastChild is ParagraphBlock) || ((lastChild as ParagraphBlock)?.Inline?.LastChild is TaskList))
             {
                 // We rebuild the new line up to the last parent container
-                var newLine = preSpaces + (lastContainer == firstChild
-                                  ? string.Empty
-                                  : BuildNewLine(firstChild, lastContainer.Parent));
+                blocks.RemoveAt(blocks.Count - 1);
+                var newLine = blocks.Count == 0 ? string.Empty : BuildNewLine(blocks);
 
                 using (var edit = _view.TextBuffer.CreateEdit())
                 {
@@ -101,38 +96,38 @@ namespace MarkdownEditor
             }
             else
             {
-                var newLine = preSpaces + BuildNewLine(firstChild, lastChild);
-                var position = _view.Caret.Position.BufferPosition;
+                var newLine = BuildNewLine(blocks);
 
                 // Make 2 separate edits so the auto-insertion of list items can be undone (ctrl-z)
-                _view.TextBuffer.Insert(position, Environment.NewLine);
-                _view.TextBuffer.Insert(position + Environment.NewLine.Length, newLine);
+                _view.TextBuffer.Insert(caretPosition, Environment.NewLine);
+                _view.TextBuffer.Insert(caretPosition + Environment.NewLine.Length, newLine);
 
             }
             return true;
         }
 
-        private string BuildNewLine(Block firstChild, Block lastChild)
+        private string BuildNewLine(List<Block> blocks)
         {
             var builder = new StringBuilder();
 
-            var child = firstChild;
             var column = 0;
 
             // Special when there is a list but the last container is not a list
             // in this case, we will skip the list and keep other containers
             // when rebuilding the new line
-            var lastContainer = lastChild as ContainerBlock ?? lastChild.Parent;
-            bool skipList = !(lastContainer is ListItemBlock);
+            var lastChild = blocks[blocks.Count - 1];
+            var lastListItemIndex = blocks.FindLastIndex(block => block is ListItemBlock);
+            var emitLastListItem = lastListItemIndex == blocks.Count - 1 || (lastChild is ParagraphBlock && lastListItemIndex == blocks.Count - 2);
 
-            while (child != null)
+            for (int i = 0; i < blocks.Count; i++)
             {
+                var child = blocks[i];
                 for (; column < child.Column; column++)
                 {
                     builder.Append(' ');
                 }
 
-                if (!skipList && child is ListItemBlock)
+                if (emitLastListItem && i == lastListItemIndex)
                 {
                     var listItem = (ListItemBlock) child;
                     var list = (ListBlock) listItem.Parent;
@@ -140,17 +135,19 @@ namespace MarkdownEditor
                     var startLength = builder.Length;
                     if (list.IsOrdered)
                     {
+                        var offset = list.IndexOf(listItem);
                         var c = list.OrderedStart[0];
                         if (c >= '0' && c <= '9')
                         {
                             int value;
                             int.TryParse(list.OrderedStart, out value);
+                            value += offset;
                             value++;
                             builder.Append(value);
                         }
                         else if (c >= 'a' && c <= 'z')
                         {
-                            c = (char)(c + 1);
+                            c = (char) (c + offset + 1);
                             c = c > 'z' ? 'z' : c;
                             builder.Append(c);
                         }
@@ -175,13 +172,13 @@ namespace MarkdownEditor
                 }
                 else if (child is QuoteBlock)
                 {
-                    var quoteBlock = (QuoteBlock)child;
+                    var quoteBlock = (QuoteBlock) child;
                     builder.Append(quoteBlock.QuoteChar);
                     column++;
                 }
                 else if (child is ParagraphBlock)
                 {
-                    var paragraph = (ParagraphBlock)child;
+                    var paragraph = (ParagraphBlock) child;
                     if (paragraph.Inline?.FirstChild is TaskList)
                     {
                         builder.Append("[ ] ");
@@ -190,25 +187,10 @@ namespace MarkdownEditor
                 }
                 else if (child is FooterBlock)
                 {
-                    var footerBlock = (FooterBlock)child;
+                    var footerBlock = (FooterBlock) child;
                     builder.Append(footerBlock.OpeningCharacter);
                     builder.Append(footerBlock.OpeningCharacter);
                     column += 2;
-                }
-
-                if (child == lastChild)
-                {
-                    break;
-                }
-
-                var container = child as ContainerBlock;
-                if (container != null)
-                {
-                    child = container.LastChild;
-                }
-                else
-                {
-                    break;
                 }
             }
             return builder.ToString();
