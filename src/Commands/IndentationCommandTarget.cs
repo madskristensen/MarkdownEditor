@@ -21,7 +21,7 @@ namespace MarkdownEditor
 
             var text = _view.Caret.ContainingTextViewLine.Extent.GetText();
 
-            if (!SmartIndentCommandTarget._regex.IsMatch(text))
+            if (!SmartIndentCommandTarget.Match(text))
                 return false;
 
             var position = extend.Start.Position;

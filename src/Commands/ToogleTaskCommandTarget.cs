@@ -57,7 +57,7 @@ namespace MarkdownEditor
 
             var text = _span.GetText();
 
-            return SmartIndentCommandTarget._regex.IsMatch(text);
+            return SmartIndentCommandTarget.Match(text);
         }
     }
 }
