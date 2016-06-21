@@ -17,7 +17,6 @@ namespace MarkdownEditor
 
         /// <summary>
         /// The number of seconds to wait before updating the position/document
-        /// TODO: We may want this to be configurable in the settings
         /// </summary>
         private const double RefreshAfterSeconds = 0.5;
 

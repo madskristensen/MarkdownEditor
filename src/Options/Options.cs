@@ -43,7 +43,7 @@ namespace MarkdownEditor
 
         [Category("Preview Window")]
         [DisplayName("Show below the document")]
-        [Description("Determines if the preview window should be located below the document or to the right. Reopen the markdown document to take effect.")]
+        [Description("Determines if the preview window should be located below the document or to the right. Reopen markdown document required.")]
         [DefaultValue(false)]
         public bool ShowPreviewWindowBelow { get; set; }
 
