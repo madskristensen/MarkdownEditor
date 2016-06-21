@@ -83,15 +83,19 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 
 **Ctrl+I** makes the selected text italic by wrapping it with `_`.
 
-**Ctrl+Space** checks and uncheks task list items
+**Ctrl+Space** checks and uncheks task list items.
 
-**Tab** increases indentation of list items
+```markdown
+- [x] task list item
+```
 
-**Shift+Tab** decreases indentation of list items
+**Tab** increases indentation of list items.
 
-**Ctrl+K,C** wraps the selection with HTML comments
+**Shift+Tab** decreases indentation of list items.
 
-**Ctrl+K,U** removes HTML comments surrounding the selection/caret
+**Ctrl+K,C** wraps the selection with HTML comments.
+
+**Ctrl+K,U** removes HTML comments surrounding the selection/caret.
 
 ### Light Bulbs
 The suggested actions shown in light bulbs makes it easier to
