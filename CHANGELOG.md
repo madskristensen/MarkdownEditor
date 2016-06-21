@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Button in editor to _Copy as HTML_
+- [x] Button in editor to _Copy as HTML_
 - [ ] Support for custom stylesheets
 - [ ] Option to load preview window beneath editor
 - [ ] Generate .html files nested under the markdown file
@@ -38,6 +38,7 @@ on the official Visual Studio extension gallery.
 - [x] `CTRL+B` makes text bold
 - [x] `CTRL+I` makes text italic
 - [x] Open remote links in default browser
+
 
 ## 1.0
 

@@ -71,6 +71,7 @@
     <Compile Include="Classifier\MarkdownClassifier.cs" />
     <Compile Include="Classifier\MarkdownClassificationTypes.cs" />
     <Compile Include="Classifier\MarkdownClassifierProvider.cs" />
+    <Compile Include="Commands\CopyAsHtmlCommand.cs" />
     <Compile Include="DragDrop\MarkdownDropHandler.cs" />
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
     <Compile Include="Helpers\Extensions.cs" />
@@ -80,6 +81,11 @@
     <Compile Include="Margin\BrowserMargin.cs" />
     <Compile Include="Margin\BrowserMarginProvider.cs" />
     <Compile Include="MarkdownEditorPackage.cs" />
+    <Compile Include="MarkdownEditorPackage1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MarkdownEditorPackage.vsct</DependentUpon>
+    </Compile>
     <Compile Include="Options\Options.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -121,6 +127,11 @@
     <Content Include="Margin\prism.js">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <VSCTCompile Include="MarkdownEditorPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>MarkdownEditorPackage1.cs</LastGenOutput>
+    </VSCTCompile>
     <Content Include="Resources\Icon.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

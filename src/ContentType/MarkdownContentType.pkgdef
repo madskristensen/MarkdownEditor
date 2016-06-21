@@ -1,11 +1,3 @@
-[$RootKey$\Editors\{8B382828-6202-11d1-8870-0000F87579D2}\Extensions]
-"markdown"=dword:2a
-"md"=dword:2a
-"mdown"=dword:2a
-"mkd"=dword:2a
-"mkdn"=dword:2a
-"mmd"=dword:2a
-
 [$RootKey$\ShellFileAssociations\.md]
 "DefaultIconMoniker"="KnownMonikers.MarkdownFile"
 

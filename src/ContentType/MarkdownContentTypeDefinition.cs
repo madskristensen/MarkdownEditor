@@ -31,5 +31,20 @@ namespace MarkdownEditor
         [ContentType(MarkdownContentType)]
         [FileExtension(".mdwn")]
         public FileExtensionToContentTypeDefinition NodemonFileExtension { get; set; }
+
+        [Export(typeof(FileExtensionToContentTypeDefinition))]
+        [ContentType(MarkdownContentType)]
+        [FileExtension(".mmd")]
+        public FileExtensionToContentTypeDefinition MmdFileExtension { get; set; }
+
+        [Export(typeof(FileExtensionToContentTypeDefinition))]
+        [ContentType(MarkdownContentType)]
+        [FileExtension(".mkdn")]
+        public FileExtensionToContentTypeDefinition MkdnFileExtension { get; set; }
+
+        [Export(typeof(FileExtensionToContentTypeDefinition))]
+        [ContentType(MarkdownContentType)]
+        [FileExtension(".mkd")]
+        public FileExtensionToContentTypeDefinition MkdFileExtension { get; set; }
     }
 }
