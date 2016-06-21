@@ -68,7 +68,8 @@ namespace MarkdownEditor
                 }
             }
 
-            if (lastChild == null)
+            // If last child is null or with have just a task list, we have an empty line, so we can remove it
+            if (lastChild == null || ((lastChild as ParagraphBlock)?.Inline?.LastChild is TaskList))
             {
                 // We rebuild the new line up to the last parent container
                 var newLine = lastContainer == firstChild
