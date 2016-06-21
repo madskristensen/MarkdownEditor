@@ -43,13 +43,17 @@ it opens.
 
 ![Preview window](art/preview-window.png)
 
-Every time the markdown document is saved, the preview window will
-update and maintain the scroll position.
+Every time the markdown document is modified, the preview window
+will update.
 
 Any code blocks recieves full syntax highligting in the preview
 window. Here's an example of JavaScript code rendered.
 
 ![Code Colorizing](art/code-colorizing.png)
+
+The preview window is automatically scrolled to match the scroll
+position of the document. As the document is scrolled up and down,
+the preview window will follow.
 
 Live preview can be disabled in the [settings](#settings).
 
