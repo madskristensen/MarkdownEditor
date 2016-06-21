@@ -7,11 +7,11 @@ or get the [CI build](http://vsixgallery.com/extension/9ca64947-e9ca-4543-bfb8-6
 
 ---------------------------------------
 
-A full featured Markdown editor with live preview and syntax highligting. 
+A full featured Markdown editor with live preview and syntax highligting.
 Supports GitHub flavored Markdown.
 
 See the [changelog](CHANGELOG.md) for changes and roadmap.
-http://google.com
+
 ## Features
 
 - Powered by [Markdig](https://github.com/lunet-io/markdig) - the best markdown parser
@@ -22,6 +22,7 @@ http://google.com
 - Paste image from clipboard directly onto document
 - Outlining/folding of code blocks
 - Keyboard shortcuts
+- Light Bulbs
 - Brace completion with type-through
 - Lightning fast
 
@@ -38,7 +39,7 @@ more.
 
 #### Live Preview Window
 The preview window opens up on the right side of the document when
-it opens. 
+it opens.
 
 ![Preview window](art/preview-window.png)
 
@@ -78,21 +79,30 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 ![Outlining Collapsed](art/outlining-collapsed.png)
 
 ### Keyboard shortcuts
-Hotkeys are available for making text bold and italic. Select the
-text and hit **Ctrl+B** for bold and **Ctrl+I** for italic.
+**Ctrl+B** makes the selected text bold by wrapping it with `**`.
 
-Bold will surround the selected text with `**` and italic surrounds
-with `_`.
+**Ctrl+I** makes the selected text italic by wrapping it with `_`.
 
-Comments can be inserted by hitting **Ctrl+K,C** and you can remove
-comments by hitting **Ctrl+K,U**.
+**Ctrl+Space** checks and uncheks task list items
 
-Hitting **Tab** while on a list item will increase its indentation
-and **Ctrl+Tab** will decrease it.
+**Tab** increases indentation of list items
 
-This feature overrides build in commands such as
-_Incremental Search_ so they hotkeys can be disabled in the
-[settings](#settings).
+**Shift+Tab** decreases indentation of list items
+
+**Ctrl+K,C** wraps the selection with HTML comments
+
+**Ctrl+K,U** removes HTML comments surrounding the selection/caret
+
+### Light Bulbs
+The suggested actions shown in light bulbs makes it easier to
+perform common tasks.
+
+![Light bulbs](art/light-bulbs.png)
+
+For instance, converting the selected text to a link will result
+in this:
+
+![Light bulbs image](art/light-bulb-image.png)
 
 ### Brace completion with type-through
 This makes typing faster. Whenever you type opening braces,
