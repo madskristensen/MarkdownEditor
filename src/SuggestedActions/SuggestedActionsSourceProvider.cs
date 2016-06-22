@@ -9,7 +9,7 @@ namespace MarkdownEditor
 {
     [Export(typeof(ISuggestedActionsSourceProvider))]
     [Name("Markdown Suggested Actions")]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     class SuggestedActionsSourceProvider : ISuggestedActionsSourceProvider
     {
         [Import]

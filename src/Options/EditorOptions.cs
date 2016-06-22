@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace MarkdownEditor
 {
     [Export(typeof(IVsTextViewCreationListener))]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     [TextViewRole(PredefinedTextViewRoles.Document)]
     public class EditorOptions : IVsTextViewCreationListener
     {

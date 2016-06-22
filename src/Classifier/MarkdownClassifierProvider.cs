@@ -10,7 +10,7 @@ namespace MarkdownEditor
     [Export(typeof(IClassifierProvider))]
     [Export(typeof(ITaggerProvider))]
     [TagType(typeof(IOutliningRegionTag))]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     internal class MarkdownClassifierProvider : IClassifierProvider, ITaggerProvider
     {
         [Import]

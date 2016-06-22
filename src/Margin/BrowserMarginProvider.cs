@@ -11,7 +11,7 @@ namespace MarkdownEditor
     [Name("MarginRightFactory")]
     [Order(After = PredefinedMarginNames.RightControl)]
     [MarginContainer(PredefinedMarginNames.Right)]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     [TextViewRole(PredefinedTextViewRoles.Debuggable)] // This is to prevent the margin from loading in the diff view
     public class BrowserMarginRightProvider : IWpfTextViewMarginProvider
     {
@@ -36,7 +36,7 @@ namespace MarkdownEditor
     [Name("MarginBottomFactory")]
     [Order(After = PredefinedMarginNames.BottomControl)]
     [MarginContainer(PredefinedMarginNames.Bottom)]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     [TextViewRole(PredefinedTextViewRoles.Debuggable)] // This is to prevent the margin from loading in the diff view
     public class BrowserMarginBottomProvider : IWpfTextViewMarginProvider
     {

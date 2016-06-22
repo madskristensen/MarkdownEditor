@@ -13,7 +13,7 @@ using System.Windows.Threading;
 namespace MarkdownEditor
 {
     [Export(typeof(IWpfTextViewCreationListener))]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class HtmlProvisionalTextHighlightFactory : IWpfTextViewCreationListener
     {

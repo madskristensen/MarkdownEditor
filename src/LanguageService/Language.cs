@@ -7,6 +7,7 @@ namespace MarkdownEditor
     [Guid("ecf70314-91e6-490d-8ea3-45e82b2d28e9")]
     public class MarkdownLanguage : LanguageService
     {
+        public const string LanguageName = "Markdown";
         private LanguagePreferences preferences = null;
 
         public override LanguagePreferences GetLanguagePreferences()
@@ -42,6 +43,7 @@ namespace MarkdownEditor
             return preferences;
         }
 
+
         public override IScanner GetScanner(IVsTextLines buffer)
         {
             return null;
@@ -57,7 +59,7 @@ namespace MarkdownEditor
             return "Markdown File (*.markdown, *.md, *.mdown, *.mdwn, *.mkd, *.mkdn, *.mmd)|*.markdown;*.md;*.mdown;*.mdwn;*.mdwn;*.mkd;*.mkdn;*.mmd";
         }
 
-        public override string Name => MarkdownContentTypeDefinition.MarkdownContentType;
+        public override string Name => LanguageName;
 
         public override void Dispose()
         {

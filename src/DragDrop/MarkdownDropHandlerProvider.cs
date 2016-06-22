@@ -10,7 +10,7 @@ namespace MarkdownEditor
     [DropFormat("CF_VSSTGPROJECTITEMS")]
     [DropFormat("FileDrop")]
     [Name("IgnoreDropHandler")]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     [Order(Before = "DefaultFileDropHandler")]
     internal class MarkdownDropHandlerProvider : IDropHandlerProvider
     {

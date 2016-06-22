@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace MarkdownEditor
 {
     [Export(typeof(IIntellisenseControllerProvider))]
-    [ContentType(MarkdownContentTypeDefinition.MarkdownContentType)]
+    [ContentType(MarkdownLanguage.LanguageName)]
     [Name("Markdown TypeThrough Completion Controller")]
     [Order(Before = "Default Completion Controller")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]

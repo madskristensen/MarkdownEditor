@@ -68,7 +68,6 @@
     <Compile Include="Commands\CommentCommandTarget.cs" />
     <Compile Include="Commands\PasteImageCommandTarget.cs" />
     <Compile Include="Commands\CommandRegistration.cs" />
-    <Compile Include="ContentType\MarkdownContentTypeDefinition.cs" />
     <Compile Include="Classifier\MarkdownClassifier.cs" />
     <Compile Include="Classifier\MarkdownClassificationTypes.cs" />
     <Compile Include="Classifier\MarkdownClassifierProvider.cs" />
@@ -121,7 +120,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ContentType\MarkdownContentType.pkgdef">
+    <Content Include="LanguageService\Icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Margin\highlight.css">
