@@ -2,11 +2,12 @@
 
 - [x] Button in editor to _Copy as HTML_
 - [x] Option to load preview window below editor
+- [x] Convert to LanguageService implementations
 - [ ] Support for custom stylesheets
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
 - [ ] Intellisense for local image and link paths
-- [ ] Format document/selection
+- [ ] Format document/selection (#12)
 
 Features that have a checkmark are complete and available for
 download in the
