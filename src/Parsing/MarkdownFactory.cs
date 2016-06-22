@@ -45,7 +45,7 @@ namespace MarkdownEditor.Parsing
             // Temp workaround for list items: We trim the beginning of the line to be able to parse nested list items.
             text = text.TrimStart();
             doc = Markdown.Parse(text, Pipeline);
-            return doc.Count != 0 && (doc[0] is QuoteBlock || doc[0] is ListBlock | doc[0] is CodeBlock || doc[0] is FooterBlock);
+            return doc.Count != 0 && (doc[0] is QuoteBlock || doc[0] is ListBlock || (doc[0] is CodeBlock && !(doc[0] is FencedCodeBlock)) || doc[0] is FooterBlock);
         }
 
         public static bool TryParsePendingSmartBlock(this ITextView view, out List<Block> blocks, out MarkdownDocument doc)
