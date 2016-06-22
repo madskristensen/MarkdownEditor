@@ -6,6 +6,7 @@
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
 - [ ] Intellisense for local image and link paths
+- [ ] Format document/selection
 
 Features that have a checkmark are complete and available for
 download in the
@@ -15,6 +16,13 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.3
+
+**2016-06-XX**
+
+- [x] Smart completion of lists, task lists and blockquotes
+- [ ] Smoother sync scroll with no-delay
 
 ## 1.2
 
