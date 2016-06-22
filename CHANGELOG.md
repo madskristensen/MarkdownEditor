@@ -22,7 +22,8 @@ on the official Visual Studio extension gallery.
 **2016-06-XX**
 
 - [x] Smart completion of lists, task lists and blockquotes
-- [ ] Smoother sync scroll with no-delay
+- [x] Smoother sync scroll with no-delay
+- [x] Smart tab taking into account list indentation
 
 ## 1.2
 

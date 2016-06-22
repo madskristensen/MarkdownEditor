@@ -1,4 +1,5 @@
 ﻿using System;
+using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -57,7 +58,7 @@ namespace MarkdownEditor
 
             var text = _span.GetText();
 
-            return SmartIndentCommandTarget.Match(text);
+            return MarkdownFactory.MatchSmartBlock(text);
         }
     }
 }

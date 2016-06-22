@@ -28,57 +28,18 @@ namespace MarkdownEditor
         {
         }
 
-        public static bool Match(string text)
-        {
-            MarkdownDocument doc;
-            return Match(text, out doc);
-        }
-
-        public static bool Match(string text, out MarkdownDocument doc)
-        {
-            // Temp workaround for list items: We trim the beginning of the line to be able to parse nested list items.
-            text = text.TrimStart();
-            doc = Markdown.Parse(text, DefaultPipeline);
-            return doc.Count != 0 && (doc[0] is QuoteBlock || doc[0] is ListBlock | doc[0] is CodeBlock || doc[0] is FooterBlock);
-        }
-
         protected override bool Execute(VSConstants.VSStd2KCmdID commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             var extend = _view.Caret.ContainingTextViewLine.Extent;
-            var text = extend.GetText();
 
-            if (!Match(text))
+            List<Block> blocks;
+            MarkdownDocument doc;
+            if (!_view.TryParsePendingSmartBlock(out blocks, out doc))
             {
                 return false;
             }
 
-            // Parse only until the end of the line after the caret
-            // Because most of the time, a user would have typed characters before typing return
-            // it is not efficient to re-use cached MarkdownDocument from Markdownfactory, as it may be invalid,
-            // and then after the hit return, the browser would have to be updated with a new snapshot
-            var snapshot = _view.TextBuffer.CurrentSnapshot;
-            var textFromTop = snapshot.GetText(0, _view.Caret.ContainingTextViewLine.Extent.Span.End);
-            var doc = Markdown.Parse(textFromTop, MarkdownFactory.Pipeline);
-            var caretPosition = _view.Caret.Position.BufferPosition.Position;
-            var lastChild = doc.FindBlockAtPosition(caretPosition);
-            if (lastChild == null || !lastChild.ContainsPosition(caretPosition))
-            {
-                return false;
-            }
-
-            // Re-build list of blocks
-            var blocks = new List<Block>();
-            var block = lastChild;
-            while (block != null)
-            {
-                // We don't add ListBlock (as they should have list items)
-                if (block != doc && !(block is ListBlock))
-                {
-                    blocks.Add(block);
-                }
-                block = block.Parent;
-            }
-            blocks.Reverse();
+            var lastChild = blocks[blocks.Count - 1];
 
             // If last child is null or with have just a task list, we have an empty line, so we can remove it
             if (!(lastChild is ParagraphBlock) || ((lastChild as ParagraphBlock)?.Inline?.LastChild is TaskList))
@@ -97,6 +58,8 @@ namespace MarkdownEditor
             else
             {
                 var newLine = BuildNewLine(blocks);
+
+                var caretPosition = _view.Caret.Position.BufferPosition.Position;
 
                 // Make 2 separate edits so the auto-insertion of list items can be undone (ctrl-z)
                 _view.TextBuffer.Insert(caretPosition, Environment.NewLine);
