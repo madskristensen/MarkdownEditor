@@ -11,7 +11,7 @@ namespace MarkdownEditor
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [ProvideService(typeof(MarkdownLanguage), ServiceName = MarkdownLanguage.LanguageName)]
-    [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownLanguage.LanguageName, 100, DefaultToInsertSpaces = true, EnableCommenting = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true, AutoOutlining = true)]
+    [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownLanguage.LanguageName, 100, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true)]
     [ProvideLanguageEditorOptionPage(typeof(Options), MarkdownLanguage.LanguageName, null, "Advanced", "#101", new[] { "markdown", "md" })]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".markdown")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".md")]

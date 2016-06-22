@@ -64,8 +64,6 @@
     <Compile Include="Commands\IndentationCommandTarget.cs" />
     <Compile Include="Commands\ToogleTaskCommandTarget.cs" />
     <Compile Include="Commands\SmartIndentCommandTarget.cs" />
-    <Compile Include="Commands\UncommentCommandTarget.cs" />
-    <Compile Include="Commands\CommentCommandTarget.cs" />
     <Compile Include="Commands\PasteImageCommandTarget.cs" />
     <Compile Include="Commands\CommandRegistration.cs" />
     <Compile Include="Classifier\MarkdownClassifier.cs" />
@@ -77,7 +75,9 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\ProjectHelpers.cs" />
-    <Compile Include="LanguageService\Language.cs" />
+    <Compile Include="LanguageService\MarkdownColorizer.cs" />
+    <Compile Include="LanguageService\MarkdownLanguage.cs" />
+    <Compile Include="LanguageService\MarkdownSource.cs" />
     <Compile Include="Margin\Browser.cs" />
     <Compile Include="Margin\BrowserMargin.cs" />
     <Compile Include="Margin\BrowserMarginProvider.cs" />

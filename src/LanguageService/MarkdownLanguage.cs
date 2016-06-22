@@ -10,6 +10,11 @@ namespace MarkdownEditor
         public const string LanguageName = "Markdown";
         private LanguagePreferences preferences = null;
 
+        public override Source CreateSource(IVsTextLines buffer)
+        {
+            return new MarkdownSource(this, buffer, new MarkdownColorizer(this, buffer, null));
+        }
+
         public override LanguagePreferences GetLanguagePreferences()
         {
             if (preferences == null)
