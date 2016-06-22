@@ -16,18 +16,24 @@ namespace MarkdownEditor
         private readonly ITextView _textView;
 
         /// <summary>
-        /// The number of seconds to wait before updating the position/document
+        /// The number of seconds to wait before updating the preview after an edit
         /// </summary>
-        private const double RefreshAfterSeconds = 0.5;
+        private const double RefreshAfterEditInSeconds = 0.5; // TODO: Make this configurable in the options?
+
+        /// <summary>
+        /// The number of seconds to wait before updating the preview after a change in position
+        /// </summary>
+        private const double RefreshAfterNewPositionInSeconds = 0.1; // TODO: Make this configurable in the options?
+
 
         public BrowserMargin(ITextView textview, ITextDocument document)
         {
             _textView = textview;
 
-            _updaterDocument = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
+            _updaterDocument = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterEditInSeconds) };
             _updaterDocument.Tick += UpdaterDocumentOnTick;
 
-            _updaterPosition = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterSeconds) };
+            _updaterPosition = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterNewPositionInSeconds) };
             _updaterPosition.Tick += UpdaterPositionOnTick;
 
             _textView.LayoutChanged += LayoutChanged;
@@ -51,7 +57,8 @@ namespace MarkdownEditor
 
         private void LayoutChanged(object sender, TextViewLayoutChangedEventArgs textViewLayoutChangedEventArgs)
         {
-            _updaterPosition.Stop();
+            // Notifies a position update (but don't cancel the previous update if a new update is coming in between)
+            //_updaterPosition.Stop();
             _updaterPosition.Start();
         }
 
