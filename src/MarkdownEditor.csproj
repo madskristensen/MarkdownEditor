@@ -78,7 +78,6 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\ProjectHelpers.cs" />
-    <Compile Include="LanguageService\EditorFactory.cs" />
     <Compile Include="LanguageService\Language.cs" />
     <Compile Include="Margin\Browser.cs" />
     <Compile Include="Margin\BrowserMargin.cs" />

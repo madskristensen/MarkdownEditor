@@ -18,8 +18,8 @@ namespace MarkdownEditor
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
 
-            textView.Options.SetOptionValue(DefaultOptions.IndentSizeOptionId, 2);
-            textView.Options.SetOptionValue(DefaultOptions.ConvertTabsToSpacesOptionId, true);
+            //textView.Options.SetOptionValue(DefaultOptions.IndentSizeOptionId, 2);
+            //textView.Options.SetOptionValue(DefaultOptions.ConvertTabsToSpacesOptionId, true);
         }
     }
 }

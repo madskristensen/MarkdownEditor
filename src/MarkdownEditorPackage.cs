@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -9,9 +10,9 @@ namespace MarkdownEditor
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
-
     [ProvideService(typeof(MarkdownLanguage), ServiceName = MarkdownContentTypeDefinition.MarkdownContentType)]
     [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownContentTypeDefinition.MarkdownContentType, 100, DefaultToInsertSpaces = true, EnableCommenting = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true, AutoOutlining = true)]
+    [ProvideLanguageEditorOptionPage(typeof(Options), MarkdownContentTypeDefinition.MarkdownContentType, null, "Advanced", "#101", new[] { "markdown", "md" })]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".markdown")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".md")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mdown")]
@@ -19,8 +20,6 @@ namespace MarkdownEditor
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mkd")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mkdn")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mmd")]
-
-    [ProvideOptionPage(typeof(Options), "Text Editor\\Markdown", "Advanced", 101, 111, true, new[] { "markdown", "md" }, ProvidesLocalizedCategoryName = false)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class MarkdownEditorPackage : Package
     {
@@ -29,6 +28,11 @@ namespace MarkdownEditor
         protected override void Initialize()
         {
             Options = (Options)GetDialogPage(typeof(Options));
+
+            var serviceContainer = this as IServiceContainer;
+            var langService = new MarkdownLanguage();
+            langService.SetSite(this);
+            serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
 
             Logger.Initialize(this, Vsix.Name);
             CopyAsHtmlCommand.Initialize(this);

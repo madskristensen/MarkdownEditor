@@ -21,9 +21,9 @@ namespace MarkdownEditor
 
                     preferences.EnableCodeSense = true;
                     preferences.EnableMatchBraces = true;
-                    preferences.EnableCommenting = true;
-                    preferences.EnableShowMatchingBrace = true;
                     preferences.EnableMatchBracesAtCaret = true;
+                    preferences.EnableShowMatchingBrace = true;
+                    preferences.EnableCommenting = true;;
                     preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
                     preferences.LineNumbers = true;
                     preferences.MaxErrorMessages = 100;
@@ -44,12 +44,12 @@ namespace MarkdownEditor
 
         public override IScanner GetScanner(IVsTextLines buffer)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public override AuthoringScope ParseSource(ParseRequest req)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public override string GetFormatFilterList()
