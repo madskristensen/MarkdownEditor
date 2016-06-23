@@ -160,8 +160,8 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Markdig, Version=0.5.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Markdig.0.5.10\lib\net40\Markdig.dll</HintPath>
+    <Reference Include="Markdig, Version=0.5.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.0.5.11\lib\net40\Markdig.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
