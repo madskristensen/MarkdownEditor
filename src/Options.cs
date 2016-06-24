@@ -30,14 +30,14 @@ namespace MarkdownEditor
         public bool EnableSmartIndent { get; set; } = true;
 
         [Category("Preview Window")]
-        [DisplayName("Enabled")]
+        [DisplayName("Enable Preview Window")]
         [Description("Determines if the preview window should be shown")]
         [DefaultValue(true)]
         public bool EnablePreviewWindow { get; set; } = true;
 
         [Category("Preview Window")]
-        [DisplayName("Sync Navigation")]
-        [Description("Determines if the preview should synchronize while navigating into the document")]
+        [DisplayName("Enable Sync Scrolling")]
+        [Description("Determines if the preview should synchronize while scrolling the document")]
         [DefaultValue(true)]
         public bool EnablePreviewSyncNavigation { get; set; } = true;
 

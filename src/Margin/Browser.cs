@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Markdig;
 using Markdig.Renderers;
 using Markdig.Syntax;
-using mshtml;
 using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio.Text;
+using mshtml;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using WebBrowser = System.Windows.Controls.WebBrowser;
 
@@ -43,6 +41,8 @@ namespace MarkdownEditor
         }
 
         public WebBrowser Control { get; private set; }
+
+        public bool AutoSyncEnabled { get; set; } = MarkdownEditorPackage.Options.EnablePreviewSyncNavigation;
 
         private void InitBrowser()
         {
@@ -114,7 +114,7 @@ namespace MarkdownEditor
 
         public void UpdatePosition(int line)
         {
-            if (_htmlDocument != null && _currentDocument != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            if (_htmlDocument != null && _currentDocument != null && AutoSyncEnabled)
             {
                 _currentViewLine = _currentDocument.FindClosestLine(line);
                 SyncNavigation();
@@ -123,7 +123,7 @@ namespace MarkdownEditor
 
         private void SyncNavigation()
         {
-            if (MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            if (AutoSyncEnabled)
             {
                 if (_currentViewLine == 1)
                 {
@@ -139,7 +139,7 @@ namespace MarkdownEditor
                     }
                 }
             }
-            else
+            else if (_htmlDocument != null)
             {
                 _currentViewLine = -1;
                 _cachedPosition = _htmlDocument.documentElement.getAttribute("scrollTop");

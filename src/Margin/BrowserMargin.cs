@@ -9,7 +9,6 @@ namespace MarkdownEditor
 {
     public class BrowserMargin : DockPanel, IWpfTextViewMargin
     {
-        private readonly Browser _browser;
         private readonly ITextDocument _document;
         private readonly DispatcherTimer _updaterDocument;
         private readonly DispatcherTimer _updaterPosition;
@@ -41,7 +40,7 @@ namespace MarkdownEditor
             _document = document;
             _document.TextBuffer.Changed += TextBufferChanged;
 
-            _browser = new Browser(_document.FilePath);
+            Browser = new Browser(_document.FilePath);
 
             if (MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
                 CreateBottomMarginControls();
@@ -54,6 +53,8 @@ namespace MarkdownEditor
         public bool Enabled => true;
         public double MarginSize => MarkdownEditorPackage.Options.PreviewWindowWidth;
         public FrameworkElement VisualElement => this;
+        public Browser Browser { get; private set; }
+
 
         private void LayoutChanged(object sender, TextViewLayoutChangedEventArgs textViewLayoutChangedEventArgs)
         {
@@ -85,7 +86,7 @@ namespace MarkdownEditor
             await Dispatcher.BeginInvoke(new Action(() =>
             {
                 var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
-                _browser.UpdatePosition(lineNumber);
+                Browser.UpdatePosition(lineNumber);
 
             }), DispatcherPriority.ApplicationIdle, null);
         }
@@ -94,7 +95,7 @@ namespace MarkdownEditor
         {
             await Dispatcher.BeginInvoke(new Action(() =>
             {
-                _browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
+                Browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
 
             }), DispatcherPriority.ApplicationIdle, null);
         }
@@ -114,11 +115,11 @@ namespace MarkdownEditor
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(width, GridUnitType.Pixel) });
             grid.RowDefinitions.Add(new RowDefinition());
 
-            grid.Children.Add(_browser.Control);
+            grid.Children.Add(Browser.Control);
             Children.Add(grid);
 
-            Grid.SetColumn(_browser.Control, 2);
-            Grid.SetRow(_browser.Control, 0);
+            Grid.SetColumn(Browser.Control, 2);
+            Grid.SetRow(Browser.Control, 0);
 
             GridSplitter splitter = new GridSplitter();
             splitter.Width = 5;
@@ -142,11 +143,11 @@ namespace MarkdownEditor
             grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
             grid.ColumnDefinitions.Add(new ColumnDefinition());
 
-            grid.Children.Add(_browser.Control);
+            grid.Children.Add(Browser.Control);
             Children.Add(grid);
 
-            Grid.SetColumn(_browser.Control, 0);
-            Grid.SetRow(_browser.Control, 2);
+            Grid.SetColumn(Browser.Control, 0);
+            Grid.SetRow(Browser.Control, 2);
 
             GridSplitter splitter = new GridSplitter();
             splitter.Height = 5;
@@ -162,18 +163,18 @@ namespace MarkdownEditor
 
         void RightDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            if (!double.IsNaN(_browser.Control.ActualWidth))
+            if (!double.IsNaN(Browser.Control.ActualWidth))
             {
-                MarkdownEditorPackage.Options.PreviewWindowWidth = _browser.Control.ActualWidth;
+                MarkdownEditorPackage.Options.PreviewWindowWidth = Browser.Control.ActualWidth;
                 MarkdownEditorPackage.Options.SaveSettingsToStorage();
             }
         }
 
         void BottomDragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            if (!double.IsNaN(_browser.Control.ActualHeight))
+            if (!double.IsNaN(Browser.Control.ActualHeight))
             {
-                MarkdownEditorPackage.Options.PreviewWindowHeight = _browser.Control.ActualHeight;
+                MarkdownEditorPackage.Options.PreviewWindowHeight = Browser.Control.ActualHeight;
                 MarkdownEditorPackage.Options.SaveSettingsToStorage();
             }
         }
@@ -186,8 +187,8 @@ namespace MarkdownEditor
 
             // TODO: concurrency problem between stopping the DispatchTimer above and the following Browser dispose?
 
-            if (_browser != null)
-                _browser.Dispose();
+            if (Browser != null)
+                Browser.Dispose();
 
             if (_textView != null)
                 _textView.LayoutChanged -= LayoutChanged;
