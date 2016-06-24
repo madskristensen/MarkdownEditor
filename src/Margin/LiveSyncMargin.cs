@@ -52,7 +52,7 @@ namespace MarkdownEditor
         {
             var moniker = _browser.Browser.AutoSyncEnabled ? KnownMonikers.Play : KnownMonikers.Pause;
             _image.Source = ImageHelper.GetImage(moniker, 11);
-            _text.Text = "Scroll sync is " + (_browser.Browser.AutoSyncEnabled ? "enabled" : "paused");
+            _text.Text = "Scroll sync is " + (_browser.Browser.AutoSyncEnabled ? "active" : "paused");
         }
 
         private void OnClick(object sender, MouseButtonEventArgs e)
