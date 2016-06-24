@@ -56,10 +56,9 @@ namespace MarkdownEditor
 
         private void UpdateControls()
         {
-            _text.Text = "Live Sync is " + (_browser.Browser.AutoSyncEnabled ? "enabled" : "disabled");
-
-            var moniker = _browser.Browser.AutoSyncEnabled ? KnownMonikers.RunUpdate : KnownMonikers.RunPaused;
+            var moniker = _browser.Browser.AutoSyncEnabled ? KnownMonikers.StatusRunning : KnownMonikers.StatusPaused;
             _image.Source = ImageHelper.GetImage(moniker, 12);
+            _text.Text = "Scroll sync is " + (_browser.Browser.AutoSyncEnabled ? "enabled" : "disabled");
         }
 
         private void OnClick(object sender, MouseButtonEventArgs e)
