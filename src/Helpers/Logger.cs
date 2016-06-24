@@ -13,6 +13,18 @@ public static class Logger
         _name = name;
     }
 
+    public static void LogOnError(Action callback)
+    {
+        try
+        {
+            callback.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Log(ex);
+        }
+    }
+
     public static void Log(object message)
     {
         try

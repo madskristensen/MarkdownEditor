@@ -114,7 +114,7 @@ namespace MarkdownEditor
 
         public void UpdatePosition(int line)
         {
-            if (_htmlDocument != null && _currentDocument  != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
+            if (_htmlDocument != null && _currentDocument != null && MarkdownEditorPackage.Options.EnablePreviewSyncNavigation)
             {
                 _currentViewLine = _currentDocument.FindClosestLine(line);
                 SyncNavigation();
@@ -190,7 +190,7 @@ namespace MarkdownEditor
             else
             {
                 var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
-                Control.NavigateToString(template);
+                Logger.LogOnError(() => Control.NavigateToString(template));
             }
 
             SyncNavigation();
