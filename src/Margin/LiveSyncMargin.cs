@@ -17,48 +17,42 @@ namespace MarkdownEditor
         {
             SetResourceReference(BackgroundProperty, EnvironmentColors.ScrollBarBackgroundBrushKey);
             HorizontalAlignment = HorizontalAlignment.Stretch;
-            Cursor = Cursors.Hand;
+            VerticalAlignment = VerticalAlignment.Stretch;
 
             Loaded += (s, e) =>
             {
                 if (!view.Properties.TryGetProperty(typeof(BrowserMargin), out _browser) && _browser.Browser != null)
                     return;
 
-                var panel = new DockPanel
-                {
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    ToolTip = "Click to toggle live sync",
-                };
-
-                panel.MouseUp += OnClick;
-
-                Children.Add(panel);
-
-                _image = new Image
-                {
-                    Source = ImageHelper.GetImage(KnownMonikers.Refresh, 12),
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Margin = new Thickness(0, 0, 5, 0),
-                };
-
-                _text = new TextBlock
-                {
-                    Padding = new Thickness(5),
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                };
-
-                panel.Children.Add(_text);
-                panel.Children.Add(_image);
-
+                CreateControls();
                 UpdateControls();
             };
         }
 
+        private void CreateControls()
+        {
+            var panel = new DockPanel();
+            panel.HorizontalAlignment = HorizontalAlignment.Right;
+            panel.VerticalAlignment = VerticalAlignment.Stretch;
+            panel.Cursor = Cursors.Hand;
+            panel.ToolTip = "Click to toggle scroll sync";
+            panel.MouseUp += OnClick;
+            Children.Add(panel);
+
+            _text = new TextBlock();
+            _text.Margin = new Thickness(0, 0, 5, 0);
+            panel.Children.Add(_text);
+
+            _image = new Image();
+            _image.Margin = new Thickness(0, 1, 2, 0);
+            panel.Children.Add(_image);
+        }
+
         private void UpdateControls()
         {
-            var moniker = _browser.Browser.AutoSyncEnabled ? KnownMonikers.StatusRunning : KnownMonikers.StatusPaused;
-            _image.Source = ImageHelper.GetImage(moniker, 12);
-            _text.Text = "Scroll sync is " + (_browser.Browser.AutoSyncEnabled ? "enabled" : "disabled");
+            var moniker = _browser.Browser.AutoSyncEnabled ? KnownMonikers.Play : KnownMonikers.Pause;
+            _image.Source = ImageHelper.GetImage(moniker, 11);
+            _text.Text = "Scroll sync is " + (_browser.Browser.AutoSyncEnabled ? "enabled" : "paused");
         }
 
         private void OnClick(object sender, MouseButtonEventArgs e)
@@ -69,7 +63,7 @@ namespace MarkdownEditor
 
         public bool Enabled => true;
 
-        public double MarginSize => 16;
+        public double MarginSize => 12;
 
         public FrameworkElement VisualElement
         {
