@@ -1,8 +1,5 @@
 # Roadmap
 
-- [x] Button in editor to _Copy as HTML_
-- [x] Option to load preview window below editor
-- [x] Convert to LanguageService implementations
 - [ ] Format document/selection (#12)
 - [ ] Support for custom stylesheets
 - [ ] Generate .html files nested under the markdown file
@@ -20,11 +17,14 @@ on the official Visual Studio extension gallery.
 
 ## 1.3
 
-**2016-06-XX**
+**2016-06-24**
 
 - [x] Smart completion of lists, task lists and blockquotes
 - [x] Smoother sync scroll with no-delay
 - [x] Smart tab taking into account list indentation
+- [x] Button in editor to _Copy as HTML_
+- [x] Option to load preview window below editor
+- [x] Convert to LanguageService implementations
 
 ## 1.2
 
