@@ -17,7 +17,7 @@ namespace MarkdownEditor
         /// <summary>
         /// The number of seconds to wait before updating the preview after an edit
         /// </summary>
-        private const double RefreshAfterEditInSeconds = 0.5; // TODO: Make this configurable in the options?
+        private const double RefreshAfterEditInSeconds = 0.3; // TODO: Make this configurable in the options?
 
         /// <summary>
         /// The number of seconds to wait before updating the preview after a change in position
