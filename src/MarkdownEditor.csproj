@@ -76,6 +76,7 @@
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\ProjectHelpers.cs" />
+    <Compile Include="LanguageService\ContentTypeDefinition.cs" />
     <Compile Include="LanguageService\MarkdownColorizer.cs" />
     <Compile Include="LanguageService\MarkdownLanguage.cs" />
     <Compile Include="LanguageService\MarkdownSource.cs" />
