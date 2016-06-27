@@ -33,7 +33,7 @@ namespace MarkdownEditor
     }
 
     [Export(typeof(IWpfTextViewMarginProvider))]
-    [Name(HeadingNagivationMargin.MarginName)]
+    [Name(HeadingSyncMargin.MarginName)]
     [Order(After = PredefinedMarginNames.ZoomControl)]
     [MarginContainer(PredefinedMarginNames.BottomControl)]
     [ContentType(MarkdownLanguage.LanguageName)]
@@ -53,7 +53,7 @@ namespace MarkdownEditor
             if (!TextDocumentFactoryService.TryGetTextDocument(wpfTextViewHost.TextView.TextDataModel.DocumentBuffer, out document))
                 return null;
 
-            return wpfTextViewHost.TextView.Properties.GetOrCreateSingletonProperty(() => new HeadingNagivationMargin(wpfTextViewHost.TextView));
+            return wpfTextViewHost.TextView.Properties.GetOrCreateSingletonProperty(() => new HeadingSyncMargin(wpfTextViewHost.TextView));
         }
     }
 

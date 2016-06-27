@@ -17,9 +17,9 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace MarkdownEditor
 {
-    public sealed class HeadingNagivationMargin : DockPanel, IWpfTextViewMargin
+    public sealed class HeadingSyncMargin : DockPanel, IWpfTextViewMargin
     {
-        public const string MarginName = "MarkdownMargin";
+        public const string MarginName = "HeadingSyncMargin";
         private readonly ITextView textView;
         private readonly ComboBox headingCombo;
 
@@ -27,7 +27,7 @@ namespace MarkdownEditor
         private int pendingChanges;
         private List<HeadingBlock> headings;
 
-        public HeadingNagivationMargin(ITextView textView)
+        public HeadingSyncMargin(ITextView textView)
         {
             this.textView = textView;
             headingCombo = new ComboBox
@@ -181,6 +181,26 @@ namespace MarkdownEditor
             public HeadingWrap(HeadingBlock heading, int[] levels)
             {
                 this.Heading = heading;
+                headingText = ComputeHeadingText(heading, levels);
+            }
+
+            public HeadingBlock Heading { get; }
+
+            public override string ToString()
+            {
+                return headingText;
+            }
+
+            /// <summary>
+            /// Computes the heading text as displayed in the combo box.
+            /// </summary>
+            /// <param name="heading">The heading.</param>
+            /// <param name="levels">The levels.</param>
+            /// <returns>The heading text</returns>
+            private static string ComputeHeadingText(HeadingBlock heading, int[] levels)
+            {
+                // This method takes into account the level of the heading, if it is already numbered or not.
+                // If not numbered, it will compute an ordered number.
 
                 // We start to indent at the very effective starting level (Someone may start the doc with a ### instead of #)
                 int startIndent = 0;
@@ -205,7 +225,7 @@ namespace MarkdownEditor
                 var htmlRenderer = new HtmlRenderer(stringWriter) { EnableHtmlForInline = false };
                 htmlRenderer.Render(heading.Inline);
                 stringWriter.Flush();
-                headingText = stringWriter.ToString();
+                var headingText = stringWriter.ToString();
 
                 // If the heading doesn't start by a digit, precalculate one
                 if (headingText.Length == 0 || !char.IsDigit(headingText[0]))
@@ -235,14 +255,7 @@ namespace MarkdownEditor
 
                 builder.Append(headingText);
 
-                headingText = builder.ToString();
-            }
-
-            public HeadingBlock Heading { get; }
-
-            public override string ToString()
-            {
-                return headingText;
+                return builder.ToString();
             }
         }
     }

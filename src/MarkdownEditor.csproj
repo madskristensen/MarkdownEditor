@@ -82,7 +82,7 @@
     <Compile Include="Margin\Browser.cs" />
     <Compile Include="Margin\BrowserMargin.cs" />
     <Compile Include="Margin\BrowserMarginProvider.cs" />
-    <Compile Include="Margin\HeadingNagivationMargin.cs" />
+    <Compile Include="Margin\HeadingSyncMargin.cs" />
     <Compile Include="Margin\LiveSyncMargin.cs" />
     <Compile Include="MarkdownEditorPackage.cs" />
     <Compile Include="MarkdownEditorPackage1.cs">
