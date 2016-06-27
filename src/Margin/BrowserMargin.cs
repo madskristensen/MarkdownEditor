@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -10,35 +11,19 @@ namespace MarkdownEditor
     public class BrowserMargin : DockPanel, IWpfTextViewMargin
     {
         private readonly ITextDocument _document;
-        private readonly DispatcherTimer _updaterDocument;
-        private readonly DispatcherTimer _updaterPosition;
         private readonly ITextView _textView;
 
-        /// <summary>
-        /// The number of seconds to wait before updating the preview after an edit
-        /// </summary>
-        private const double RefreshAfterEditInSeconds = 0.3; // TODO: Make this configurable in the options?
-
-        /// <summary>
-        /// The number of seconds to wait before updating the preview after a change in position
-        /// </summary>
-        private const double RefreshAfterNewPositionInSeconds = 0.1; // TODO: Make this configurable in the options?
 
 
         public BrowserMargin(ITextView textview, ITextDocument document)
         {
             _textView = textview;
 
-            _updaterDocument = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterEditInSeconds) };
-            _updaterDocument.Tick += UpdaterDocumentOnTick;
-
-            _updaterPosition = new DispatcherTimer { Interval = TimeSpan.FromSeconds(RefreshAfterNewPositionInSeconds) };
-            _updaterPosition.Tick += UpdaterPositionOnTick;
-
-            _textView.LayoutChanged += LayoutChanged;
-
             _document = document;
-            _document.TextBuffer.Changed += TextBufferChanged;
+
+            var documentView = MarkdownDocumentView.Get(textview);
+            documentView.DocumentChanged += UpdaterDocumentOnTick;
+            documentView.PositionChanged += UpdaterPositionOnTick;
 
             Browser = new Browser(_document.FilePath);
 
@@ -55,30 +40,14 @@ namespace MarkdownEditor
         public FrameworkElement VisualElement => this;
         public Browser Browser { get; private set; }
 
-
-        private void LayoutChanged(object sender, TextViewLayoutChangedEventArgs textViewLayoutChangedEventArgs)
-        {
-            // Notifies a position update (but don't cancel the previous update if a new update is coming in between)
-            //_updaterPosition.Stop();
-            _updaterPosition.Start();
-        }
-
         private void UpdaterDocumentOnTick(object sender, EventArgs eventArgs)
         {
-            _updaterDocument.Stop();
             UpdateBrowser();
         }
 
         private void UpdaterPositionOnTick(object sender, EventArgs eventArgs)
         {
-            _updaterPosition.Stop();
             UpdatePosition();
-        }
-
-        private void TextBufferChanged(object sender, TextContentChangedEventArgs e)
-        {
-            _updaterDocument.Stop();
-            _updaterDocument.Start();
         }
 
         private async void UpdatePosition()
@@ -181,21 +150,11 @@ namespace MarkdownEditor
 
         public void Dispose()
         {
-            // Make sure timers are stopped
-            _updaterDocument.Stop();
-            _updaterPosition.Stop();
-
             // TODO: concurrency problem between stopping the DispatchTimer above and the following Browser dispose?
 
             if (Browser != null)
                 Browser.Dispose();
 
-            if (_textView != null)
-                _textView.LayoutChanged -= LayoutChanged;
-
-            var textBuffer = _document?.TextBuffer;
-            if (textBuffer != null)
-                textBuffer.Changed -= TextBufferChanged;
         }
     }
 }
