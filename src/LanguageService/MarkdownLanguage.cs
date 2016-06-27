@@ -15,6 +15,11 @@ namespace MarkdownEditor
             return new MarkdownSource(this, buffer, new MarkdownColorizer(this, buffer, null));
         }
 
+        public override TypeAndMemberDropdownBars CreateDropDownHelper(IVsTextView forView)
+        {
+            return new DropDownBars(this, forView);
+        }
+
         public override LanguagePreferences GetLanguagePreferences()
         {
             if (preferences == null)
@@ -29,7 +34,7 @@ namespace MarkdownEditor
                     preferences.EnableMatchBraces = true;
                     preferences.EnableMatchBracesAtCaret = true;
                     preferences.EnableShowMatchingBrace = true;
-                    preferences.EnableCommenting = true;;
+                    preferences.EnableCommenting = true; ;
                     preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
                     preferences.LineNumbers = true;
                     preferences.MaxErrorMessages = 100;
@@ -38,6 +43,7 @@ namespace MarkdownEditor
                     preferences.ShowNavigationBar = true;
                     preferences.InsertTabs = false;
                     preferences.IndentSize = 2;
+                    preferences.ShowNavigationBar = true;
 
                     preferences.AutoListMembers = true;
                     preferences.EnableQuickInfo = true;
