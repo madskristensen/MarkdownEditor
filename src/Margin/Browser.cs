@@ -123,14 +123,19 @@ namespace MarkdownEditor
 
         private void SyncNavigation()
         {
+            if (_htmlDocument == null)
+            {
+                return;
+            }
+
             if (AutoSyncEnabled)
             {
-                if (_currentViewLine == 1)
+                if (_currentViewLine == 0)
                 {
                     // Forces the preview window to scroll to the top of the document
                     _htmlDocument.documentElement.setAttribute("scrollTop", 0);
                 }
-                else if (_currentViewLine >= 0)
+                else
                 {
                     var element = _htmlDocument.getElementById("pragma-line-" + _currentViewLine);
                     if (element != null)

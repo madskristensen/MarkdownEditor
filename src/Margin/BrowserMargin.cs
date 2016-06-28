@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -52,9 +53,10 @@ namespace MarkdownEditor
 
         private async void UpdatePosition()
         {
+            var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
+            Trace.WriteLine($"UpdatePosition {lineNumber}");
             await Dispatcher.BeginInvoke(new Action(() =>
             {
-                var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
                 Browser.UpdatePosition(lineNumber);
 
             }), DispatcherPriority.ApplicationIdle, null);
