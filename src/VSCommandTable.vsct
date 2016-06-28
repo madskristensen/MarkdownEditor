@@ -7,9 +7,9 @@
 
   <Commands package="guidPackage">
     <Buttons>
-      <Button guid="guidPackageCmdSet" id="CopyAsHtml" priority="0x0900" type="Button">
+      <Button guid="guidPackageCmdSet" id="CopyAsHtml" priority="0x0300" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT"/>
-        <Icon guid="ImageCatalogGuid" id="HTMLEndTag" />
+        <Icon guid="ImageCatalogGuid" id="MarkdownFile" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <CommandFlag>DefaultDisabled</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.IO;
-using System.Linq;
 using System.Windows;
 using EnvDTE;
 using Markdig;
@@ -12,7 +10,6 @@ namespace MarkdownEditor
     internal sealed class CopyAsHtmlCommand
     {
         private readonly Package _package;
-        private static string[] _extensions = { ".md", ".markdown", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mdwn", ".mmd" };
 
         private CopyAsHtmlCommand(Package package)
         {
@@ -47,12 +44,7 @@ namespace MarkdownEditor
 
             var document = ProjectHelpers.DTE.ActiveDocument;
 
-            if (document == null)
-                return;
-
-            var ext = Path.GetExtension(document.FullName);
-
-            if (_extensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
+            if (MarkdownLanguage.LanguageName.Equals(document?.Language, StringComparison.OrdinalIgnoreCase))
             {
                 button.Visible = true;
 
@@ -71,6 +63,8 @@ namespace MarkdownEditor
 
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             var html = Markdown.ToHtml(markdown, pipeline).Replace("\n", Environment.NewLine);
+
+            // TODO: Prettify the HTML
 
             Clipboard.SetText(html);
 

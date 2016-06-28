@@ -86,10 +86,10 @@
     <Compile Include="Margin\BrowserMarginProvider.cs" />
     <Compile Include="Margin\LiveSyncMargin.cs" />
     <Compile Include="MarkdownEditorPackage.cs" />
-    <Compile Include="MarkdownEditorPackage1.cs">
+    <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MarkdownEditorPackage.vsct</DependentUpon>
+      <DependentUpon>VSCommandTable.vsct</DependentUpon>
     </Compile>
     <Compile Include="Options.cs">
       <SubType>Component</SubType>
@@ -133,10 +133,10 @@
     <Content Include="Margin\prism.js">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <VSCTCompile Include="MarkdownEditorPackage.vsct">
+    <VSCTCompile Include="VSCommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
-      <LastGenOutput>MarkdownEditorPackage1.cs</LastGenOutput>
+      <LastGenOutput>VSCommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
     <Content Include="Resources\Icon.png">
