@@ -14,17 +14,11 @@ namespace MarkdownEditor
         private readonly ITextDocument _document;
         private readonly ITextView _textView;
 
-
-
         public BrowserMargin(ITextView textview, ITextDocument document)
         {
             _textView = textview;
 
             _document = document;
-
-            var documentView = MarkdownDocumentView.Get(textview);
-            documentView.DocumentChanged += UpdaterDocumentOnTick;
-            documentView.PositionChanged += UpdaterPositionOnTick;
 
             Browser = new Browser(_document.FilePath);
 
@@ -34,6 +28,10 @@ namespace MarkdownEditor
                 CreateRightMarginControls();
 
             UpdateBrowser();
+
+            var documentView = MarkdownDocumentView.Get(textview);
+            documentView.DocumentChanged += UpdaterDocumentOnTick;
+            documentView.PositionChanged += UpdaterPositionOnTick;
         }
 
         public bool Enabled => true;
