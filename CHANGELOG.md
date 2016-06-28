@@ -1,6 +1,7 @@
 # Roadmap
 
 - [x] Toggle live sync on individual document
+- [x] Navigational dropdowns
 - [ ] Format document/selection (#12)
 - [ ] Support for custom stylesheets
 - [ ] Generate .html files nested under the markdown file
