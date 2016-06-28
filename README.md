@@ -101,6 +101,10 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 
 **Ctrl+K,U** removes HTML comments surrounding the selection/caret.
 
+**Ctrl+PgUp** moves caret to previous heading
+
+**Ctrl+PgDown** moves caret to next heading
+
 ### Light Bulbs
 The suggested actions shown in light bulbs makes it easier to
 perform common tasks.

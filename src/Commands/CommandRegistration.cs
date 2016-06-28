@@ -35,6 +35,7 @@ namespace MarkdownEditor
                 textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndentCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new IndentationCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ToogleTaskCommandTarget(textViewAdapter, textView));
+                textView.Properties.GetOrCreateSingletonProperty(() => new Navigate(textViewAdapter, textView));
             }
         }
     }

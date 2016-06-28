@@ -62,6 +62,7 @@
     <Compile Include="Commands\CommandTargetBase.cs" />
     <Compile Include="Commands\BoldCommandTarget.cs" />
     <Compile Include="Commands\IndentationCommandTarget.cs" />
+    <Compile Include="Commands\NavigateCommandTarget.cs" />
     <Compile Include="Commands\ToogleTaskCommandTarget.cs" />
     <Compile Include="Commands\SmartIndentCommandTarget.cs" />
     <Compile Include="Commands\PasteImageCommandTarget.cs" />
