@@ -2,7 +2,7 @@
 
 - [x] Toggle live sync on individual document
 - [x] Navigational dropdowns
-- [x] Keyboard navigation between headings
+- [x] Keyboard navigation between headings (Ctrl+PgUp/Down)
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ascii image URLs (#20)
 - [ ] Support for custom stylesheets
