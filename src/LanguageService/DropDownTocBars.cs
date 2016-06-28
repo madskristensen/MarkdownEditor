@@ -30,8 +30,6 @@ namespace MarkdownEditor
         private MarkdownDocument _currentDocument;
         private List<HeadingBlock> _headings;
 
-        private List<string> _declarations = new List<string> { "Current document" };
-
         private List<HeadingWrap> _members = null;
         private List<HeadingWrap> _previousMembersSync = null;
         private readonly LanguageService _languageService;
@@ -73,11 +71,11 @@ namespace MarkdownEditor
             switch (comboType)
             {
                 case ComboIndex.Types:
-                    entries = (uint)_declarations.Count();
+                    entries = (uint)_members.Count;
                     break;
 
                 case ComboIndex.Members:
-                    entries = (uint)(_members?.Count ?? 0);
+                    entries = 0;
                     break;
             }
 
@@ -99,12 +97,10 @@ namespace MarkdownEditor
             switch (comboType)
             {
                 case ComboIndex.Types:
-                    text = _declarations[entry];
+                    text = localMembers?[entry].ToString() ?? string.Empty;
                     break;
 
                 case ComboIndex.Members:
-
-                    text = localMembers?[entry].ToString() ?? string.Empty;
                     break;
             }
 
@@ -131,7 +127,7 @@ namespace MarkdownEditor
                     var heading = localHeadings[i];
                     if (line >= heading.Line)
                     {
-                        selectedMember = i + 1;
+                        selectedType = i + 1;
                         break;
                     }
                 }
@@ -141,7 +137,7 @@ namespace MarkdownEditor
             var localMembers = _members;
             if (localMembers != null && localMembers != _previousMembersSync)
             {
-                dropDownMembers.Clear();
+                dropDownTypes.Clear();
                 foreach (var wrap in localMembers)
                 {
                     var textSpan = wrap.Heading != null
@@ -154,7 +150,7 @@ namespace MarkdownEditor
                         }
                         : new TextSpan();
 
-                    dropDownMembers.Add(new DropDownMember(wrap.ToString(), textSpan, (int)ComboIndex.Members, DROPDOWNFONTATTR.FONTATTR_PLAIN));
+                    dropDownTypes.Add(new DropDownMember(wrap.ToString(), textSpan, (int)ComboIndex.Types, DROPDOWNFONTATTR.FONTATTR_PLAIN));
                 }
                 _previousMembersSync = localMembers;
             }
