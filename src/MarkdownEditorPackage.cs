@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -29,13 +30,16 @@ namespace MarkdownEditor
         {
             Options = (Options)GetDialogPage(typeof(Options));
 
-            var serviceContainer = this as IServiceContainer;
-            var langService = new MarkdownLanguage();
-            langService.SetSite(this);
-            serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+            {
+                Logger.Initialize(this, Vsix.Name);
+                CopyAsHtmlCommand.Initialize(this);
 
-            Logger.Initialize(this, Vsix.Name);
-            CopyAsHtmlCommand.Initialize(this);
+                var serviceContainer = this as IServiceContainer;
+                var langService = new MarkdownLanguage();
+                langService.SetSite(this);
+                serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
+            }), DispatcherPriority.ApplicationIdle, null);
 
             base.Initialize();
         }

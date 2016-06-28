@@ -17,7 +17,6 @@ namespace MarkdownEditor
         public BrowserMargin(ITextView textview, ITextDocument document)
         {
             _textView = textview;
-
             _document = document;
 
             Browser = new Browser(_document.FilePath);
@@ -62,11 +61,7 @@ namespace MarkdownEditor
 
         private async void UpdateBrowser()
         {
-            await Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
-
-            }), DispatcherPriority.ApplicationIdle, null);
+            await Browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
         }
 
         public ITextViewMargin GetTextViewMargin(string marginName)

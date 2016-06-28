@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using Markdig.Renderers;
 using Markdig.Syntax;
 using MarkdownEditor.Parsing;
@@ -153,52 +155,55 @@ namespace MarkdownEditor
             }
         }
 
-        public void UpdateBrowser(ITextSnapshot snapshot)
+        public async Task UpdateBrowser(ITextSnapshot snapshot)
         {
-            // Generate the HTML document
-            string html = null;
-            StringWriter htmlWriter = null;
-            try
+            await Control.Dispatcher.BeginInvoke(new Action(() =>
             {
-                _currentDocument = snapshot.ParseToMarkdown();
+                // Generate the HTML document
+                string html = null;
+                StringWriter htmlWriter = null;
+                try
+                {
+                    _currentDocument = snapshot.ParseToMarkdown();
 
-                htmlWriter = htmlWriterStatic ?? (htmlWriterStatic = new StringWriter());
-                htmlWriter.GetStringBuilder().Clear();
-                var htmlRenderer = new HtmlRenderer(htmlWriter);
-                MarkdownFactory.Pipeline.Setup(htmlRenderer);
-                htmlRenderer.Render(_currentDocument);
-                htmlWriter.Flush();
-                html = htmlWriter.ToString();
-            }
-            catch (Exception ex)
-            {
-                // We could output this to the exception pane of VS?
-                // Though, it's easier to output it directly to the browser
-                html = "<p>An unexpected exception occured:</p><pre>" +
-                       ex.ToString().Replace("<", "&lt;").Replace("&", "&amp;") + "</pre>";
-            }
-            finally
-            {
-                // Free any resources allocated by HtmlWriter
-                htmlWriter?.GetStringBuilder().Clear();
-            }
+                    htmlWriter = htmlWriterStatic ?? (htmlWriterStatic = new StringWriter());
+                    htmlWriter.GetStringBuilder().Clear();
+                    var htmlRenderer = new HtmlRenderer(htmlWriter);
+                    MarkdownFactory.Pipeline.Setup(htmlRenderer);
+                    htmlRenderer.Render(_currentDocument);
+                    htmlWriter.Flush();
+                    html = htmlWriter.ToString();
+                }
+                catch (Exception ex)
+                {
+                    // We could output this to the exception pane of VS?
+                    // Though, it's easier to output it directly to the browser
+                    html = "<p>An unexpected exception occured:</p><pre>" +
+                           ex.ToString().Replace("<", "&lt;").Replace("&", "&amp;") + "</pre>";
+                }
+                finally
+                {
+                    // Free any resources allocated by HtmlWriter
+                    htmlWriter?.GetStringBuilder().Clear();
+                }
 
-            if (_htmlDocument != null)
-            {
-                var content = _htmlDocument.getElementById("___markdown-content___");
-                content.innerHTML = html;
+                if (_htmlDocument != null)
+                {
+                    var content = _htmlDocument.getElementById("___markdown-content___");
+                    content.innerHTML = html;
 
-                // Makes sure that any code blocks get syntax highligted by Prism
-                var win = _htmlDocument.parentWindow;
-                win.execScript("Prism.highlightAll();", "javascript");
-            }
-            else
-            {
-                var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
-                Logger.LogOnError(() => Control.NavigateToString(template));
-            }
+                    // Makes sure that any code blocks get syntax highligted by Prism
+                    var win = _htmlDocument.parentWindow;
+                    win.execScript("Prism.highlightAll();", "javascript");
+                }
+                else
+                {
+                    var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
+                    Logger.LogOnError(() => Control.NavigateToString(template));
+                }
 
-            SyncNavigation();
+                SyncNavigation();
+            }), DispatcherPriority.ApplicationIdle, null);
         }
 
         private static string GetFolder()

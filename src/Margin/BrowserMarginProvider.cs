@@ -31,7 +31,7 @@ namespace MarkdownEditor
             return wpfTextViewHost.TextView.Properties.GetOrCreateSingletonProperty(() => new BrowserMargin(wpfTextViewHost.TextView, document));
         }
     }
-    
+
     [Export(typeof(IWpfTextViewMarginProvider))]
     [Name("MarginBottomFactory")]
     [Order(After = PredefinedMarginNames.BottomControl)]
