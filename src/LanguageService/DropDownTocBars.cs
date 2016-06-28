@@ -26,34 +26,34 @@ namespace MarkdownEditor
     /// <seealso cref="Microsoft.VisualStudio.Package.TypeAndMemberDropdownBars" />
     public class DropDownTocBars : TypeAndMemberDropdownBars
     {
-        private readonly ITextView textView;
-        private MarkdownDocument currentDocument;
-        private List<HeadingBlock> headings;
+        private readonly ITextView _textView;
+        private MarkdownDocument _currentDocument;
+        private List<HeadingBlock> _headings;
 
         private List<string> _declarations = new List<string> { "Current document" };
 
         private List<HeadingWrap> _members = null;
         private List<HeadingWrap> _previousMembersSync = null;
-        private readonly LanguageService languageService;
+        private readonly LanguageService _languageService;
 
         public DropDownTocBars(LanguageService languageService, IVsTextView view)
         : base(languageService)
         {
-            this.languageService = languageService;
+            this._languageService = languageService;
             var componentModel = (IComponentModel)languageService.GetService(typeof(SComponentModel));
             var editorAdapterFactoryService = componentModel.GetService<IVsEditorAdaptersFactoryService>();
-            this.textView = editorAdapterFactoryService.GetWpfTextView(view);
+            this._textView = editorAdapterFactoryService.GetWpfTextView(view);
 
-            var documentView = MarkdownDocumentView.Get(textView);
+            var documentView = MarkdownDocumentView.Get(_textView);
             documentView.DocumentChanged += OnDocumentChanged;
             documentView.CaretChanged += OnCaretPositionChanged;
 
-            UpdateElements(this.textView.TextSnapshot, false);
+            UpdateElements(this._textView.TextSnapshot, false);
         }
 
         private void OnCaretPositionChanged(object sender, EventArgs e)
         {
-            languageService.SynchronizeDropdowns();
+            _languageService.SynchronizeDropdowns();
         }
 
         private enum ComboIndex
@@ -123,7 +123,7 @@ namespace MarkdownEditor
         {
             selectedType = 0;
             selectedMember = 0;
-            var localHeadings = headings; // work on a copy of the variable
+            var localHeadings = _headings; // work on a copy of the variable
             if (localHeadings != null)
             {
                 for (int i = localHeadings.Count - 1; i >= 0; i--)
@@ -164,24 +164,24 @@ namespace MarkdownEditor
 
         private void OnDocumentChanged(object sender, EventArgs textContentChangedEventArgs)
         {
-            UpdateElements(textView.TextSnapshot, true);
+            UpdateElements(_textView.TextSnapshot, true);
         }
 
         private void UpdateElements(ITextSnapshot snapshot, bool synchronize)
         {
             var doc = snapshot.ParseToMarkdown();
-            if (doc == currentDocument)
+            if (doc == _currentDocument)
             {
                 return;
             }
 
-            currentDocument = doc;
-            headings = doc.OfType<HeadingBlock>().ToList();
+            _currentDocument = doc;
+            _headings = doc.OfType<HeadingBlock>().ToList();
 
             var newMembers = new List<HeadingWrap> {new HeadingWrap("(top)")};
 
             var levels = new int[10];
-            foreach (var heading in headings)
+            foreach (var heading in _headings)
             {
                 if (heading.Level < levels.Length)
                 {
@@ -197,7 +197,7 @@ namespace MarkdownEditor
 
             if (synchronize)
             {
-                languageService.SynchronizeDropdowns();
+                _languageService.SynchronizeDropdowns();
             }
         }
 
