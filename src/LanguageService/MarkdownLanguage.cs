@@ -17,7 +17,7 @@ namespace MarkdownEditor
 
         public override TypeAndMemberDropdownBars CreateDropDownHelper(IVsTextView forView)
         {
-            return new DropDownBars(this, forView);
+            return new DropDownTocBars(this, forView);
         }
 
         public override LanguagePreferences GetLanguagePreferences()

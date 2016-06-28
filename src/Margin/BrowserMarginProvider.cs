@@ -31,32 +31,7 @@ namespace MarkdownEditor
             return wpfTextViewHost.TextView.Properties.GetOrCreateSingletonProperty(() => new BrowserMargin(wpfTextViewHost.TextView, document));
         }
     }
-
-    [Export(typeof(IWpfTextViewMarginProvider))]
-    [Name(HeadingSyncMargin.MarginName)]
-    [Order(After = PredefinedMarginNames.ZoomControl)]
-    [MarginContainer(PredefinedMarginNames.BottomControl)]
-    [ContentType(MarkdownLanguage.LanguageName)]
-    [TextViewRole(PredefinedTextViewRoles.Debuggable)] // This is to prevent the margin from loading in the diff view
-    public class HeadingNavigationMarginProvider : IWpfTextViewMarginProvider
-    {
-        [Import]
-        public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
-
-        public IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer)
-        {
-            if (!MarkdownEditorPackage.Options.EnablePreviewWindow || MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
-                return null;
-
-            ITextDocument document;
-
-            if (!TextDocumentFactoryService.TryGetTextDocument(wpfTextViewHost.TextView.TextDataModel.DocumentBuffer, out document))
-                return null;
-
-            return wpfTextViewHost.TextView.Properties.GetOrCreateSingletonProperty(() => new HeadingSyncMargin(wpfTextViewHost.TextView));
-        }
-    }
-
+    
     [Export(typeof(IWpfTextViewMarginProvider))]
     [Name("MarginBottomFactory")]
     [Order(After = PredefinedMarginNames.BottomControl)]

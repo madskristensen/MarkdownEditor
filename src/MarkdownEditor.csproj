@@ -77,14 +77,13 @@
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="LanguageService\ContentTypeDefinition.cs" />
-    <Compile Include="LanguageService\DropDownBars.cs" />
+    <Compile Include="LanguageService\DropDownTocBars.cs" />
     <Compile Include="LanguageService\MarkdownColorizer.cs" />
     <Compile Include="LanguageService\MarkdownLanguage.cs" />
     <Compile Include="LanguageService\MarkdownSource.cs" />
     <Compile Include="Margin\Browser.cs" />
     <Compile Include="Margin\BrowserMargin.cs" />
     <Compile Include="Margin\BrowserMarginProvider.cs" />
-    <Compile Include="Margin\HeadingSyncMargin.cs" />
     <Compile Include="Margin\LiveSyncMargin.cs" />
     <Compile Include="MarkdownEditorPackage.cs" />
     <Compile Include="MarkdownEditorPackage1.cs">
