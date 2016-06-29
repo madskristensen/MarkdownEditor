@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -19,36 +20,39 @@ namespace MarkdownEditor
             _textView = textview;
             _document = document;
 
-            Browser = new Browser(_document.FilePath);
+            Loaded += async (s, e) =>
+            {
+                Browser = new Browser(_document.FilePath);
 
-            if (MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
-                CreateBottomMarginControls();
-            else
-                CreateRightMarginControls();
+                if (MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
+                    CreateBottomMarginControls();
+                else
+                    CreateRightMarginControls();
 
-            UpdateBrowser();
+                await UpdateBrowser();
 
-            var documentView = MarkdownDocumentView.Get(textview);
-            documentView.DocumentChanged += UpdaterDocumentOnTick;
-            documentView.PositionChanged += UpdaterPositionOnTick;
+                var documentView = MarkdownDocumentView.Get(textview);
+                documentView.DocumentChanged += UpdaterDocumentOnTick;
+                documentView.PositionChanged += UpdaterPositionOnTick;
+            };
         }
 
         public bool Enabled => true;
-        public double MarginSize => MarkdownEditorPackage.Options.PreviewWindowWidth;
+        public double MarginSize => 500;
         public FrameworkElement VisualElement => this;
         public Browser Browser { get; private set; }
 
-        private void UpdaterDocumentOnTick(object sender, EventArgs eventArgs)
+        private async void UpdaterDocumentOnTick(object sender, EventArgs eventArgs)
         {
-            UpdateBrowser();
+            await UpdateBrowser();
         }
 
-        private void UpdaterPositionOnTick(object sender, EventArgs eventArgs)
+        private async void UpdaterPositionOnTick(object sender, EventArgs eventArgs)
         {
-            UpdatePosition();
+            await UpdatePosition();
         }
 
-        private async void UpdatePosition()
+        private async Task UpdatePosition()
         {
             var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
             Trace.WriteLine($"UpdatePosition {lineNumber}");
@@ -59,7 +63,7 @@ namespace MarkdownEditor
             }), DispatcherPriority.ApplicationIdle, null);
         }
 
-        private async void UpdateBrowser()
+        private async Task UpdateBrowser()
         {
             await Browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
         }

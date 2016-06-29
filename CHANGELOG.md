@@ -3,9 +3,11 @@
 - [x] Toggle live sync on individual document
 - [x] Navigational dropdowns
 - [x] Keyboard navigation between headings (Ctrl+PgUp/Down)
+- [ ] Buttons to switch between Split/Source/Rendered mode
+- [ ] Show/hide the preview window when Options change
+- [ ] Item template for Markdown file
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ascii image URLs (#20)
-- [ ] Support for custom stylesheets
 - [ ] Generate .html files nested under the markdown file
 - [ ] Validate local image and link paths
 - [ ] Intellisense for local image and link paths
