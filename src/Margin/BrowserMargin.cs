@@ -20,21 +20,18 @@ namespace MarkdownEditor
             _textView = textview;
             _document = document;
 
-            Loaded += async (s, e) =>
-            {
-                Browser = new Browser(_document.FilePath);
+            Browser = new Browser(_document.FilePath);
 
-                if (MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
-                    CreateBottomMarginControls();
-                else
-                    CreateRightMarginControls();
+            if (MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
+                CreateBottomMarginControls();
+            else
+                CreateRightMarginControls();
 
-                await UpdateBrowser();
+            UpdateBrowser();
 
-                var documentView = MarkdownDocumentView.Get(textview);
-                documentView.DocumentChanged += UpdaterDocumentOnTick;
-                documentView.PositionChanged += UpdaterPositionOnTick;
-            };
+            var documentView = MarkdownDocumentView.Get(textview);
+            documentView.DocumentChanged += UpdaterDocumentOnTick;
+            documentView.PositionChanged += UpdaterPositionOnTick;
         }
 
         public bool Enabled => true;
@@ -42,9 +39,9 @@ namespace MarkdownEditor
         public FrameworkElement VisualElement => this;
         public Browser Browser { get; private set; }
 
-        private async void UpdaterDocumentOnTick(object sender, EventArgs eventArgs)
+        private void UpdaterDocumentOnTick(object sender, EventArgs eventArgs)
         {
-            await UpdateBrowser();
+            UpdateBrowser();
         }
 
         private async void UpdaterPositionOnTick(object sender, EventArgs eventArgs)
@@ -63,7 +60,7 @@ namespace MarkdownEditor
             }), DispatcherPriority.ApplicationIdle, null);
         }
 
-        private async Task UpdateBrowser()
+        private async void UpdateBrowser()
         {
             await Browser.UpdateBrowser(_document.TextBuffer.CurrentSnapshot);
         }

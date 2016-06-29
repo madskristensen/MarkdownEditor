@@ -1,8 +1,5 @@
 # Roadmap
 
-- [x] Toggle live sync on individual document
-- [x] Navigational dropdowns
-- [x] Keyboard navigation between headings (Ctrl+PgUp/Down)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Item template for Markdown file
@@ -20,6 +17,14 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.4
+
+**2016-06-29**
+
+- [x] Toggle live sync on individual document
+- [x] Navigational dropdowns
+- [x] Keyboard navigation between headings (Ctrl+PgUp/Down)
 
 ## 1.3
 

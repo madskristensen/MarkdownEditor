@@ -19,7 +19,7 @@ namespace MarkdownEditor
             HorizontalAlignment = HorizontalAlignment.Stretch;
             VerticalAlignment = VerticalAlignment.Stretch;
 
-            Loaded += (s, e) =>
+            Initialized += (s, e) =>
             {
                 if (!view.Properties.TryGetProperty(typeof(BrowserMargin), out _browser) && _browser.Browser != null)
                     return;
