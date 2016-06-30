@@ -57,6 +57,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Label="TemplateBuilder">
+    <TemplateBuilderTargets Condition=" '$(TemplateBuilderTargets)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\TemplateBuilder.1.1.4.9-beta\tools\ligershark.templates.targets ))</TemplateBuilderTargets>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />
@@ -117,7 +120,9 @@
       <Link>Resources\LICENSE</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="ItemTemplates\NetCore\file.md" />
     <None Include="packages.config" />
+    <None Include="Properties\template-builder.props" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
@@ -125,6 +130,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ItemTemplates\General\icon.png" />
+    <Content Include="ItemTemplates\General\preview.png" />
+    <None Include="ItemTemplates\General\file.md" />
+    <Content Include="ItemTemplates\General\_Definitions\CSharp.vstemplate" />
+    <Content Include="ItemTemplates\General\_Definitions\VB.vstemplate">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ItemTemplates\General\_Definitions\Web.csharp.vstemplate">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ItemTemplates\General\_preprocess.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ItemTemplates\NetCore\icon.png" />
+    <Content Include="ItemTemplates\NetCore\preview.png" />
+    <Content Include="ItemTemplates\NetCore\_Definitions\CSharp.vstemplate" />
+    <Content Include="ItemTemplates\NetCore\_preprocess.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="LanguageService\Icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -167,8 +191,8 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Markdig, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Markdig.0.7.0\lib\net40\Markdig.dll</HintPath>
+    <Reference Include="Markdig, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.0.7.1\lib\net40\Markdig.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
@@ -329,6 +353,10 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="TemplateBuilder, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TemplateBuilder.1.1.4.9-beta\lib\TemplateBuilder.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +368,7 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -350,6 +379,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.14.3.25407\build\Microsoft.VSSDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VSSDK.BuildTools.14.3.25407\build\Microsoft.VSSDK.BuildTools.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.14.3.25407\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.14.3.25407\build\Microsoft.VSSDK.BuildTools.targets')" />
+  <Import Project="$(TemplateBuilderTargets)" Condition="Exists('$(TemplateBuilderTargets)')" Label="TemplateBuilder" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

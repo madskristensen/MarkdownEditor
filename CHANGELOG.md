@@ -1,8 +1,8 @@
 # Roadmap
 
+- [x] Item template for Markdown file
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
-- [ ] Item template for Markdown file
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ascii image URLs (#20)
 - [ ] Generate .html files nested under the markdown file
