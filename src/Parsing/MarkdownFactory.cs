@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using Markdig;
 using Markdig.Extensions.Footers;
-using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -11,6 +10,7 @@ namespace MarkdownEditor.Parsing
 {
     public static class MarkdownFactory
     {
+        public static object _syncRoot = new object();
         private static readonly ConditionalWeakTable<ITextSnapshot, MarkdownDocument> CachedDocuments = new ConditionalWeakTable<ITextSnapshot, MarkdownDocument>();
 
         static MarkdownFactory()
@@ -22,15 +22,17 @@ namespace MarkdownEditor.Parsing
 
         public static MarkdownPipeline Pipeline { get; }
 
-
         public static MarkdownDocument ParseToMarkdown(this ITextSnapshot snapshot)
         {
-            return CachedDocuments.GetValue(snapshot, key =>
+            lock (_syncRoot)
             {
-                var text = key.GetText();
-                var markdownDocument =  Markdown.Parse(text, Pipeline);
-                return markdownDocument;
-            });
+                return CachedDocuments.GetValue(snapshot, key =>
+                {
+                    var text = key.GetText();
+                    var markdownDocument = Markdown.Parse(text, Pipeline);
+                    return markdownDocument;
+                });
+            }
         }
 
 

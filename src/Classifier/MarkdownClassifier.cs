@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Markdig;
-using Markdig.Parsers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Text.Tagging;
 
 namespace MarkdownEditor
 {
-    internal class MarkdownClassifier : IClassifier, ITagger<IOutliningRegionTag>
+    internal class MarkdownClassifier : IClassifier
     {
         private readonly IClassificationType _code, _header, _quote, _bold, _italic, _link, _html, _comment;
         private readonly ITextBuffer _buffer;
         private MarkdownDocument _doc;
         private bool _isProcessing;
-        private readonly MarkdownPipeline _pipeline;
 
         internal MarkdownClassifier(ITextBuffer buffer, IClassificationTypeRegistryService registry)
         {
@@ -32,9 +28,6 @@ namespace MarkdownEditor
             _link = registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword);
             _html = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownHtml);
             _comment = registry.GetClassificationType(PredefinedClassificationTypeNames.Comment);
-
-            var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
-            _pipeline = pipelineBuilder.Build();
 
             ParseDocument();
 
@@ -53,14 +46,10 @@ namespace MarkdownEditor
             if (_doc == null || _isProcessing || span.IsEmpty)
                 return list;
 
-            var e = _doc.Descendants();
+            var e = _doc.Descendants().Where(b => b.Span.Start <= span.End);
 
             foreach (var mdobj in e)
             {
-                // Break the loop if the object spans are greater than the snapshotspan
-                if (mdobj.Span.Start > span.End.Position)
-                    break;
-
                 var blockSpan = new Span(mdobj.Span.Start, mdobj.Span.Length);
 
                 try
@@ -134,63 +123,16 @@ namespace MarkdownEditor
 
             await Task.Run(() =>
             {
-                var rawText = _buffer.CurrentSnapshot.GetText();
-                _doc = MarkdownParser.Parse(rawText, _pipeline);
+                _doc = Parsing.MarkdownFactory.ParseToMarkdown(_buffer.CurrentSnapshot);
 
                 SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
 
                 ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
-                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
 
                 _isProcessing = false;
             });
         }
 
-        public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
-        {
-            if (spans.Count == 0 || _doc == null || !MarkdownEditorPackage.Options.EnableOutlining)
-                yield break;
-
-            var descendants = _doc.Descendants();
-            var snapshot = spans.First().Snapshot;
-
-            // Code blocks
-            var codeBlocks = descendants.OfType<FencedCodeBlock>();
-
-            foreach (var block in codeBlocks)
-            {
-                if (block.IsOpen || block.Lines.Count == 0)
-                    continue;
-
-                string text = $"{block.Info.ToUpperInvariant()} Code Block".Trim();
-                string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
-
-                var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
-                var tag = new OutliningRegionTag(false, false, text, tooltip);
-
-                yield return new TagSpan<IOutliningRegionTag>(span, tag);
-            }
-
-            // HTML Blocks
-            var htmlBlocks = descendants.OfType<HtmlBlock>();
-
-            foreach (var block in htmlBlocks)
-            {
-                // This prevents outlining for single line comments
-                if (block.Lines.Count == 1)
-                    continue;
-
-                string text = "HTML Block";
-                string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
-
-                var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
-                var tag = new OutliningRegionTag(false, false, text, tooltip);
-
-                yield return new TagSpan<IOutliningRegionTag>(span, tag);
-            }
-        }
-
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
-        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
     }
 }

@@ -90,6 +90,8 @@
     <Compile Include="Margin\BrowserMarginProvider.cs" />
     <Compile Include="Margin\LiveSyncMargin.cs" />
     <Compile Include="MarkdownEditorPackage.cs" />
+    <Compile Include="Outlining\MarkdownOutliningProvider.cs" />
+    <Compile Include="Outlining\MarkdownOutliningTagger.cs" />
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
