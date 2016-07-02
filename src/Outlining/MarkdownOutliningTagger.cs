@@ -51,7 +51,7 @@ namespace MarkdownEditor.Outlining
             if (spans.Count == 0 || _doc == null || !MarkdownEditorPackage.Options.EnableOutlining)
                 return Enumerable.Empty<ITagSpan<IOutliningRegionTag>>();
 
-            var descendants = _doc.Descendants().Where(b => b.Span.Start <= spans.Last().End);
+            var descendants = _doc.Descendants();
             var snapshot = spans.First().Snapshot;
 
             var codeBlocks = ProcessCodeBlocks(descendants, snapshot);
