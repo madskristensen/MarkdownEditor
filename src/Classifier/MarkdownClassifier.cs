@@ -46,7 +46,7 @@ namespace MarkdownEditor
             if (_doc == null || _isProcessing || span.IsEmpty)
                 return list;
 
-            var e = _doc.Descendants().Where(b => b.Span.Start <= span.End);
+            var e = _doc.Descendants().Where(b => b.Span.Start <= span.End && b.Span.Length > 0);
 
             foreach (var mdobj in e)
             {
