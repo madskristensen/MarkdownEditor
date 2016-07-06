@@ -2,6 +2,7 @@
 
 - [x] Item template for Markdown file
 - [x] Outlining per heading (#21)
+- [x] Hotkey for wrapping selection in a code block
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

@@ -87,6 +87,8 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 
 **Ctrl+I** makes the selected text italic by wrapping it with `_`.
 
+**Ctrl+Shift+C** wrappes the selected text in a code block.
+
 **Ctrl+Space** checks and uncheks task list items.
 
 ```markdown

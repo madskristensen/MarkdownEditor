@@ -61,11 +61,13 @@
     <TemplateBuilderTargets Condition=" '$(TemplateBuilderTargets)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\TemplateBuilder.1.1.4.9-beta\tools\ligershark.templates.targets ))</TemplateBuilderTargets>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\InlineCodeCommandTarget.cs" />
     <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />
     <Compile Include="Commands\BoldCommandTarget.cs" />
     <Compile Include="Commands\IndentationCommandTarget.cs" />
     <Compile Include="Commands\NavigateCommandTarget.cs" />
+    <Compile Include="Commands\HotkeyCommandBase.cs" />
     <Compile Include="Commands\ToogleTaskCommandTarget.cs" />
     <Compile Include="Commands\SmartIndentCommandTarget.cs" />
     <Compile Include="Commands\PasteImageCommandTarget.cs" />
