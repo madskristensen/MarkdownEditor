@@ -83,7 +83,7 @@ namespace MarkdownEditor
             {
                 spans.Add(mdobj.ToSimpleSpan(), _header);
             }
-            else if (mdobj is CodeBlock)
+            else if (mdobj is CodeBlock || mdobj is CodeInline)
             {
                 spans.Add(mdobj.ToSimpleSpan(), _code);
             }
