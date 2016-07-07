@@ -15,8 +15,9 @@ See the [changelog](CHANGELOG.md) for changes and roadmap.
 ## Features
 
 - Powered by [Markdig](https://github.com/lunet-io/markdig) - the best markdown parser
-- Syntax highlighting supporting GitHub flavor
-- Live preview window
+- Syntax highlighting
+- Live preview window with scroll sync
+- CommandMark and GitHub flavored Markdown
 - High-DPI support
 - Drag 'n drop of images supported
 - Paste image from clipboard directly onto document

@@ -1,8 +1,5 @@
 # Roadmap
 
-- [x] Item template for Markdown file
-- [x] Outlining per heading (#21)
-- [x] Hotkey for wrapping selection in a code block
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
@@ -19,6 +16,15 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.5
+
+**2016-07-07**
+
+- [x] Item template for Markdown file
+- [x] Outlining per heading (#21)
+- [x] Hotkey for wrapping selection in a code block
+- [x] Turned line numbers off by default
 
 ## 1.4
 

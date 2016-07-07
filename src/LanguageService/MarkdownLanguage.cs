@@ -36,7 +36,7 @@ namespace MarkdownEditor
                     preferences.EnableShowMatchingBrace = true;
                     preferences.EnableCommenting = true; ;
                     preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
-                    preferences.LineNumbers = true;
+                    preferences.LineNumbers = false;
                     preferences.MaxErrorMessages = 100;
                     preferences.AutoOutlining = false;
                     preferences.MaxRegionTime = 2000;
