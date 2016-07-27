@@ -12,7 +12,8 @@ namespace MarkdownEditor
 {
     internal class MarkdownClassifier : IClassifier
     {
-        private readonly IClassificationType _code, _header, _quote, _bold, _italic, _link, _html, _comment;
+        private readonly IClassificationType _code, _header, _quote, _bold, _italic, _link, _html, _comment,
+            _naturalLanguage;
         private readonly ITextBuffer _buffer;
         private MarkdownDocument _doc;
         private bool _isProcessing;
@@ -28,6 +29,7 @@ namespace MarkdownEditor
             _link = registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword);
             _html = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownHtml);
             _comment = registry.GetClassificationType(PredefinedClassificationTypeNames.Comment);
+            _naturalLanguage = registry.GetClassificationType(PredefinedClassificationTypeNames.NaturalLanguage);
 
             ParseDocument();
 
@@ -41,6 +43,7 @@ namespace MarkdownEditor
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
+            Span lastSpan = new Span();
             var list = new List<ClassificationSpan>();
 
             if (_doc == null || _isProcessing || span.IsEmpty)
@@ -61,7 +64,14 @@ namespace MarkdownEditor
                         foreach (var range in all.Keys)
                         {
                             var snapspan = new SnapshotSpan(span.Snapshot, range);
-                            list.Add(new ClassificationSpan(snapspan, all[range]));
+
+                            // Literal spans may appear as children of other spans such as headings.  When this
+                            // occurs, we ignore them.
+                            if (!lastSpan.Contains(snapspan))
+                            {
+                                list.Add(new ClassificationSpan(snapspan, all[range]));
+                                lastSpan = snapspan;
+                            }
                         }
                     }
                 }
@@ -109,6 +119,10 @@ namespace MarkdownEditor
                     spans.Add(mdobj.ToSimpleSpan(), _comment);
                 else
                     spans.Add(mdobj.ToSimpleSpan(), _html);
+            }
+            else if (mdobj is LiteralInline)
+            {
+                spans.Add(mdobj.ToSimpleSpan(), _naturalLanguage);
             }
 
             return spans;
