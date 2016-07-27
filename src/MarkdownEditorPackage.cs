@@ -55,6 +55,7 @@ namespace MarkdownEditor
 
             Logger.Initialize(this, Vsix.Name);
             CopyAsHtmlCommand.Initialize(this);
+            AddCustomStylesheet.Initialize(this);
 
             var serviceContainer = this as IServiceContainer;
             var langService = new MarkdownLanguage();

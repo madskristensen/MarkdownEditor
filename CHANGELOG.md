@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Custom stylesheet support
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

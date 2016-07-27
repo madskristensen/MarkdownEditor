@@ -1,31 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <Extern href="stdidcmd.h"/>
-    <Extern href="vsshlids.h"/>
-    <Include href="KnownImageIds.vsct"/>
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
 
-    <Commands package="guidPackage">
-        <Buttons>
-            <Button guid="guidPackageCmdSet" id="CopyAsHtml" priority="0x0300" type="Button">
-                <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT"/>
-                <Icon guid="ImageCatalogGuid" id="MarkdownFile" />
-                <CommandFlag>IconIsMoniker</CommandFlag>
-                <CommandFlag>DefaultDisabled</CommandFlag>
-                <CommandFlag>DefaultInvisible</CommandFlag>
-                <CommandFlag>DynamicVisibility</CommandFlag>
-                <Strings>
-                    <ButtonText>Copy as HTML</ButtonText>
-                </Strings>
-            </Button>
-        </Buttons>
-    </Commands>
+  <Commands package="guidPackage">
+    <Groups>
+      <Group guid="guidPackageCmdSet" id="ContextGroup" priority="0x0800">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidPackageCmdSet" id="CopyAsHtml" priority="0x0300" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT"/>
+        <Icon guid="ImageCatalogGuid" id="MarkdownFile" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Copy as HTML</ButtonText>
+        </Strings>
+      </Button>
 
-    <Symbols>
-        <GuidSymbol name="guidPackage" value="{9ca64947-e9ca-4543-bfb8-6cce9be19fd6}" />
+      <Button guid="guidPackageCmdSet" id="AddCustomStylesheet" priority="0x0300" type="Button">
+        <Parent guid="guidPackageCmdSet" id="ContextGroup"/>
+        <Icon guid="ImageCatalogGuid" id="StyleSheet" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Add Custom Stylesheet...</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
 
-        <GuidSymbol name="guidPackageCmdSet" value="{82e1d55b-7e76-4319-ad60-94cc79c643c1}">
-            <IDSymbol name="CopyAsHtml" value="0x0100" />
-        </GuidSymbol>
-    </Symbols>
+  <Symbols>
+    <GuidSymbol name="guidPackage" value="{9ca64947-e9ca-4543-bfb8-6cce9be19fd6}" />
+
+    <GuidSymbol name="guidPackageCmdSet" value="{82e1d55b-7e76-4319-ad60-94cc79c643c1}">
+      <IDSymbol name="ContextGroup" value="0x0010" />
+      <IDSymbol name="CopyAsHtml" value="0x0100" />
+      <IDSymbol name="AddCustomStylesheet" value="0x0200" />
+    </GuidSymbol>
+  </Symbols>
 </CommandTable>

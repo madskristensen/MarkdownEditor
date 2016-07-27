@@ -38,7 +38,7 @@ Advanced markdown extensions are supported to give more features to
 the syntax. This includes pipe tables, emoji, mathematics and a lot
 more.
 
-#### Live Preview Window
+### Live Preview Window
 The preview window opens up on the right side of the document when
 it opens.
 
@@ -59,6 +59,22 @@ the preview window will follow.
 Live preview can be disabled in the [settings](#settings).
 
 > The syntax highligter is powered by [Prism](http://prismjs.com/)
+
+#### Custom stylesheets
+The preview window supports loading of custom stylesheets. It will
+look for a file called **md-styles.css** in the same directory as
+the currently opened markdown file or any parent directory.
+
+If no **md-styles.css** file is found it will look for it in
+_%userprofile%_. If it still isn't found it will use the built in
+stylesheet.
+
+To generate a custom stylesheet, simply right-click inside the
+markdown editor document and select _Add Custom Stylesheet..._
+
+![Custom Stylesheet](art\custom-stylesheet.png)
+
+The name of the custom stylesheet can be changed in the settings.
 
 ### Drag 'n drop images
 Drag an image directly from Solution Explorer onto the document to

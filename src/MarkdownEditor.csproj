@@ -61,6 +61,7 @@
     <TemplateBuilderTargets Condition=" '$(TemplateBuilderTargets)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\TemplateBuilder.1.1.4.9-beta\tools\ligershark.templates.targets ))</TemplateBuilderTargets>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\AddCustomStylesheet.cs" />
     <Compile Include="Commands\InlineCodeCommandTarget.cs" />
     <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Margin\Browser.cs" />
     <Compile Include="Margin\BrowserMargin.cs" />
     <Compile Include="Margin\BrowserMarginProvider.cs" />
+    <Compile Include="Margin\CssCreationListener.cs" />
     <Compile Include="Margin\LiveSyncMargin.cs" />
     <Compile Include="MarkdownEditorPackage.cs" />
     <Compile Include="Outlining\MarkdownOutliningProvider.cs" />
