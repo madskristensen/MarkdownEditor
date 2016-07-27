@@ -22,6 +22,8 @@ namespace MarkdownEditor
     /// </summary>
     internal sealed partial class PackageIds
     {
+        public const int ContextGroup = 0x0010;
         public const int CopyAsHtml = 0x0100;
+        public const int AddCustomStylesheet = 0x0200;
     }
 }

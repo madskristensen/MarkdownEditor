@@ -20,7 +20,6 @@ namespace MarkdownEditor
     {
         private string _file;
         private HTMLDocument _htmlDocument;
-        private string _htmlTemplate;
         private int _zoomFactor;
         private double _cachedPosition = 0,
                        _cachedHeight = 0,
@@ -36,10 +35,11 @@ namespace MarkdownEditor
         {
             _zoomFactor = GetZoomFactor();
             _file = file;
-            _htmlTemplate = GetHtmlTemplate();
             _currentViewLine = -1;
 
             InitBrowser();
+
+            CssCreationListener.StylesheetUpdated += OnStylesheetUpdated;
         }
 
         public WebBrowser Control { get; private set; }
@@ -198,7 +198,8 @@ namespace MarkdownEditor
                 }
                 else
                 {
-                    var template = string.Format(CultureInfo.InvariantCulture, _htmlTemplate, html);
+                    var htmlTemplate = GetHtmlTemplate();
+                    var template = string.Format(CultureInfo.InvariantCulture, htmlTemplate, html);
                     Logger.LogOnError(() => Control.NavigateToString(template));
                 }
 
@@ -206,18 +207,30 @@ namespace MarkdownEditor
             }), DispatcherPriority.ApplicationIdle, null);
         }
 
-        private static string GetFolder()
+        private void OnStylesheetUpdated(object sender, EventArgs e)
+        {
+            if (_htmlDocument != null)
+            {
+                var link = _htmlDocument.styleSheets.item(0) as IHTMLStyleSheet;
+
+                if (link != null)
+                {
+                    link.href = GetCustomStylesheet(_file) + "?" + new Guid();
+                }
+            }
+        }
+
+        public static string GetFolder()
         {
             string assembly = Assembly.GetExecutingAssembly().Location;
-            string folder = Path.GetDirectoryName(assembly);
-            return folder;
+            return Path.GetDirectoryName(assembly);
         }
 
         private string GetHtmlTemplate()
         {
             var baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
             string folder = GetFolder();
-            string cssPath = Path.Combine(folder, "margin\\highlight.css");
+            string cssPath = GetCustomStylesheet(_file) ?? Path.Combine(folder, "margin\\highlight.css");
             string scriptPath = Path.Combine(folder, "margin\\prism.js");
 
             return $@"<!DOCTYPE html>
@@ -236,6 +249,30 @@ namespace MarkdownEditor
         <script src=""{scriptPath}""></script>
     </body>
 </html>";
+        }
+
+        private static string GetCustomStylesheet(string markdownFile)
+        {
+            var dir = new DirectoryInfo(Path.GetDirectoryName(markdownFile));
+            var name = MarkdownEditorPackage.Options.CustomStylesheetFileName;
+
+            while (dir.Parent != null)
+            {
+                string file = Path.Combine(dir.FullName, name);
+
+                if (File.Exists(file))
+                    return file;
+
+                dir = dir.Parent;
+            }
+
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string globalFile = Path.Combine(userProfile, name);
+
+            if (File.Exists(globalFile))
+                return globalFile;
+
+            return null;
         }
 
         private void Zoom(int zoomFactor)

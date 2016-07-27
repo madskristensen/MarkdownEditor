@@ -48,6 +48,12 @@ namespace MarkdownEditor
         public bool ShowPreviewWindowBelow { get; set; }
 
         [Category("Preview Window")]
+        [DisplayName("Custom stylesheet name")]
+        [Description("The file name of a custom stylesheet.")]
+        [DefaultValue("md-styles.css")]
+        public string CustomStylesheetFileName { get; set; } = "md-styles.css";
+
+        [Category("Preview Window")]
         [DefaultValue(600)]
         [Browsable(false)]
         public double PreviewWindowWidth { get; set; } = 600;
