@@ -1,12 +1,11 @@
 # Roadmap
 
 - [x] Custom stylesheet support
+- [x] Validate local image and link paths
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ascii image URLs (#20)
-- [ ] Generate .html files nested under the markdown file
-- [ ] Validate local image and link paths
 - [ ] Intellisense for local image and link paths
 
 Features that have a checkmark are complete and available for

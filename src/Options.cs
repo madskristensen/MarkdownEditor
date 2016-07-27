@@ -62,5 +62,11 @@ namespace MarkdownEditor
         [DefaultValue(500)]
         [Browsable(false)]
         public double PreviewWindowHeight { get; set; } = 500;
+
+        [Category("Validation")]
+        [DisplayName("Enabled")]
+        [Description("Enable validation to run on local link and image references.")]
+        [DefaultValue(true)]
+        public bool EnableValidation { get; set; } = true;
     }
 }

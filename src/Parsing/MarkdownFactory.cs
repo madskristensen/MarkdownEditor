@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Markdig;
 using Markdig.Extensions.Footers;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -35,6 +39,44 @@ namespace MarkdownEditor.Parsing
             }
         }
 
+
+        public static IEnumerable<Error> Validate(this MarkdownDocument doc, string file)
+        {
+            var descendants = doc.Descendants().OfType<LinkInline>();
+
+            foreach (var link in descendants)
+            {
+                if (!IsUrlValid(file, link.Url))
+                    yield return new Error
+                    {
+                        File = file,
+                        Message = $"The file \"{link.Url}\" could not be resolved.",
+                        Line = link.Line,
+                        Column = link.Column,
+                        ErrorCode = "missing-file",
+                        Span = new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length)
+                    };
+            }
+        }
+
+        private static bool IsUrlValid(string file, string url)
+        {
+            if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#"))
+                return true;
+
+            try
+            {
+                string currentDir = Path.GetDirectoryName(file);
+                string path = Path.Combine(currentDir, url);
+
+                return File.Exists(path);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return true;
+            }
+        }
 
         public static bool MatchSmartBlock(string text)
         {
