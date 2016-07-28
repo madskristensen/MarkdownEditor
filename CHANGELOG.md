@@ -2,6 +2,7 @@
 
 - [x] Custom stylesheet support
 - [x] Validate local image and link paths
+- [x] Links in preview window are clickable
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
