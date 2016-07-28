@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Markdig.Syntax;
 using MarkdownEditor.Parsing;
@@ -20,14 +21,26 @@ namespace MarkdownEditor
         {
             _buffer = buffer;
             _file = file;
-            ParseDocument();
 
-            _buffer.Changed += bufferChanged;
+            ParseDocument();
+            MarkdownFactory.Parsed += MarkdownParsed;
         }
 
-        private void bufferChanged(object sender, TextContentChangedEventArgs e)
+        private void MarkdownParsed(object sender, ParsingEventArgs e)
         {
-            ParseDocument();
+            if (string.IsNullOrEmpty(e.File) || e.Snapshot != _buffer.CurrentSnapshot)
+                return;
+
+            var errors = e.Document.Validate(e.File);
+            var errorCount = errors.Count();
+
+            if (errorCount == 0 && (_errors == null || !_errors.Any()))
+                return;
+
+            _errors = errors;
+
+            SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
+            TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
         }
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
@@ -57,7 +70,6 @@ namespace MarkdownEditor
 
             await Task.Run(() =>
             {
-                // TODO: Use the MarkdownFactory.parsed event instead
                 _doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
                 _errors = _doc.Validate(_file);
 

@@ -79,8 +79,8 @@
     <Compile Include="Commands\CopyAsHtmlCommand.cs" />
     <Compile Include="DragDrop\MarkdownDropHandler.cs" />
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
-    <Compile Include="ErrorList\Error.cs" />
-    <Compile Include="ErrorList\ErrorList.cs" />
+    <Compile Include="Validation\ErrorList\Error.cs" />
+    <Compile Include="Validation\ErrorList\ErrorList.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />

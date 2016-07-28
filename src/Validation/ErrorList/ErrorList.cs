@@ -62,7 +62,6 @@ namespace MarkdownEditor
         {
             var provider = GetProvider(file);
 
-            provider.SuspendRefresh();
             provider.Tasks.Clear();
 
             foreach (var error in errors)
@@ -70,9 +69,6 @@ namespace MarkdownEditor
                 var task = CreateTask(error, provider);
                 provider.Tasks.Add(task);
             }
-
-            provider.ResumeRefresh();
-            provider.Refresh();
         }
 
         private static ErrorListProvider GetProvider(string file)
