@@ -34,7 +34,7 @@ namespace MarkdownEditor.Parsing
                 {
                     var text = key.GetText();
                     var markdownDocument = Markdown.Parse(text, Pipeline);
-                    Parsed?.Invoke(snapshot, new ParsingEventArgs(markdownDocument, file));
+                    Parsed?.Invoke(snapshot, new ParsingEventArgs(markdownDocument, file, snapshot));
                     return markdownDocument;
                 });
             }

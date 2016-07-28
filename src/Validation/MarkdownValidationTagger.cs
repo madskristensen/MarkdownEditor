@@ -32,7 +32,7 @@ namespace MarkdownEditor
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0 || _doc == null || !MarkdownEditorPackage.Options.EnableValidation)
+            if (spans.Count == 0 || _errors == null || !MarkdownEditorPackage.Options.EnableValidation)
                 yield break;
 
             foreach (var error in _errors)
@@ -57,6 +57,7 @@ namespace MarkdownEditor
 
             await Task.Run(() =>
             {
+                // TODO: Use the MarkdownFactory.parsed event instead
                 _doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
                 _errors = _doc.Validate(_file);
 
