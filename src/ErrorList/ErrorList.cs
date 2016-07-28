@@ -19,32 +19,32 @@ namespace MarkdownEditor
         public static void Initialize(IServiceProvider provider)
         {
             _provider = provider;
-            MarkdownFactory.Parsed += MarkdownFactory_Parsed;
+            MarkdownFactory.Parsed += MarkdownParsed;
 
             _solutionEvents = ProjectHelpers.DTE.Events.SolutionEvents;
-            _solutionEvents.AfterClosing += SolutionEvents_AfterClosing;
-            _solutionEvents.ProjectRemoved += _solutionEvents_ProjectRemoved;
+            _solutionEvents.AfterClosing += SolutionClosed;
+            _solutionEvents.ProjectRemoved += ProjectRemoved;
 
             _documentEvents = ProjectHelpers.DTE.Events.DocumentEvents;
-            _documentEvents.DocumentClosing += _documentEvents_DocumentClosing;
+            _documentEvents.DocumentClosing += DocumentClosing;
         }
 
-        private static void _solutionEvents_ProjectRemoved(Project Project)
+        private static void ProjectRemoved(Project Project)
         {
             CleanAllErrors();
         }
 
-        private static void SolutionEvents_AfterClosing()
+        private static void SolutionClosed()
         {
             CleanAllErrors();
         }
 
-        private static void _documentEvents_DocumentClosing(Document Document)
+        private static void DocumentClosing(Document Document)
         {
             CleanErrors(Document.FullName);
         }
 
-        private static async void MarkdownFactory_Parsed(object sender, ParsingEventArgs e)
+        private static async void MarkdownParsed(object sender, ParsingEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.File))
             {
@@ -60,10 +60,10 @@ namespace MarkdownEditor
 
         public static void AddErrors(string file, IEnumerable<Error> errors)
         {
-            CleanErrors(file);
+            var provider = GetProvider(file);
 
-            ErrorListProvider provider = new ErrorListProvider(_provider);
             provider.SuspendRefresh();
+            provider.Tasks.Clear();
 
             foreach (var error in errors)
             {
@@ -72,7 +72,18 @@ namespace MarkdownEditor
             }
 
             provider.ResumeRefresh();
+            provider.Refresh();
+        }
+
+        private static ErrorListProvider GetProvider(string file)
+        {
+            if (_providers.ContainsKey(file))
+                return _providers[file];
+
+            var provider = new ErrorListProvider(_provider);
             _providers.Add(file, provider);
+
+            return provider;
         }
 
         public static void CleanErrors(string file)
@@ -113,7 +124,7 @@ namespace MarkdownEditor
                 Text = $"({Vsix.Name}) {error.Message}",
             };
 
-            EnvDTE.ProjectItem item = ProjectHelpers.DTE.Solution.FindProjectItem(error.File);
+            var item = ProjectHelpers.DTE.Solution.FindProjectItem(error.File);
 
             if (item != null && item.ContainingProject != null)
                 AddHierarchyItem(task, item.ContainingProject);
@@ -124,7 +135,7 @@ namespace MarkdownEditor
 
                 if (task.Column > 0)
                 {
-                    var doc = (EnvDTE.TextDocument)ProjectHelpers.DTE.ActiveDocument.Object("textdocument");
+                    var doc = (TextDocument)ProjectHelpers.DTE.ActiveDocument.Object("textdocument");
                     doc.Selection.MoveToLineAndOffset(task.Line, task.Column, false);
                 }
             };
@@ -134,7 +145,7 @@ namespace MarkdownEditor
 
         const uint DISP_E_MEMBERNOTFOUND = 0x80020003;
 
-        public static void AddHierarchyItem(ErrorTask task, EnvDTE.Project project)
+        public static void AddHierarchyItem(ErrorTask task, Project project)
         {
             IVsHierarchy hierarchyItem = null;
             IVsSolution solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
