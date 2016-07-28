@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Markdig.Syntax;
 using MarkdownEditor.Parsing;
@@ -24,20 +23,6 @@ namespace MarkdownEditor
             ParseDocument();
 
             _buffer.Changed += bufferChanged;
-            MarkdownFactory.Parsed += MarkdownFactory_Parsed;
-        }
-
-        private void MarkdownFactory_Parsed(object sender, EventArgs e)
-        {
-            if (sender != _buffer.CurrentSnapshot)
-                return;
-
-            if (_doc != null)
-            {
-
-                //TableDataSource.Instance.CleanErrors(_file);
-                //TableDataSource.Instance.AddErrors(_file, _errors);
-            }
         }
 
         private void bufferChanged(object sender, TextContentChangedEventArgs e)
@@ -81,7 +66,6 @@ namespace MarkdownEditor
                 TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
             });
         }
-
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
     }
