@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -59,29 +60,7 @@ namespace MarkdownEditor
                 _cachedHeight = _htmlDocument.body.offsetHeight;
                 _htmlDocument.documentElement.setAttribute("scrollTop", _positionPercentage * _cachedHeight / 100);
 
-                foreach (IHTMLElement link in _htmlDocument.links)
-                {
-                    HTMLAnchorElement anchor = link as HTMLAnchorElement;
-                    if (anchor == null || anchor.protocol != "file:")
-                        continue;
-
-                    HTMLAnchorEvents_Event handler = anchor as HTMLAnchorEvents_Event;
-                    if (handler == null)
-                        continue;
-
-                    string file = anchor.pathname.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-                    if (!File.Exists(file))
-                    {
-                        anchor.title = "The file does not exist";
-                        return;
-                    }
-
-                    handler.onclick += () =>
-                    {
-                        ProjectHelpers.OpenFileInPreviewTab(file);
-                        return true;
-                    };
-                }
+                this.AdjustAnchors();
             };
 
             // Open external links in default browser
@@ -91,9 +70,85 @@ namespace MarkdownEditor
                     return;
 
                 e.Cancel = true;
-                if (e.Uri.IsAbsoluteUri && e.Uri.Scheme.StartsWith("http"))
-                    Process.Start(e.Uri.ToString());
+
+                // If it's a file-based anchor we converted, open the related file if possible
+                if (e.Uri.Scheme == "about")
+                {
+                    string file = e.Uri.LocalPath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+
+                    // In-page section link.  Not something we can handle here so ignore it.  Note that they
+                    // don't work anyway even if this event isn't canceled.
+                    if (file == "blank")
+                        return;
+
+                    if (!File.Exists(file))
+                    {
+                        string[] possibleExtensions = new string[] { ".markdown", ".md", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mmd" };
+                        string ext = null;
+
+                        // If the file has no extension, see if one exists with a markdown extension.  If so,
+                        // treat it as the file to open.
+                        if (String.IsNullOrEmpty(Path.GetExtension(file)))
+                            ext = possibleExtensions.FirstOrDefault(fx => File.Exists(file + fx));
+
+                        if (ext != null)
+                            ProjectHelpers.OpenFileInPreviewTab(file + ext);
+                    }
+                    else
+                        ProjectHelpers.OpenFileInPreviewTab(file);
+                }
+                else
+                    if (e.Uri.IsAbsoluteUri && e.Uri.Scheme.StartsWith("http"))
+                        Process.Start(e.Uri.ToString());
             };
+        }
+
+        /// <summary>
+        /// Adjust the file-based anchors so that they are navigable on the local file system
+        /// </summary>
+        /// <remarks>Anchors using the "file:" protocol appear to be blocked by security settings and won't work.
+        /// If we convert them to use the "about:" protocol so that we recognize them, we can open the file in
+        /// the <c>Navigating</c> event handler.</remarks>
+        private void AdjustAnchors()
+        {
+            try
+            {
+                foreach (IHTMLElement link in _htmlDocument.links)
+                {
+                    HTMLAnchorElement anchor = link as HTMLAnchorElement;
+
+                    if (anchor != null && anchor.protocol == "file:")
+                    {
+                        string pathName = null, hash = anchor.hash;
+
+                        // Anchors with a hash cause a crash if you try to set the protocol without clearing the
+                        // hash and path name first.
+                        if (hash != null)
+                        {
+                            pathName = anchor.pathname;
+                            anchor.hash = null;
+                            anchor.pathname = String.Empty;
+                        }
+
+                        anchor.protocol = "about:";
+
+                        if (hash != null)
+                        {
+                            // For an in-page section link, use "blank" as the path name.  These don't work
+                            // anyway but this is the proper way to handle them.
+                            if (pathName == null || pathName.EndsWith("/"))
+                                pathName = "blank";
+
+                            anchor.pathname = pathName;
+                            anchor.hash = hash;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore exceptions
+            }
         }
 
         private static int GetZoomFactor()
@@ -178,7 +233,7 @@ namespace MarkdownEditor
                 {
                     // We could output this to the exception pane of VS?
                     // Though, it's easier to output it directly to the browser
-                    html = "<p>An unexpected exception occured:</p><pre>" +
+                    html = "<p>An unexpected exception occurred:</p><pre>" +
                            ex.ToString().Replace("<", "&lt;").Replace("&", "&amp;") + "</pre>";
                 }
                 finally
@@ -187,14 +242,22 @@ namespace MarkdownEditor
                     htmlWriter?.GetStringBuilder().Clear();
                 }
 
+                IHTMLElement content = null;
+
                 if (_htmlDocument != null)
+                    content = _htmlDocument.getElementById("___markdown-content___");
+
+                // Content may be null if the Refresh context menu option is used.  If so, reload the template.
+                if (content != null)
                 {
-                    var content = _htmlDocument.getElementById("___markdown-content___");
                     content.innerHTML = html;
 
-                    // Makes sure that any code blocks get syntax highligted by Prism
+                    // Makes sure that any code blocks get syntax highlighted by Prism
                     var win = _htmlDocument.parentWindow;
                     win.execScript("Prism.highlightAll();", "javascript");
+
+                    // Adjust the anchors after and edit
+                    this.AdjustAnchors();
                 }
                 else
                 {
