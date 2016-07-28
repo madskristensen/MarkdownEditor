@@ -80,9 +80,7 @@
     <Compile Include="DragDrop\MarkdownDropHandler.cs" />
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
     <Compile Include="ErrorList\Error.cs" />
-    <Compile Include="ErrorList\SinkManager.cs" />
-    <Compile Include="ErrorList\TableDataSource.cs" />
-    <Compile Include="ErrorList\TableEntriesSnapshot.cs" />
+    <Compile Include="ErrorList\ErrorList.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="MarkdownEditorPackage.cs" />
     <Compile Include="Outlining\MarkdownOutliningProvider.cs" />
     <Compile Include="Outlining\MarkdownOutliningTagger.cs" />
+    <Compile Include="Parsing\ParsingEventArgs.cs" />
     <Compile Include="Validation\MarkdownValidationProvider.cs" />
     <Compile Include="Validation\MarkdownValidationTagger.cs" />
     <Compile Include="VSCommandTable.cs">

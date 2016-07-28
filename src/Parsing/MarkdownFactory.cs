@@ -26,7 +26,7 @@ namespace MarkdownEditor.Parsing
 
         public static MarkdownPipeline Pipeline { get; }
 
-        public static MarkdownDocument ParseToMarkdown(this ITextSnapshot snapshot)
+        public static MarkdownDocument ParseToMarkdown(this ITextSnapshot snapshot, string file = null)
         {
             lock (_syncRoot)
             {
@@ -34,11 +34,13 @@ namespace MarkdownEditor.Parsing
                 {
                     var text = key.GetText();
                     var markdownDocument = Markdown.Parse(text, Pipeline);
+                    Parsed?.Invoke(snapshot, new ParsingEventArgs(markdownDocument, file));
                     return markdownDocument;
                 });
             }
         }
 
+        public static event EventHandler<ParsingEventArgs> Parsed;
 
         public static IEnumerable<Error> Validate(this MarkdownDocument doc, string file)
         {

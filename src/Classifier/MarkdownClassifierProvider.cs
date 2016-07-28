@@ -12,9 +12,17 @@ namespace MarkdownEditor
         [Import]
         private IClassificationTypeRegistryService classificationRegistry { get; set; }
 
+        [Import]
+        public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
+
         public IClassifier GetClassifier(ITextBuffer buffer)
         {
-            return buffer.Properties.GetOrCreateSingletonProperty(() => new MarkdownClassifier(buffer, classificationRegistry));
+            ITextDocument document;
+
+            if (!TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
+                return null;
+
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new MarkdownClassifier(buffer, classificationRegistry, document.FilePath));
         }
     }
 }

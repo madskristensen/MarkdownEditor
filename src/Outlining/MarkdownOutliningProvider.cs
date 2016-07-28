@@ -11,9 +11,17 @@ namespace MarkdownEditor.Outlining
     [ContentType(MarkdownLanguage.LanguageName)]
     public class MarkdownOutliningProvider : ITaggerProvider
     {
+        [Import]
+        public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
+
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            return buffer.Properties.GetOrCreateSingletonProperty(() => new MarkdownOutliningTagger(buffer)) as ITagger<T>;
+            ITextDocument document;
+
+            if (!TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
+                return null;
+
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new MarkdownOutliningTagger(buffer, document.FilePath)) as ITagger<T>;
         }
     }
 }

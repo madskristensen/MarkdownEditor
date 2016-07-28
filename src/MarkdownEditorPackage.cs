@@ -54,6 +54,7 @@ namespace MarkdownEditor
             _options = (Options)GetDialogPage(typeof(Options));
 
             Logger.Initialize(this, Vsix.Name);
+            ErrorList.Initialize(this);
             CopyAsHtmlCommand.Initialize(this);
             AddCustomStylesheet.Initialize(this);
 

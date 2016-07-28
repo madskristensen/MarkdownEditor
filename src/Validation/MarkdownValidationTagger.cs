@@ -24,6 +24,20 @@ namespace MarkdownEditor
             ParseDocument();
 
             _buffer.Changed += bufferChanged;
+            MarkdownFactory.Parsed += MarkdownFactory_Parsed;
+        }
+
+        private void MarkdownFactory_Parsed(object sender, EventArgs e)
+        {
+            if (sender != _buffer.CurrentSnapshot)
+                return;
+
+            if (_doc != null)
+            {
+
+                //TableDataSource.Instance.CleanErrors(_file);
+                //TableDataSource.Instance.AddErrors(_file, _errors);
+            }
         }
 
         private void bufferChanged(object sender, TextContentChangedEventArgs e)
@@ -39,25 +53,6 @@ namespace MarkdownEditor
             foreach (var error in _errors)
             {
                 yield return GenerateTag(error);
-            }
-        }
-
-        private bool IsUrlValid(string url)
-        {
-            if (url.Contains("://") || url.StartsWith("/"))
-                return true;
-
-            try
-            {
-                string currentDir = Path.GetDirectoryName(_file);
-                string path = Path.Combine(currentDir, url);
-
-                return File.Exists(path);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-                return true;
             }
         }
 
@@ -77,10 +72,8 @@ namespace MarkdownEditor
 
             await Task.Run(() =>
             {
-                _doc = _buffer.CurrentSnapshot.ParseToMarkdown();
+                _doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
                 _errors = _doc.Validate(_file);
-
-                TableDataSource.Instance.AddErrors(_file, _errors);
 
                 SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
                 _isProcessing = false;

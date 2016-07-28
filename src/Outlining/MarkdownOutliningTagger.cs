@@ -14,10 +14,12 @@ namespace MarkdownEditor.Outlining
         private MarkdownDocument _doc;
         private bool _isProcessing;
         private ITextBuffer _buffer;
+        private string _file;
 
-        public MarkdownOutliningTagger(ITextBuffer buffer)
+        public MarkdownOutliningTagger(ITextBuffer buffer, string file)
         {
             _buffer = buffer;
+            _file = file;
             ParseDocument();
 
             _buffer.Changed += bufferChanged;
@@ -37,7 +39,7 @@ namespace MarkdownEditor.Outlining
 
             await Task.Run(() =>
             {
-                _doc = _buffer.CurrentSnapshot.ParseToMarkdown();
+                _doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
 
                 SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
                 _isProcessing = false;
