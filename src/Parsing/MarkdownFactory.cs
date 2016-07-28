@@ -66,6 +66,14 @@ namespace MarkdownEditor.Parsing
             if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#"))
                 return true;
 
+            var query = url.IndexOf('?');
+            if (query > -1)
+                url = url.Substring(0, query);
+
+            var fragment = url.IndexOf('#');
+            if (fragment > -1)
+                url = url.Substring(0, fragment);
+
             try
             {
                 string currentDir = Path.GetDirectoryName(file);
