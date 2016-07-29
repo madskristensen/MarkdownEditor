@@ -1,22 +1,28 @@
-# Roadmap
+# Road map
 
-- [x] Custom stylesheet support
-- [x] Validate local image and link paths
-- [x] Links in preview window are clickable
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
-- [ ] Support for non-ascii image URLs (#20)
+- [ ] Support for non-ASCII image URLs (#20)
 - [ ] Intellisense for local image and link paths
 
 Features that have a checkmark are complete and available for
 download in the
 [CI build](http://vsixgallery.com/extension/9ca64947-e9ca-4543-bfb8-6cce9be19fd6/).
 
-# Changelog
+# Change log
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.6
+
+**2016-07-29**
+
+- [x] Custom stylesheet support
+- [x] Validate local image and link paths
+- [x] Links in preview window are clickable
+- [x] Support for [Visual Studio Spell Checker](https://visualstudiogallery.msdn.microsoft.com/a23de100-31a1-405c-b4b7-d6be40c3dfff)
 
 ## 1.5
 
@@ -74,17 +80,17 @@ on the official Visual Studio extension gallery.
 
 **2016-06-18**
 
-- [x] Syntax highligting
+- [x] Syntax highlighting
 - [x] Preview window
 - [x] Added GitHub stylesheet
 - [x] Store width of preview window
 - [x] Options to disable preview window
-- [x] Zooming dependant on OS DPI settings
+- [x] Zooming dependent on OS DPI settings
 - [x] Markdown file icons in Solution Explorer
 - [x] Drag 'n drop of image
 - [x] Paste image from clipboard directly to editor
 - [x] Use [Prism](http://prismjs.com/) for code block syntax highlighting
-- [x] Write documention in [README.md](README.md)
+- [x] Write documentation in [README.md](README.md)
 - [x] Clicking links to local markdown documents in preview should open them
 - [x] Outlining for code blocks
 - [x] Setting to disable outlining
