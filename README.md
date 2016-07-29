@@ -7,17 +7,17 @@ or get the [CI build](http://vsixgallery.com/extension/9ca64947-e9ca-4543-bfb8-6
 
 ---------------------------------------
 
-A full featured Markdown editor with live preview and syntax highligting.
+A full featured Markdown editor with live preview and syntax highlighting.
 Supports GitHub flavored Markdown.
 
-See the [changelog](CHANGELOG.md) for changes and roadmap.
+See the [change log](CHANGELOG.md) for changes and road map.
 
 ## Features
 
 - Powered by [Markdig](https://github.com/lunet-io/markdig) - the best markdown parser
 - Syntax highlighting
 - Live preview window with scroll sync
-- CommandMark and GitHub flavored Markdown
+- CommonMark and GitHub flavored Markdown
 - High-DPI support
 - Drag 'n drop of images supported
 - Paste image from clipboard directly onto document
@@ -47,7 +47,7 @@ it opens.
 Every time the markdown document is modified, the preview window
 will update.
 
-Any code blocks recieves full syntax highligting in the preview
+Any code blocks receives full syntax highlighting in the preview
 window. Here's an example of JavaScript code rendered.
 
 ![Code Colorizing](art/code-colorizing.png)
@@ -58,7 +58,7 @@ the preview window will follow.
 
 Live preview can be disabled in the [settings](#settings).
 
-> The syntax highligter is powered by [Prism](http://prismjs.com/)
+> The syntax highlighter is powered by [Prism](http://prismjs.com/)
 
 #### Custom stylesheets
 The preview window supports loading of custom stylesheets. It will
@@ -82,7 +82,7 @@ insert the appropriate markdown that will render the image.
 
 ### Paste images
 This is really helpful for copying images from a browser or for
-inserting screenshots. Simply copy an image into the clipboard and
+inserting screen shots. Simply copy an image into the clipboard and
 paste it directly into the document. This will prompt you for a file
 name relative to the document and then it inserts the appropriate
 markdown.
@@ -91,7 +91,7 @@ It will even parse the file name and make a friendly name to use
 for the alt text.
 
 ### Outlining
-Any fenced code and HTML blocks can be collapsed, so that tihs:
+Any fenced code and HTML blocks can be collapsed, so that this:
 
 ![Outlining Expanded](art/outlining-expanded.png)
 
@@ -104,9 +104,9 @@ Any fenced code and HTML blocks can be collapsed, so that tihs:
 
 **Ctrl+I** makes the selected text italic by wrapping it with `_`.
 
-**Ctrl+Shift+C** wrappes the selected text in a code block.
+**Ctrl+Shift+C** wraps the selected text in a code block.
 
-**Ctrl+Space** checks and uncheks task list items.
+**Ctrl+Space** checks and unchecks task list items.
 
 ```markdown
 - [x] task list item
@@ -137,7 +137,7 @@ in this:
 
 ### Brace completion with type-through
 This makes typing faster. Whenever you type opening braces,
-paranthesis or brackets, a corrosponding closing character is
+parenthesis or brackets, a corresponding closing character is
 inserted. It is smart about when it adds the closing character
 so it doesn't become annoying.
 
