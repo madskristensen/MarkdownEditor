@@ -1,5 +1,6 @@
 # Road map
 
+- [x] Convert text to bulleted list (#35)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
