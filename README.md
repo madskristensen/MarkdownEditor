@@ -72,7 +72,7 @@ stylesheet.
 To generate a custom stylesheet, simply right-click inside the
 markdown editor document and select _Add Custom Stylesheet..._
 
-![Custom Stylesheet](art\custom-stylesheet.png)
+![Custom Stylesheet](art/custom-stylesheet.png)
 
 The name of the custom stylesheet can be changed in the settings.
 
