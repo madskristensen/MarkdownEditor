@@ -47,9 +47,16 @@ namespace MarkdownEditor
                 list.AddRange(CreateActionSet(convertToLink, convertToImage));
             }
 
+            // Blocks
             var convertToQuote = new ConvertToQuoteAction(SelectedSpan, _view);
             var convertToCodeBlock = new ConvertToCodeBlockAction(SelectedSpan, _view);
             list.AddRange(CreateActionSet(convertToQuote, convertToCodeBlock));
+
+            // Lists
+            var convertToUnorderedList = new ConvertToUnorderedList(SelectedSpan, _view);
+            var convertToOrderedList = new ConvertToOrderedList(SelectedSpan, _view);
+            var convertToTaskList = new ConvertToTaskList(SelectedSpan, _view);
+            list.AddRange(CreateActionSet(convertToUnorderedList, convertToOrderedList, convertToTaskList));
 
             return list;
         }

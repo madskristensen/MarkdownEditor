@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
 
 namespace MarkdownEditor
 {
@@ -72,6 +74,15 @@ namespace MarkdownEditor
         {
             telemetryId = Guid.Empty;
             return false;
+        }
+
+        protected static IEnumerable<ITextSnapshotLine> GetSelectedLines(SnapshotSpan span, out SnapshotSpan wholeSpan)
+        {
+            var startLine = span.Start.GetContainingLine();
+            var endLine = span.End.GetContainingLine();
+
+            wholeSpan = new SnapshotSpan(startLine.Start, endLine.End);
+            return span.Snapshot.Lines.Where(l => l.LineNumber >= startLine.LineNumber && l.LineNumber <= endLine.LineNumber);
         }
     }
 }
