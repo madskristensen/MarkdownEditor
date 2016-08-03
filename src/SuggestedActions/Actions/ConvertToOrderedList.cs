@@ -42,7 +42,7 @@ namespace MarkdownEditor
                 {
                     if (!string.IsNullOrWhiteSpace(line.GetText()))
                     {
-                        edit.Insert(line.Start.Position, $"{number} ");
+                        edit.Insert(line.Start.Position, $"{number}. ");
                         number += 1;
                     }
                 }

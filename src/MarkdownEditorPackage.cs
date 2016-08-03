@@ -9,9 +9,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 namespace MarkdownEditor
 {
     [Guid(PackageGuids.guidPackageString)]
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
-    [ProvideService(typeof(MarkdownLanguage), ServiceName = MarkdownLanguage.LanguageName)]
+    [ProvideService(typeof(MarkdownLanguage), ServiceName = MarkdownLanguage.LanguageName, IsAsyncQueryable = true)]
     [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownLanguage.LanguageName, 100, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true)]
     [ProvideLanguageEditorOptionPage(typeof(Options), MarkdownLanguage.LanguageName, null, "Advanced", "#101", new[] { "markdown", "md" })]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".markdown")]

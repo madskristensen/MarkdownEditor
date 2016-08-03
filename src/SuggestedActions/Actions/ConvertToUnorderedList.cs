@@ -40,7 +40,7 @@ namespace MarkdownEditor
                 foreach (var line in lines)
                 {
                     if (!string.IsNullOrWhiteSpace(line.GetText()))
-                        edit.Insert(line.Start.Position, " - ");
+                        edit.Insert(line.Start.Position, "- ");
                 }
 
                 edit.Apply();
