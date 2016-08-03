@@ -60,6 +60,8 @@ namespace MarkdownEditor
             var serviceContainer = this as IServiceContainer;
             var langService = new MarkdownLanguage(this);
             serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
+
+            base.Initialize();
         }
     }
 }
