@@ -66,6 +66,9 @@ namespace MarkdownEditor.Parsing
             if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#"))
                 return true;
 
+            if (url.Contains('\\'))
+                return false;
+
             var query = url.IndexOf('?');
             if (query > -1)
                 url = url.Substring(0, query);

@@ -11,7 +11,7 @@ namespace MarkdownEditor
         public const string Name = "Markdown Editor";
         public const string Description = "A full featured Markdown editor with live preview and syntax highligting. Supports GitHub flavored Markdown.";
         public const string Language = "en-US";
-        public const string Version = "1.6";
+        public const string Version = "1.6.1";
         public const string Author = "Mads Kristensen";
         public const string Tags = "markdown, editor, live preview";
     }
