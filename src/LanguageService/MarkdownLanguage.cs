@@ -29,7 +29,7 @@ namespace MarkdownEditor
         {
             if (preferences == null)
             {
-                preferences = new LanguagePreferences(this.Site, typeof(MarkdownLanguage).GUID, this.Name);
+                preferences = new LanguagePreferences(Site, typeof(MarkdownLanguage).GUID, Name);
 
                 if (preferences != null)
                 {
@@ -58,7 +58,6 @@ namespace MarkdownEditor
 
             return preferences;
         }
-
 
         public override IScanner GetScanner(IVsTextLines buffer)
         {
