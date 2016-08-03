@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.Composition;
+using System.Windows.Threading;
 using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
@@ -24,11 +26,14 @@ namespace MarkdownEditor
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
-            var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-            ITextDocument document;
-
-            if (TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
+                var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+                ITextDocument document;
+
+                if (!TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
+                    return;
+
                 textView.Properties.GetOrCreateSingletonProperty(() => new PasteImage(textViewAdapter, textView, document.FilePath));
                 textView.Properties.GetOrCreateSingletonProperty(() => new BoldCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ItalicCommandTarget(textViewAdapter, textView));
@@ -37,7 +42,7 @@ namespace MarkdownEditor
                 textView.Properties.GetOrCreateSingletonProperty(() => new IndentationCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ToogleTaskCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new Navigate(textViewAdapter, textView));
-            }
+            });
         }
     }
 }

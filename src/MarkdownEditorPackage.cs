@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
-using System.Windows.Threading;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -59,11 +58,8 @@ namespace MarkdownEditor
             AddCustomStylesheet.Initialize(this);
 
             var serviceContainer = this as IServiceContainer;
-            var langService = new MarkdownLanguage();
-            langService.SetSite(this);
+            var langService = new MarkdownLanguage(this);
             serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
-
-            base.Initialize();
         }
     }
 }
