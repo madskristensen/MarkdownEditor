@@ -26,14 +26,14 @@ namespace MarkdownEditor
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_None, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 
-    [ProvideEditorExtension(typeof(EditorFactory), ".markdown", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".md", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".mdown", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".mdwn", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".mkd", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".mkdn", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".mmd", 100, NameResourceID = 110)]
-    [ProvideEditorExtension(typeof(EditorFactory), ".rst", 100, NameResourceID = 110)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".markdown", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".md", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".mdown", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".mdwn", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".mkd", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".mkdn", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".mmd", 100)]
+    [ProvideEditorExtension(typeof(EditorFactory), ".rst", 100)]
     [ProvideEditorExtension(typeof(EditorFactory), ".*", 2, NameResourceID = 110)]
     public sealed class MarkdownEditorPackage : Package
     {
