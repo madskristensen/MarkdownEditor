@@ -39,7 +39,6 @@ namespace MarkdownEditor
     {
         private static Options _options;
         private static object _syncRoot = new object();
-        private EditorFactory editorFactory;
 
         public static Options Options
         {
@@ -73,7 +72,7 @@ namespace MarkdownEditor
             var langService = new MarkdownLanguage(this);
             serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
 
-            editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
+            var editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
             RegisterEditorFactory(editorFactory);
         }
 
