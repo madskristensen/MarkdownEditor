@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace MarkdownEditor
@@ -9,8 +10,8 @@ namespace MarkdownEditor
         private static readonly Guid _commandGroup = new Guid("{c9dd4a59-47fb-11d2-83e7-00c04f9902c1}");
         private static readonly uint _commandId = 311; // maps to Debug.FunctionalBreakpoint
 
-        public BoldCommandTarget(IVsTextView adapter, IWpfTextView textView)
-            : base(adapter, textView, _commandGroup, _commandId)
+        public BoldCommandTarget(IVsTextView adapter, IWpfTextView textView, ITextStructureNavigatorSelectorService navigator)
+            : base(adapter, textView, navigator, _commandGroup, _commandId)
         { }
 
         public override string Symbol

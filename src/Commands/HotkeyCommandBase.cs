@@ -5,6 +5,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace MarkdownEditor
@@ -13,14 +14,16 @@ namespace MarkdownEditor
     {
         private IOleCommandTarget _nextCommandTarget;
         private readonly IWpfTextView _view;
+        private ITextStructureNavigator _navigator;
 
         private readonly Guid _commandGroup;
         private readonly uint _commandId;
 
-        public HotkeyCommandBase(IVsTextView adapter, IWpfTextView textView, Guid commandGroup, uint commandId)
+        public HotkeyCommandBase(IVsTextView adapter, IWpfTextView textView, ITextStructureNavigatorSelectorService navigator, Guid commandGroup, uint commandId)
         {
             _view = textView;
             _commandGroup = commandGroup;
+            _navigator = navigator.GetTextStructureNavigator(textView.TextBuffer);
             _commandId = commandId;
 
             Dispatcher.CurrentDispatcher.InvokeAsync(() =>
@@ -49,23 +52,41 @@ namespace MarkdownEditor
             if (pguidCmdGroup != _commandGroup || _commandId != nCmdID)
                 return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
 
-            var span = _view.Selection.SelectedSpans.First().Span;
+            Span span = GetSelectedSpan();
+
             string text = _view.TextBuffer.CurrentSnapshot.GetText(span);
 
             bool isMultiline = text.Contains('\n');
             string symbolStart = isMultiline ? MultiLineSymbolStart : Symbol;
             string symbolEnd = isMultiline ? MultiLineSymbolEnd : Symbol;
 
-            using (var edit = _view.TextBuffer.CreateEdit())
+            try
             {
-                edit.Replace(span, $"{symbolStart}{text}{symbolEnd}");
-                edit.Apply();
+                ProjectHelpers.DTE.UndoContext.Open("Emphasize text");
+
+                using (var edit = _view.TextBuffer.CreateEdit())
+                {
+                    edit.Replace(span, $"{symbolStart}{text}{symbolEnd}");
+                    edit.Apply();
+                }
+
+                var newSelectionSpan = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, span.Start, span.Length + symbolStart.Length + symbolEnd.Length);
+                _view.Selection.Select(newSelectionSpan, _view.Selection.IsReversed);
+            }
+            finally
+            {
+                ProjectHelpers.DTE.UndoContext.Close();
             }
 
-            var newSelectionSpan = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, span.Start, span.Length + symbolStart.Length + symbolEnd.Length);
-            _view.Selection.Select(newSelectionSpan, _view.Selection.IsReversed);
-
             return VSConstants.S_OK;
+        }
+
+        private Span GetSelectedSpan()
+        {
+            if (_view.Selection.IsEmpty)
+                return _navigator.GetExtentOfWord(_view.Caret.Position.BufferPosition - 1).Span;
+
+            return _view.Selection.SelectedSpans.First().Span;
         }
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
@@ -80,15 +101,7 @@ namespace MarkdownEditor
             {
                 if (_commandId == prgCmds[i].cmdID)
                 {
-                    if (!_view.Selection.IsEmpty)
-                    {
-                        prgCmds[i].cmdf = (uint)(OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-                    }
-                    else
-                    {
-                        prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_SUPPORTED;
-                    }
-
+                    prgCmds[i].cmdf = (uint)(OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
                     return VSConstants.S_OK;
                 }
             }

@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 
@@ -16,13 +17,16 @@ namespace MarkdownEditor
     public class CommandRegistration : IVsTextViewCreationListener
     {
         [Import]
-        public IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
+        IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
 
         [Import]
         ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
 
         [Import]
         IClassifierAggregatorService ClassifierAggregatorService { get; set; }
+
+        [Import]
+        ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
@@ -35,9 +39,9 @@ namespace MarkdownEditor
                     return;
 
                 textView.Properties.GetOrCreateSingletonProperty(() => new PasteImage(textViewAdapter, textView, document.FilePath));
-                textView.Properties.GetOrCreateSingletonProperty(() => new BoldCommandTarget(textViewAdapter, textView));
-                textView.Properties.GetOrCreateSingletonProperty(() => new ItalicCommandTarget(textViewAdapter, textView));
-                textView.Properties.GetOrCreateSingletonProperty(() => new InlineCodeCommandTarget(textViewAdapter, textView));
+                textView.Properties.GetOrCreateSingletonProperty(() => new BoldCommandTarget(textViewAdapter, textView, NavigatorService));
+                textView.Properties.GetOrCreateSingletonProperty(() => new ItalicCommandTarget(textViewAdapter, textView, NavigatorService));
+                textView.Properties.GetOrCreateSingletonProperty(() => new InlineCodeCommandTarget(textViewAdapter, textView, NavigatorService));
                 textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndentCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new IndentationCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ToogleTaskCommandTarget(textViewAdapter, textView));
