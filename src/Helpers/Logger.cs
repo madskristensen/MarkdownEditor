@@ -1,7 +1,9 @@
 using System;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using task = System.Threading.Tasks.Task;
 
-public static class Logger
+internal static class Logger
 {
     private static string _name;
     private static IVsOutputWindowPane _pane;
@@ -13,16 +15,10 @@ public static class Logger
         _name = name;
     }
 
-    public static void LogOnError(Action callback)
+    public static async task InitializeAsync(AsyncPackage package, string name)
     {
-        try
-        {
-            callback.Invoke();
-        }
-        catch (Exception ex)
-        {
-            Log(ex);
-        }
+        _output = await package.GetServiceAsync(typeof(SVsOutputWindow)) as IVsOutputWindow;
+        _name = name;
     }
 
     public static void Log(object message)
@@ -40,13 +36,28 @@ public static class Logger
         }
     }
 
+    public static void LogOnError(Action callback)
+    {
+        try
+        {
+            callback.Invoke();
+        }
+        catch (Exception ex)
+        {
+            Log(ex);
+        }
+    }
+
     private static bool EnsurePane()
     {
-        if (_pane == null)
+        if (_pane == null && _output != null)
         {
-            Guid guid = Guid.NewGuid();
-            _output.CreatePane(ref guid, _name, 1, 1);
-            _output.GetPane(ref guid, out _pane);
+            ThreadHelper.Generic.BeginInvoke(() =>
+            {
+                Guid guid = Guid.NewGuid();
+                _output.CreatePane(ref guid, _name, 1, 1);
+                _output.GetPane(ref guid, out _pane);
+            });
         }
 
         return _pane != null;

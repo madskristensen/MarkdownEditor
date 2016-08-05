@@ -14,8 +14,10 @@ namespace MarkdownEditor
     {
         public const string guidPackageString = "9ca64947-e9ca-4543-bfb8-6cce9be19fd6";
         public const string guidPackageCmdSetString = "82e1d55b-7e76-4319-ad60-94cc79c643c1";
+        public const string guidPackageActivationString = "7a8ef22f-30e9-420a-b9b2-d5f4b750a7c2";
         public static Guid guidPackage = new Guid(guidPackageString);
         public static Guid guidPackageCmdSet = new Guid(guidPackageCmdSetString);
+        public static Guid guidPackageActivation = new Guid(guidPackageActivationString);
     }
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.

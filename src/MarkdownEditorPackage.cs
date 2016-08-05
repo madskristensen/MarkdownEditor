@@ -10,11 +10,20 @@ namespace MarkdownEditor
     [Guid(PackageGuids.guidPackageString)]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
 
     [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownLanguage.LanguageName, 100, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true)]
     [ProvideLanguageEditorOptionPage(typeof(Options), MarkdownLanguage.LanguageName, null, "Advanced", "#101", new[] { "markdown", "md" })]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".markdown")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".md")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mdown")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mdwn")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mkd")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mkdn")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mmd")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".rst")]
 
-    [ProvideEditorFactory(typeof(EditorFactory), 110)]
+    [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_OpensSlowly, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 
     [ProvideEditorExtension(typeof(EditorFactory), ".markdown", 0x32, NameResourceID = 110)]
@@ -26,7 +35,6 @@ namespace MarkdownEditor
     [ProvideEditorExtension(typeof(EditorFactory), ".mmd", 0x32, NameResourceID = 110)]
     [ProvideEditorExtension(typeof(EditorFactory), ".rst", 0x32, NameResourceID = 110)]
     [ProvideEditorExtension(typeof(EditorFactory), ".*", 1, NameResourceID = 110)]
-    [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class MarkdownEditorPackage : Package
     {
         private static Options _options;
@@ -43,10 +51,7 @@ namespace MarkdownEditor
                     {
                         if (_options == null)
                         {
-                            // Load the package when options are needed
-                            var shell = (IVsShell)GetGlobalService(typeof(SVsShell));
-                            IVsPackage package;
-                            ErrorHandler.ThrowOnFailure(shell.LoadPackage(ref PackageGuids.guidPackage, out package));
+                            LoadPackage();
                         }
                     }
                 }
@@ -68,10 +73,18 @@ namespace MarkdownEditor
             var langService = new MarkdownLanguage(this);
             serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
 
-            editorFactory = new EditorFactory(this, langService.GetLanguageServiceGuid());
+            editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
             RegisterEditorFactory(editorFactory);
+        }
 
-            base.Initialize();
+        private static void LoadPackage()
+        {
+            var shell = (IVsShell)GetGlobalService(typeof(SVsShell));
+
+            IVsPackage package;
+
+            if (shell.IsPackageLoaded(ref PackageGuids.guidPackage, out package) != VSConstants.S_OK)
+                ErrorHandler.Succeeded(shell.LoadPackage(ref PackageGuids.guidPackage, out package));
         }
     }
 }
