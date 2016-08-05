@@ -15,7 +15,7 @@ namespace MarkdownEditor
 
         public override string Symbol
         {
-            get { return "**"; }
+            get { return MarkdownEditorPackage.Options.BoldStyle == EmphasisStyle.Asterisk ? "**" : "__"; }
         }
     }
 }

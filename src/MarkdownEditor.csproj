@@ -79,6 +79,7 @@
     <Compile Include="Commands\CopyAsHtmlCommand.cs" />
     <Compile Include="DragDrop\MarkdownDropHandler.cs" />
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
+    <Compile Include="Options\EmphasisStyle.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToOrderedList.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToTaskList.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToUnorderedList.cs" />
@@ -109,7 +110,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VSCommandTable.vsct</DependentUpon>
     </Compile>
-    <Compile Include="Options.cs">
+    <Compile Include="Options\Options.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Parsing\MarkdownDocumentView.cs" />

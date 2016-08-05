@@ -1,6 +1,9 @@
 # Road map
 
 - [x] Convert text to bulleted list (#35)
+- [x] Option for using asterisk/underscore for bold and italic (#37)
+- [ ] Bold & italic commands should work on word extent
+- [ ] Open .rst files as markdown (#38)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
