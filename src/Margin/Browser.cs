@@ -83,7 +83,7 @@ namespace MarkdownEditor
 
                     if (!File.Exists(file))
                     {
-                        string[] possibleExtensions = new string[] { ".markdown", ".md", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mmd" };
+                        string[] possibleExtensions = new string[] { ".markdown", ".md", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mmd", ".rst" };
                         string ext = null;
 
                         // If the file has no extension, see if one exists with a markdown extension.  If so,

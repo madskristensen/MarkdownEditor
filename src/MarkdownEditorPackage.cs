@@ -20,6 +20,7 @@ namespace MarkdownEditor
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mkd")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mkdn")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".mmd")]
+    [ProvideLanguageExtension(typeof(MarkdownLanguage), ".rst")]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class MarkdownEditorPackage : Package
     {

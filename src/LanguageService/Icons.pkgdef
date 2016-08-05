@@ -18,3 +18,6 @@
 
 [$RootKey$\ShellFileAssociations\.mmd]
 "DefaultIconMoniker"="KnownMonikers.MarkdownFile"
+
+[$RootKey$\ShellFileAssociations\.rst]
+"DefaultIconMoniker"="KnownMonikers.MarkdownFile"
