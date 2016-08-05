@@ -4,6 +4,7 @@
 - [x] Option for using asterisk/underscore for bold and italic (#37)
 - [x] Bold & italic commands should work on word extent
 - [x] Open .rst files as markdown (#38)
+- [x] Added editor factory
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

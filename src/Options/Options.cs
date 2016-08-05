@@ -40,8 +40,8 @@ namespace MarkdownEditor
         [Category("Style")]
         [DisplayName("Italic character")]
         [Description("Determines if italic should use single asterisk or underscore. Example: _italic text_")]
-        [DefaultValue(EmphasisStyle.Underscore)]
-        public EmphasisStyle ItalicStyle { get; set; } = EmphasisStyle.Underscore;
+        [DefaultValue(EmphasisStyle.Asterisk)]
+        public EmphasisStyle ItalicStyle { get; set; } = EmphasisStyle.Asterisk;
 
         // Preview window
         [Category("Preview Window")]
