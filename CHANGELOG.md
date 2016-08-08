@@ -26,6 +26,7 @@ on the official Visual Studio extension gallery.
 - [x] Open .rst files as markdown (#38)
 - [x] Added editor factory
 - [x] Hide Live Sync margin when preview is below editor (#41)
+- [x] Asynchronous extension load
 
 ## 1.6
 
