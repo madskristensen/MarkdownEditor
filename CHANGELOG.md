@@ -1,11 +1,11 @@
 # Road map
 
+- [ ] Generate .html file from Markdown (#39)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ASCII image URLs (#20)
 - [ ] Intellisense for local image and link paths
-- [ ] Generate .html file from Markdown (#39)
 
 Features that have a checkmark are complete and available for
 download in the
