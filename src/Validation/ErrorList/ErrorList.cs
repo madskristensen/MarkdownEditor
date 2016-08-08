@@ -41,7 +41,8 @@ namespace MarkdownEditor
 
         private static void DocumentClosing(Document Document)
         {
-            CleanErrors(Document.FullName);
+            if (Document != null)
+                CleanErrors(Document.FullName);
         }
 
         private static async void MarkdownParsed(object sender, ParsingEventArgs e)

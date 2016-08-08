@@ -10,7 +10,7 @@
             <Group guid="guidPackageCmdSet" id="ContextGroup" priority="0x0800">
                 <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
             </Group>
-            <Group guid="guidPackageCmdSet" id="SolutionExplorerGroup" priority="0x0800">
+            <Group guid="guidPackageCmdSet" id="SolutionExplorerGroup" priority="0x0500">
                 <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
             </Group>
         </Groups>

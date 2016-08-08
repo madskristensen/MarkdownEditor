@@ -3,10 +3,11 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using EnvDTE;
 using Markdig;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MarkdownEditor
 {
@@ -71,7 +72,11 @@ namespace MarkdownEditor
 
             if (File.Exists(htmlFile))
             {
-                ProjectHelpers.DeleteFileFromProject(htmlFile);
+                string msg = "This will delete the .html file from your project.\r\rDo you wish to continue?";
+                var answer = VsShellUtilities.ShowMessageBox(_package, msg, Vsix.Name, OLEMSGICON.OLEMSGICON_QUERY, OLEMSGBUTTON.OLEMSGBUTTON_OKCANCEL, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
+                if (answer == (int)VSConstants.MessageBoxResult.IDOK)
+                    ProjectHelpers.DeleteFileFromProject(htmlFile);
             }
             else
             {
