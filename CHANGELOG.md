@@ -1,16 +1,11 @@
 # Road map
 
-- [x] Convert text to bulleted list (#35)
-- [x] Option for using asterisk/underscore for bold and italic (#37)
-- [x] Bold & italic commands should work on word extent
-- [x] Open .rst files as markdown (#38)
-- [x] Added editor factory
-- [x] Hide Live Sync margin when preview is below editor (#41)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ASCII image URLs (#20)
 - [ ] Intellisense for local image and link paths
+- [ ] Generate .html file from Markdown (#39)
 
 Features that have a checkmark are complete and available for
 download in the
@@ -20,6 +15,17 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.7
+
+**2016-08-08**
+
+- [x] Convert text to bulleted list (#35)
+- [x] Option for using asterisk/underscore for bold and italic (#37)
+- [x] Bold & italic commands should work on word extent
+- [x] Open .rst files as markdown (#38)
+- [x] Added editor factory
+- [x] Hide Live Sync margin when preview is below editor (#41)
 
 ## 1.6
 
