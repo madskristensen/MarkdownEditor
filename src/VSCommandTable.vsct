@@ -51,6 +51,12 @@
         </Buttons>
     </Commands>
 
+    <CommandPlacements>
+        <CommandPlacement guid="guidPackageCmdSet" id="SolutionExplorerGroup" priority="0x0500">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBITEMNODE"/>
+        </CommandPlacement>
+    </CommandPlacements>
+
     <Symbols>
         <GuidSymbol name="guidPackage" value="{9ca64947-e9ca-4543-bfb8-6cce9be19fd6}" />
 
@@ -61,7 +67,5 @@
             <IDSymbol name="AddCustomStylesheet" value="0x0200" />
             <IDSymbol name="GenerateHtml" value="0x0300" />
         </GuidSymbol>
-
-        <GuidSymbol name="guidPackageActivation" value="{7a8ef22f-30e9-420a-b9b2-d5f4b750a7c2}" />
     </Symbols>
 </CommandTable>

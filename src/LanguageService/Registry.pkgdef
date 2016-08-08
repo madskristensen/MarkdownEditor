@@ -1,3 +1,10 @@
+// Website nesting rules
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\RelatedFiles\.md]
+"RelationType"=dword:00000001
+
+[$RootKey$\Projects\{E24C65DC-7377-472b-9ABA-BC803B73C61A}\RelatedFiles\.md\.html]
+
+// File icons
 [$RootKey$\ShellFileAssociations\.md]
 "DefaultIconMoniker"="KnownMonikers.MarkdownFile"
 

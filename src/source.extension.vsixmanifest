@@ -22,7 +22,7 @@
     <Assets>
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="LanguageService\Icons.pkgdef" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="LanguageService\Registry.pkgdef" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" Path="Output\ItemTemplates" />
         <!--<Asset Type="Microsoft.VisualStudio.ProjectTemplate" Path="Output\ProjectTemplates" />-->
     </Assets>

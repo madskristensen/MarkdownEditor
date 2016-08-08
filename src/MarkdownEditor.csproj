@@ -166,7 +166,7 @@
     <Content Include="ItemTemplates\NetCore\_preprocess.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="LanguageService\Icons.pkgdef">
+    <Content Include="LanguageService\Registry.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Margin\highlight.css">
