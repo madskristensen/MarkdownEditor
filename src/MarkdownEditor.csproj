@@ -62,6 +62,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\AddCustomStylesheet.cs" />
+    <Compile Include="Commands\GenerateHtmlTarget.cs" />
     <Compile Include="Commands\InlineCodeCommandTarget.cs" />
     <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />

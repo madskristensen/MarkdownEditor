@@ -35,6 +35,21 @@ namespace MarkdownEditor
     [ProvideEditorExtension(typeof(EditorFactory), ".mmd", 100)]
     [ProvideEditorExtension(typeof(EditorFactory), ".rst", 100)]
     [ProvideEditorExtension(typeof(EditorFactory), ".*", 2, NameResourceID = 110)]
+
+    [ProvideAutoLoad("559ffa40-ab05-4ca2-9cc6-fb20c4a37112")]
+    [ProvideUIContextRule("559ffa40-ab05-4ca2-9cc6-fb20c4a37112",
+    name: Vsix.Name,
+    expression: "(markdown | md | mdown | mdwn | mkd | mmd | rst)",
+    termNames: new[] { "markdown", "md", "mdown", "mdwn", "mkd", "mkdn", "mmd", "rst" },
+    termValues: new[] {
+        "HierSingleSelectionName:.markdown$",
+        "HierSingleSelectionName:.md$",
+        "HierSingleSelectionName:.mdown$",
+        "HierSingleSelectionName:.mdwn$",
+        "HierSingleSelectionName:.mkd$",
+        "HierSingleSelectionName:.mkdn$",
+        "HierSingleSelectionName:.mmd$",
+        "HierSingleSelectionName:.rst$"})]
     public sealed class MarkdownEditorPackage : Package
     {
         private static Options _options;
@@ -67,6 +82,7 @@ namespace MarkdownEditor
             ErrorList.Initialize(this);
             CopyAsHtmlCommand.Initialize(this);
             AddCustomStylesheet.Initialize(this);
+            GenerateHtml.Initialize(this);
 
             var serviceContainer = this as IServiceContainer;
             var langService = new MarkdownLanguage(this);

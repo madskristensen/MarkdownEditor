@@ -33,9 +33,9 @@ namespace MarkdownEditor
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
                 var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-                ITextDocument document;
+                ITextDocument document = null;
 
-                if (!TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
+                if (textView != null && !TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
                     return;
 
                 textView.Properties.GetOrCreateSingletonProperty(() => new PasteImage(textViewAdapter, textView, document.FilePath));
@@ -46,7 +46,17 @@ namespace MarkdownEditor
                 textView.Properties.GetOrCreateSingletonProperty(() => new IndentationCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ToogleTaskCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new Navigate(textViewAdapter, textView));
+
+                document.FileActionOccurred += Document_FileActionOccurred;
             });
+        }
+
+        private void Document_FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
+        {
+            if (e.FileActionType == FileActionTypes.ContentSavedToDisk)
+            {
+                GenerateHtml.GenerateHtmlFile(e.FilePath);
+            }
         }
     }
 }

@@ -83,13 +83,12 @@ namespace MarkdownEditor
 
                     if (!File.Exists(file))
                     {
-                        string[] possibleExtensions = new string[] { ".markdown", ".md", ".mdown", ".mdwn", ".mkd", ".mkdn", ".mmd", ".rst" };
                         string ext = null;
 
                         // If the file has no extension, see if one exists with a markdown extension.  If so,
                         // treat it as the file to open.
                         if (String.IsNullOrEmpty(Path.GetExtension(file)))
-                            ext = possibleExtensions.FirstOrDefault(fx => File.Exists(file + fx));
+                            ext = ContentTypeDefinition.MarkdownExtensions.FirstOrDefault(fx => File.Exists(file + fx));
 
                         if (ext != null)
                             ProjectHelpers.OpenFileInPreviewTab(file + ext);

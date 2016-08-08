@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
@@ -26,6 +27,52 @@ namespace MarkdownEditor
                 ProjectItem item = project.ProjectItems.AddFromFile(file);
             }
         }
+
+        public static void AddNestedFile(string parentFile, string newFile, bool force = false)
+        {
+            ProjectItem item = DTE.Solution.FindProjectItem(parentFile);
+
+            try
+            {
+                if (item == null
+                    || item.ContainingProject == null
+                    || item.ContainingProject.IsKind(ProjectTypes.ASPNET_5))
+                    return;
+
+                if (item.ProjectItems == null || item.ContainingProject.IsKind(ProjectTypes.UNIVERSAL_APP))
+                {
+                    item.ContainingProject.AddFileToProject(newFile);
+                }
+                else if (DTE.Solution.FindProjectItem(newFile) == null || force)
+                {
+                    item.ProjectItems.AddFromFile(newFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public static bool DeleteFileFromProject(string file)
+        {
+            ProjectItem item = DTE.Solution.FindProjectItem(file);
+
+            if (item == null)
+                return false;
+
+            try
+            {
+                item.Delete();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return false;
+            }
+        }
+
 
         public static bool IsKind(this Project project, params string[] kindGuids)
         {
@@ -56,6 +103,46 @@ namespace MarkdownEditor
                 if (newDocumentStateContext != null)
                     newDocumentStateContext.Restore();
             }
+        }
+
+        /// <summary>
+        /// Returns either a Project or ProjectItem. Returns null if Solution is Selected
+        /// </summary>
+        /// <returns></returns>
+        public static object GetSelectedItem()
+        {
+            IntPtr hierarchyPointer, selectionContainerPointer;
+            object selectedObject = null;
+            IVsMultiItemSelect multiItemSelect;
+            uint itemId;
+
+            var monitorSelection = (IVsMonitorSelection)Package.GetGlobalService(typeof(SVsShellMonitorSelection));
+
+            try
+            {
+                monitorSelection.GetCurrentSelection(out hierarchyPointer,
+                                                 out itemId,
+                                                 out multiItemSelect,
+                                                 out selectionContainerPointer);
+
+                IVsHierarchy selectedHierarchy = Marshal.GetTypedObjectForIUnknown(
+                                                     hierarchyPointer,
+                                                     typeof(IVsHierarchy)) as IVsHierarchy;
+
+                if (selectedHierarchy != null)
+                {
+                    ErrorHandler.ThrowOnFailure(selectedHierarchy.GetProperty(itemId, (int)__VSHPROPID.VSHPROPID_ExtObject, out selectedObject));
+                }
+
+                Marshal.Release(hierarchyPointer);
+                Marshal.Release(selectionContainerPointer);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Write(ex);
+            }
+
+            return selectedObject;
         }
     }
 

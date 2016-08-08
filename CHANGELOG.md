@@ -1,6 +1,6 @@
 # Road map
 
-- [ ] Generate .html file from Markdown (#39)
+- [x] Generate .html file from Markdown (#39)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

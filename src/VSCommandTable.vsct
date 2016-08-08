@@ -10,6 +10,9 @@
             <Group guid="guidPackageCmdSet" id="ContextGroup" priority="0x0800">
                 <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
             </Group>
+            <Group guid="guidPackageCmdSet" id="SolutionExplorerGroup" priority="0x0800">
+                <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+            </Group>
         </Groups>
         <Buttons>
             <Button guid="guidPackageCmdSet" id="CopyAsHtml" priority="0x0300" type="Button">
@@ -35,6 +38,16 @@
                     <ButtonText>Add Custom Stylesheet...</ButtonText>
                 </Strings>
             </Button>
+
+            <Button guid="guidPackageCmdSet" id="GenerateHtml" priority="0x0100" type="Button">
+                <Parent guid="guidPackageCmdSet" id="SolutionExplorerGroup"/>
+                <CommandFlag>DefaultDisabled</CommandFlag>
+                <CommandFlag>DefaultInvisible</CommandFlag>
+                <CommandFlag>DynamicVisibility</CommandFlag>
+                <Strings>
+                    <ButtonText>Generate HTML File</ButtonText>
+                </Strings>
+            </Button>
         </Buttons>
     </Commands>
 
@@ -43,8 +56,10 @@
 
         <GuidSymbol name="guidPackageCmdSet" value="{82e1d55b-7e76-4319-ad60-94cc79c643c1}">
             <IDSymbol name="ContextGroup" value="0x0010" />
+            <IDSymbol name="SolutionExplorerGroup" value="0x0020" />
             <IDSymbol name="CopyAsHtml" value="0x0100" />
             <IDSymbol name="AddCustomStylesheet" value="0x0200" />
+            <IDSymbol name="GenerateHtml" value="0x0300" />
         </GuidSymbol>
 
         <GuidSymbol name="guidPackageActivation" value="{7a8ef22f-30e9-420a-b9b2-d5f4b750a7c2}" />
