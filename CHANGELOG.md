@@ -5,6 +5,7 @@
 - [x] Bold & italic commands should work on word extent
 - [x] Open .rst files as markdown (#38)
 - [x] Added editor factory
+- [x] Hide Live Sync margin when preview is below editor (#41)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
