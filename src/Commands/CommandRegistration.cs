@@ -35,7 +35,7 @@ namespace MarkdownEditor
                 var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
                 ITextDocument document = null;
 
-                if (textView != null && !TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
+                if (textView == null || !TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
                     return;
 
                 textView.Properties.GetOrCreateSingletonProperty(() => new PasteImage(textViewAdapter, textView, document.FilePath));
@@ -55,7 +55,8 @@ namespace MarkdownEditor
         {
             if (e.FileActionType == FileActionTypes.ContentSavedToDisk)
             {
-                GenerateHtml.GenerateHtmlFile(e.FilePath);
+                if (GenerateHtml.HtmlGenerationEnabled(e.FilePath))
+                    GenerateHtml.GenerateHtmlFile(e.FilePath);
             }
         }
     }

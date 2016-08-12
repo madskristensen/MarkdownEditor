@@ -96,6 +96,13 @@ namespace MarkdownEditor
             ProjectHelpers.AddNestedFile(markdownFile, htmlFile);
         }
 
+        public static bool HtmlGenerationEnabled(string markdownFile)
+        {
+            string htmlFile = GetHtmlFileName(markdownFile);
+
+            return File.Exists(htmlFile);
+        }
+
         private static string GetHtmlFileName(string markdownFile)
         {
             return Path.ChangeExtension(markdownFile, ".html");
