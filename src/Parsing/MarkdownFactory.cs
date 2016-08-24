@@ -48,7 +48,7 @@ namespace MarkdownEditor.Parsing
 
             foreach (var link in descendants)
             {
-                if (!IsUrlValid(file, link.Url))
+                if (!IsUrlValid(file, link.Url) && link.UrlSpan.HasValue)
                     yield return new Error
                     {
                         File = file,
