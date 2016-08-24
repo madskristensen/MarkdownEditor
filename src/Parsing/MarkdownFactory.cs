@@ -56,7 +56,18 @@ namespace MarkdownEditor.Parsing
                         Line = link.Line,
                         Column = link.Column,
                         ErrorCode = "missing-file",
-                        Span = new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length)
+                        // FIX: There seems to be something wrong with the Markdig parser
+                        //      when parsing a referenced image e.g.
+                        //      ![The image][image]
+                        //      ^^^^^^^^^^^^^~~~~~^
+                        //      [image]: images/the-image.png
+                        //
+                        //      The intension of the span is to add error curlies underneat image only
+                        //      which is shown with the tilde above. But the fallback option adds them
+                        //      to the entire span, ^ and ~.
+                        Span = new Span(
+                            link.UrlSpan?.Start ?? link.Span.Start,
+                            link.UrlSpan?.Length ?? link.Span.Length)
                     };
             }
         }
