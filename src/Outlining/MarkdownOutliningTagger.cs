@@ -54,7 +54,7 @@ namespace MarkdownEditor.Outlining
                 return Enumerable.Empty<ITagSpan<IOutliningRegionTag>>();
 
             var descendants = _doc.Descendants();
-            var snapshot = spans.First().Snapshot;
+            var snapshot = _buffer.CurrentSnapshot;
 
             var codeBlocks = ProcessCodeBlocks(descendants, snapshot);
             var htmlBlocks = ProcessHtmlBlocks(descendants, snapshot);
@@ -75,8 +75,11 @@ namespace MarkdownEditor.Outlining
                 string text = $"{block.Info.ToUpperInvariant()} Code Block".Trim();
                 string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
 
-                var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
-                yield return CreateTag(span, text, tooltip);
+                if (snapshot.Length >= block.Span.End)
+                {
+                    var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
+                    yield return CreateTag(span, text, tooltip);
+                }
             }
         }
 
@@ -93,8 +96,11 @@ namespace MarkdownEditor.Outlining
                 string text = "HTML Block";
                 string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
 
-                var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
-                yield return CreateTag(span, text, tooltip);
+                if (snapshot.Length >= block.Span.End)
+                {
+                    var span = new SnapshotSpan(snapshot, block.ToSimpleSpan());
+                    yield return CreateTag(span, text, tooltip);
+                }
             }
         }
 
@@ -112,10 +118,13 @@ namespace MarkdownEditor.Outlining
                 else
                     length = GetSectionEnding(snapshot.GetLineFromLineNumber(snapshot.LineCount - 1)) - block.Span.Start;
 
-                string text = snapshot.GetText(block.ToSimpleSpan());
-                var span = new SnapshotSpan(snapshot, block.Span.Start, length);
+                if (snapshot.Length >= block.Span.End)
+                {
+                    string text = snapshot.GetText(block.ToSimpleSpan());
+                    var span = new SnapshotSpan(snapshot, block.Span.Start, length);
 
-                yield return CreateTag(span, text, span.GetText());
+                    yield return CreateTag(span, text, span.GetText());
+                }
             }
         }
 

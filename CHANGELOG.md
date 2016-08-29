@@ -1,6 +1,7 @@
 # Road map
 
 - [x] Generate .html file from Markdown (#39)
+- [x] Fixed issue with deleting folded code (#51)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
