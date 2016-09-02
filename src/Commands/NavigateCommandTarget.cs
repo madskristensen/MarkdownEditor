@@ -57,7 +57,7 @@ namespace MarkdownEditor
 
         private IEnumerable<HeadingBlock> GetHeadings()
         {
-            var doc = MarkdownFactory.ParseToMarkdown(_view.TextBuffer.CurrentSnapshot);
+            var doc = _view.TextBuffer.CurrentSnapshot.ParseToMarkdown();
             return doc.Descendants().OfType<HeadingBlock>();
         }
 

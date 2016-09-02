@@ -1,5 +1,7 @@
+﻿using System;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 
@@ -7,9 +9,9 @@ using Microsoft.VisualStudio.Utilities;
 namespace MarkdownEditor.Outlining
 {
     [Export(typeof(ITaggerProvider))]
-    [TagType(typeof(IOutliningRegionTag))]
+    [TagType(typeof(IErrorTag))]
     [ContentType(MarkdownLanguage.LanguageName)]
-    public class MarkdownOutliningProvider : ITaggerProvider
+    public class MarkdownValidationProvider : ITaggerProvider
     {
         [Import]
         public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
@@ -21,7 +23,7 @@ namespace MarkdownEditor.Outlining
             if (!TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
                 return null;
 
-            return buffer.Properties.GetOrCreateSingletonProperty(() => new MarkdownOutliningTagger(buffer, document.FilePath)) as ITagger<T>;
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new MarkdownValidationTagger(buffer, document.FilePath)) as ITagger<T>;
         }
     }
 }

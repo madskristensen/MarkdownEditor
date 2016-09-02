@@ -22,7 +22,6 @@ namespace MarkdownEditor
             : base(adapter, textView, VSConstants.VSStd97CmdID.Paste)
         {
             _fileName = fileName;
-            //WebEssentialsPackage.DTE.Events.SolutionEvents.AfterClosing += delegate { _lastPath = null; };
         }
 
         protected override bool Execute(VSConstants.VSStd97CmdID commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)

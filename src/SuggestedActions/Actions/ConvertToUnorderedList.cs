@@ -7,12 +7,12 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace MarkdownEditor
 {
-    class ConvertToQuoteAction : BaseSuggestedAction
+    class ConvertToUnorderedList : BaseSuggestedAction
     {
         private SnapshotSpan _span;
         private ITextView _view;
 
-        public ConvertToQuoteAction(SnapshotSpan span, ITextView view)
+        public ConvertToUnorderedList(SnapshotSpan span, ITextView view)
         {
             _span = span;
             _view = view;
@@ -20,18 +20,18 @@ namespace MarkdownEditor
 
         public override string DisplayText
         {
-            get { return "Convert To Blockquote"; }
+            get { return "Convert To Bullet List"; }
         }
 
         public override ImageMoniker IconMoniker
         {
-            get { return KnownMonikers.Quote; }
+            get { return KnownMonikers.BulletList; }
         }
 
         public override void Execute(CancellationToken cancellationToken)
         {
             SnapshotSpan span;
-            var lines = GetSelectedLines(_span, out span).Reverse();
+            var lines = GetSelectedLines(_span, out span);
 
             _view.Caret.MoveTo(lines.ElementAt(0).End);
 
@@ -39,7 +39,8 @@ namespace MarkdownEditor
             {
                 foreach (var line in lines)
                 {
-                    edit.Insert(line.Start.Position, "> ");
+                    if (!string.IsNullOrWhiteSpace(line.GetText()))
+                        edit.Insert(line.Start.Position, "- ");
                 }
 
                 edit.Apply();

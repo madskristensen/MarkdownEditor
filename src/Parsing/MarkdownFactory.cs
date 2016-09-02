@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Markdig;
 using Markdig.Extensions.Footers;
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -22,7 +26,7 @@ namespace MarkdownEditor.Parsing
 
         public static MarkdownPipeline Pipeline { get; }
 
-        public static MarkdownDocument ParseToMarkdown(this ITextSnapshot snapshot)
+        public static MarkdownDocument ParseToMarkdown(this ITextSnapshot snapshot, string file = null)
         {
             lock (_syncRoot)
             {
@@ -30,11 +34,73 @@ namespace MarkdownEditor.Parsing
                 {
                     var text = key.GetText();
                     var markdownDocument = Markdown.Parse(text, Pipeline);
+                    Parsed?.Invoke(snapshot, new ParsingEventArgs(markdownDocument, file, snapshot));
                     return markdownDocument;
                 });
             }
         }
 
+        public static event EventHandler<ParsingEventArgs> Parsed;
+
+        public static IEnumerable<Error> Validate(this MarkdownDocument doc, string file)
+        {
+            var descendants = doc.Descendants().OfType<LinkInline>();
+
+            foreach (var link in descendants)
+            {
+                if (!IsUrlValid(file, link.Url))
+                    yield return new Error
+                    {
+                        File = file,
+                        Message = $"The file \"{link.Url}\" could not be resolved.",
+                        Line = link.Line,
+                        Column = link.Column,
+                        ErrorCode = "missing-file",
+                        // FIX: There seems to be something wrong with the Markdig parser
+                        //      when parsing a referenced image e.g.
+                        //      ![The image][image]
+                        //      ^^^^^^^^^^^^^~~~~~^
+                        //      [image]: images/the-image.png
+                        //
+                        //      The intension of the span is to add error curlies underneat image only
+                        //      which is shown with the tilde above. But the fallback option adds them
+                        //      to the entire span, ^ and ~.
+                        Span = new Span(
+                            link.UrlSpan?.Start ?? link.Span.Start,
+                            link.UrlSpan?.Length ?? link.Span.Length)
+                    };
+            }
+        }
+
+        private static bool IsUrlValid(string file, string url)
+        {
+            if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#"))
+                return true;
+
+            if (url.Contains('\\'))
+                return false;
+
+            var query = url.IndexOf('?');
+            if (query > -1)
+                url = url.Substring(0, query);
+
+            var fragment = url.IndexOf('#');
+            if (fragment > -1)
+                url = url.Substring(0, fragment);
+
+            try
+            {
+                string currentDir = Path.GetDirectoryName(file);
+                string path = Path.Combine(currentDir, url);
+
+                return File.Exists(path);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return true;
+            }
+        }
 
         public static bool MatchSmartBlock(string text)
         {

@@ -67,7 +67,7 @@ namespace MarkdownEditor
     {
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost wpfTextViewHost, IWpfTextViewMargin marginContainer)
         {
-            if (!MarkdownEditorPackage.Options.EnablePreviewWindow)
+            if (!MarkdownEditorPackage.Options.EnablePreviewWindow || MarkdownEditorPackage.Options.ShowPreviewWindowBelow)
                 return null;
 
             return wpfTextViewHost.TextView.Properties.GetOrCreateSingletonProperty(() => new LiveSyncMargin(wpfTextViewHost.TextView));

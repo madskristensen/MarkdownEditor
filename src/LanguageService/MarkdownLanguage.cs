@@ -10,6 +10,11 @@ namespace MarkdownEditor
         public const string LanguageName = "Markdown";
         private LanguagePreferences preferences = null;
 
+        public MarkdownLanguage(object site)
+        {
+            SetSite(site);
+        }
+
         public override Source CreateSource(IVsTextLines buffer)
         {
             return new MarkdownSource(this, buffer, new MarkdownColorizer(this, buffer, null));
@@ -24,7 +29,7 @@ namespace MarkdownEditor
         {
             if (preferences == null)
             {
-                preferences = new LanguagePreferences(this.Site, typeof(MarkdownLanguage).GUID, this.Name);
+                preferences = new LanguagePreferences(Site, typeof(MarkdownLanguage).GUID, Name);
 
                 if (preferences != null)
                 {
@@ -53,7 +58,6 @@ namespace MarkdownEditor
 
             return preferences;
         }
-
 
         public override IScanner GetScanner(IVsTextLines buffer)
         {

@@ -38,7 +38,7 @@ namespace MarkdownEditor
             if (!TryGetFileName(dir, out fileName))
                 return;
 
-            string relative = PackageUtilities.MakeRelative(_file, fileName);
+            string relative = PackageUtilities.MakeRelative(_file, fileName).Replace("\\", "/");
 
             string text = string.Format(_format, _span.GetText(), relative);
 

@@ -62,6 +62,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\AddCustomStylesheet.cs" />
+    <Compile Include="Commands\GenerateHtmlTarget.cs" />
     <Compile Include="Commands\InlineCodeCommandTarget.cs" />
     <Compile Include="Commands\ItalicCommandTarget.cs" />
     <Compile Include="Commands\CommandTargetBase.cs" />
@@ -79,6 +80,13 @@
     <Compile Include="Commands\CopyAsHtmlCommand.cs" />
     <Compile Include="DragDrop\MarkdownDropHandler.cs" />
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
+    <Compile Include="LanguageService\EditorFactory.cs" />
+    <Compile Include="Options\EmphasisStyle.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToOrderedList.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToTaskList.cs" />
+    <Compile Include="SuggestedActions\Actions\ConvertToUnorderedList.cs" />
+    <Compile Include="Validation\ErrorList\Error.cs" />
+    <Compile Include="Validation\ErrorList\ErrorList.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\Logger.cs" />
@@ -96,12 +104,15 @@
     <Compile Include="MarkdownEditorPackage.cs" />
     <Compile Include="Outlining\MarkdownOutliningProvider.cs" />
     <Compile Include="Outlining\MarkdownOutliningTagger.cs" />
+    <Compile Include="Parsing\ParsingEventArgs.cs" />
+    <Compile Include="Validation\MarkdownValidationProvider.cs" />
+    <Compile Include="Validation\MarkdownValidationTagger.cs" />
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VSCommandTable.vsct</DependentUpon>
     </Compile>
-    <Compile Include="Options.cs">
+    <Compile Include="Options\Options.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Parsing\MarkdownDocumentView.cs" />
@@ -155,7 +166,7 @@
     <Content Include="ItemTemplates\NetCore\_preprocess.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="LanguageService\Icons.pkgdef">
+    <Content Include="LanguageService\Registry.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Margin\highlight.css">
@@ -197,8 +208,8 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Markdig, Version=0.7.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Markdig.0.7.3\lib\net40\Markdig.dll</HintPath>
+    <Reference Include="Markdig, Version=0.7.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Markdig.0.7.4\lib\net40\Markdig.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
@@ -374,7 +385,6 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(TemplateBuilderTargets)" Condition="Exists('$(TemplateBuilderTargets)')" Label="TemplateBuilder" />

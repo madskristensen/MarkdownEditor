@@ -7,6 +7,7 @@ using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using MarkdownEditor.Parsing;
 
 namespace MarkdownEditor
 {
@@ -17,10 +18,12 @@ namespace MarkdownEditor
         private readonly ITextBuffer _buffer;
         private MarkdownDocument _doc;
         private bool _isProcessing;
+        private string _file;
 
-        internal MarkdownClassifier(ITextBuffer buffer, IClassificationTypeRegistryService registry)
+        internal MarkdownClassifier(ITextBuffer buffer, IClassificationTypeRegistryService registry, string file)
         {
             _buffer = buffer;
+            _file = file;
             _code = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownCode);
             _header = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownHeader);
             _quote = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownQuote);
@@ -137,7 +140,7 @@ namespace MarkdownEditor
 
             await Task.Run(() =>
             {
-                _doc = Parsing.MarkdownFactory.ParseToMarkdown(_buffer.CurrentSnapshot);
+                _doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
 
                 SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
 
