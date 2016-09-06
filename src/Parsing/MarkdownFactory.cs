@@ -96,7 +96,11 @@ namespace MarkdownEditor.Parsing
                 string currentDir = Path.GetDirectoryName(file);
                 string path = Path.Combine(currentDir, url);
 
-                return File.Exists(path);
+                if(File.Exists(path) || (String.IsNullOrWhiteSpace(Path.GetExtension(path)) &&
+                  ContentTypeDefinition.MarkdownExtensions.Any(ext => File.Exists(path + ext))))
+                    return true;
+
+                return false;
             }
             catch (Exception ex)
             {

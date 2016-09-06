@@ -88,6 +88,7 @@ namespace MarkdownEditor
         public static void OpenFileInPreviewTab(string file)
         {
             IVsNewDocumentStateContext newDocumentStateContext = null;
+            bool failedToOpen = false;
 
             try
             {
@@ -98,10 +99,21 @@ namespace MarkdownEditor
 
                 DTE.ItemOperations.OpenFile(file);
             }
+            catch(COMException ex)
+            {
+                // Not sure why, but it's failing to open the documents in the preview tab when links are clicked
+                // in the HTML view.  All we get is an E_ABORT COM exception.  They do open successfully in their
+                // own tab though which we'll do below after restoring the state.
+                System.Diagnostics.Debug.WriteLine(ex);
+                failedToOpen = true;
+            }
             finally
             {
                 if (newDocumentStateContext != null)
                     newDocumentStateContext.Restore();
+
+                if (failedToOpen)
+                    DTE.ItemOperations.OpenFile(file);
             }
         }
 
