@@ -74,6 +74,9 @@ namespace MarkdownEditor.Parsing
 
         private static bool IsUrlValid(string file, string url)
         {
+            if (string.IsNullOrWhiteSpace(url))
+                return false;
+
             if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#"))
                 return true;
 
