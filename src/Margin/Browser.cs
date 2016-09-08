@@ -254,6 +254,7 @@ namespace MarkdownEditor
                     // Makes sure that any code blocks get syntax highlighted by Prism
                     var win = _htmlDocument.parentWindow;
                     win.execScript("Prism.highlightAll();", "javascript");
+                    win.execScript("mermaid.init(undefined, document.querySelectorAll('.mermaid'));", "javascript");
 
                     // Adjust the anchors after and edit
                     this.AdjustAnchors();
@@ -292,8 +293,10 @@ namespace MarkdownEditor
         {
             var baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
             string folder = GetFolder();
-            string cssPath = GetCustomStylesheet(_file) ?? Path.Combine(folder, "margin\\highlight.css");
-            string scriptPath = Path.Combine(folder, "margin\\prism.js");
+            string cssHighlightPath = GetCustomStylesheet(_file) ?? Path.Combine(folder, "margin\\highlight.css");
+            string cssMermaidPath = Path.Combine(folder, "margin\\mermaid.css");
+            string scriptPrismPath = Path.Combine(folder, "margin\\prism.js");
+            string scriptMermaidPath = Path.Combine(folder, "margin\\mermaid.js");
 
             return $@"<!DOCTYPE html>
 <html lang=""en"">
@@ -302,13 +305,15 @@ namespace MarkdownEditor
         <meta charset=""utf-8"" />
         <base href=""file:///{baseHref}/"" />
         <title>Markdown Preview</title>
-        <link rel=""stylesheet"" href=""{cssPath}"" />
+        <link rel=""stylesheet"" href=""{cssHighlightPath}"" />
+        <link rel=""stylesheet"" href=""{cssMermaidPath}"" />
 </head>
     <body class=""markdown-body"">
         <div id='___markdown-content___'>
           {{0}}
         </div>
-        <script src=""{scriptPath}""></script>
+        <script src=""{scriptPrismPath}""></script>
+        <script src=""{scriptMermaidPath}""></script>
     </body>
 </html>";
         }

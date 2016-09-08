@@ -21,6 +21,7 @@ namespace MarkdownEditor.Parsing
         {
             Pipeline = new MarkdownPipelineBuilder()
                 .UsePragmaLines()
+                .UseDiagrams()
                 .UseAdvancedExtensions().Build();
         }
 
