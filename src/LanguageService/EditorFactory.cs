@@ -17,6 +17,7 @@
 namespace MarkdownEditor
 {
     using System;
+    using System.Runtime.InteropServices;
     using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
     using IComponentModel = Microsoft.VisualStudio.ComponentModelHost.IComponentModel;
     using IConnectionPoint = Microsoft.VisualStudio.OLE.Interop.IConnectionPoint;
@@ -41,6 +42,7 @@ namespace MarkdownEditor
     using VsServiceProviderWrapper = Microsoft.VisualStudio.Shell.VsServiceProviderWrapper;
     using VsTextBufferClass = Microsoft.VisualStudio.TextManager.Interop.VsTextBufferClass;
 
+    [Guid(PackageGuids.guidMarkdownEditorString)]
     public class EditorFactory : IVsEditorFactory
     {
         private readonly Package _package;

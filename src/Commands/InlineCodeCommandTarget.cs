@@ -8,8 +8,8 @@ namespace MarkdownEditor
 {
     internal class InlineCodeCommandTarget : HotkeyCommandBase
     {
-        private static readonly Guid _commandGroup = typeof(VSConstants.VSStd97CmdID).GUID;
-        private static readonly uint _commandId = (uint)VSConstants.VSStd97CmdID.ClassView;
+        private static readonly Guid _commandGroup = PackageGuids.guidPackageCmdSet;
+        private static readonly uint _commandId = PackageIds.EditorInlineCode;
 
         public InlineCodeCommandTarget(IVsTextView adapter, IWpfTextView textView, ITextStructureNavigatorSelectorService navigator)
             : base(adapter, textView, navigator, _commandGroup, _commandId)
