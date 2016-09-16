@@ -47,6 +47,9 @@ namespace MarkdownEditor
             var button = (OleMenuCommand)sender;
             button.Visible = button.Enabled = false;
 
+            if (!MarkdownEditorPackage.Options.GenerateHtmlFiles)
+                return;
+
             _item = ProjectHelpers.GetSelectedItem() as ProjectItem;
             if (_item == null || _item.ContainingProject == null)
                 return;

@@ -30,6 +30,12 @@ namespace MarkdownEditor
         [DefaultValue(true)]
         public bool EnableSmartIndent { get; set; } = true;
 
+        [Category("General")]
+        [DisplayName("Generate HTML files")]
+        [Description("When a .html file exist in the same folder as an .md file it should automatically sync the .html file on save.")]
+        [DefaultValue(true)]
+        public bool GenerateHtmlFiles { get; set; } = true;
+
         // Style
         [Category("Style")]
         [DisplayName("Bold character")]
