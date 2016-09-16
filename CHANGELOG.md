@@ -1,11 +1,5 @@
 # Road map
 
-- [x] Generate .html file from Markdown (#39)
-- [x] Fixed issue with deleting folded code (#51)
-- [x] Mermaid chart support (#40)
-- [x] Re-implemented shortcut key bindings (#45)
-- [x] Option to disable HTML generation (#60)
-- [x] Fix for `mailto:` links (#57)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
@@ -21,9 +15,16 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
-## 1.7
+## 1.8
 
-**2016-08-08**
+- [x] Generate .html file from Markdown (#39)
+- [x] Fixed issue with deleting folded code (#51)
+- [x] Mermaid chart support (#40)
+- [x] Re-implemented shortcut key bindings (#45)
+- [x] Option to disable HTML generation (#60)
+- [x] Fix for `mailto:` links (#57)
+
+## 1.7
 
 - [x] Convert text to bulleted list (#35)
 - [x] Option for using asterisk/underscore for bold and italic (#37)
@@ -35,16 +36,12 @@ on the official Visual Studio extension gallery.
 
 ## 1.6
 
-**2016-07-29**
 
-- [x] Custom stylesheet support
 - [x] Validate local image and link paths
 - [x] Links in preview window are clickable
 - [x] Support for [Visual Studio Spell Checker](https://visualstudiogallery.msdn.microsoft.com/a23de100-31a1-405c-b4b7-d6be40c3dfff)
 
 ## 1.5
-
-**2016-07-07**
 
 - [x] Item template for Markdown file
 - [x] Outlining per heading (#21)
@@ -53,15 +50,11 @@ on the official Visual Studio extension gallery.
 
 ## 1.4
 
-**2016-06-29**
-
 - [x] Toggle live sync on individual document
 - [x] Navigational dropdowns
 - [x] Keyboard navigation between headings (Ctrl+PgUp/Down)
 
 ## 1.3
-
-**2016-06-24**
 
 - [x] Smart completion of lists, task lists and blockquotes
 - [x] Smoother sync scroll with no-delay
@@ -72,8 +65,6 @@ on the official Visual Studio extension gallery.
 
 ## 1.2
 
-**2016-06-20**
-
 - [x] Auto-update preview window while typing
 - [x] Sync scroll position
 - [x] Enter key maintains left whitespace matching previous line
@@ -82,8 +73,6 @@ on the official Visual Studio extension gallery.
 - [x] `Ctrl+Space` on a task list item toggles the checked state
 
 ## 1.1
-
-**2016-06-19**
 
 - [x] Multiline comment outlining
 - [x] Convert tabs to spaces
@@ -95,8 +84,6 @@ on the official Visual Studio extension gallery.
 
 
 ## 1.0
-
-**2016-06-18**
 
 - [x] Syntax highlighting
 - [x] Preview window

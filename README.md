@@ -17,6 +17,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Powered by [Markdig](https://github.com/lunet-io/markdig) - the best markdown parser
 - Syntax highlighting
 - Live preview window with scroll sync
+- Mermaid chart support
 - CommonMark and GitHub flavored Markdown
 - High-DPI support
 - Drag 'n drop of images supported
