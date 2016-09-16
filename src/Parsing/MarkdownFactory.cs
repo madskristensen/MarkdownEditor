@@ -78,7 +78,7 @@ namespace MarkdownEditor.Parsing
             if (string.IsNullOrWhiteSpace(url))
                 return false;
 
-            if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#"))
+            if (url.Contains("://") || url.StartsWith("/") || url.StartsWith("#") || url.StartsWith("mailto:"))
                 return true;
 
             if (url.Contains('\\'))
