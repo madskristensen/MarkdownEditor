@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Markdig;
 using Markdig.Extensions.Footers;
+using Markdig.Extensions.TaskLists;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Text;
@@ -123,27 +124,53 @@ namespace MarkdownEditor.Parsing
             return doc.Count != 0 && (doc[0] is QuoteBlock || doc[0] is ListBlock || (doc[0] is CodeBlock && !(doc[0] is FencedCodeBlock)) || doc[0] is FooterBlock);
         }
 
-        public static bool TryParsePendingSmartBlock(this ITextView view, out List<Block> blocks, out MarkdownDocument doc)
+        public static bool TryParsePendingSmartBlock(this ITextView view, bool fullLine, out List<Block> blocks, out MarkdownDocument doc, out bool isEmptyLineText, out bool isEmptyLineAfterCaret)
         {
             // Prematch the current line to detect a smart block
-            var extend = view.Caret.ContainingTextViewLine.Extent;
-            var text = extend.GetText();
+            var caretPosition = view.Caret.Position.BufferPosition.Position;
+            var startLinePosition = view.Caret.ContainingTextViewLine.Start.Position;
+            var endLinePosition = fullLine
+                ? view.Caret.ContainingTextViewLine.EndIncludingLineBreak.Position
+                : caretPosition;
+            var text = view.TextBuffer.CurrentSnapshot.GetText(startLinePosition, endLinePosition - startLinePosition);
             blocks = null;
             doc = null;
+            isEmptyLineText = false;
+            isEmptyLineAfterCaret = false;
 
-            if (!MatchSmartBlock(text))
+            MarkdownDocument singleLineDoc;
+            if (!MatchSmartBlock(text, out singleLineDoc))
             {
                 return false;
             }
+
+            // Detect any literal text inside the line we parsed
+            var allLiteralsEmpty =
+                singleLineDoc.Descendants()
+                    .OfType<LiteralInline>()
+                    .All(literal => literal.Content.IsEmptyOrWhitespace());
+
+            // Detect any non-whitespace chars after the caret to the end of the line
+            var textLine = view.TextBuffer.CurrentSnapshot.GetText(caretPosition, view.Caret.ContainingTextViewLine.End.Position - caretPosition);
+            isEmptyLineAfterCaret = true;
+            for (int i = 0; i < textLine.Length; i++)
+            {
+                if (!char.IsWhiteSpace(textLine[i]))
+                {
+                    isEmptyLineAfterCaret = false;
+                    break;
+                }
+            }
+
+            isEmptyLineText = allLiteralsEmpty && isEmptyLineAfterCaret;
 
             // Parse only until the end of the line after the caret
             // Because most of the time, a user would have typed characters before typing return
             // it is not efficient to re-use cached MarkdownDocument from Markdownfactory, as it may be invalid,
             // and then after the hit return, the browser would have to be updated with a new snapshot
             var snapshot = view.TextBuffer.CurrentSnapshot;
-            var textFromTop = snapshot.GetText(0, view.Caret.ContainingTextViewLine.Extent.Span.End);
+            var textFromTop = snapshot.GetText(0, endLinePosition);
             doc = Markdown.Parse(textFromTop, Pipeline);
-            var caretPosition = view.Caret.Position.BufferPosition.Position;
             var lastChild = doc.FindBlockAtPosition(caretPosition);
             if (lastChild == null || !lastChild.ContainsPosition(caretPosition))
             {

@@ -28,7 +28,9 @@ namespace MarkdownEditor
 
             List<Block> blocks;
             MarkdownDocument doc;
-            if (!_view.TryParsePendingSmartBlock(out blocks, out doc))
+            bool isEmptyLineText;
+            bool isEmptyLineTextAfterCaret;
+            if (!_view.TryParsePendingSmartBlock(true, out blocks, out doc, out isEmptyLineText, out isEmptyLineTextAfterCaret))
                 return false;
 
             var text = extend.GetText();

@@ -8,6 +8,7 @@ using Markdig.Extensions.TaskLists;
 using Markdig.Syntax;
 using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 
@@ -34,42 +35,73 @@ namespace MarkdownEditor
 
             List<Block> blocks;
             MarkdownDocument doc;
-            if (!_view.TryParsePendingSmartBlock(out blocks, out doc))
+            bool isEmptyLineText;
+            bool isEmptyLineTextAfterCaret;
+            // Try to parse the current line and current context (from the beginning of the document) to ensure proper smart indentation
+            if (!_view.TryParsePendingSmartBlock(false, out blocks, out doc, out isEmptyLineText, out isEmptyLineTextAfterCaret))
             {
                 return false;
             }
 
-            var lastChild = blocks[blocks.Count - 1];
-
-            // If last child is null or with have just a task list, we have an empty line, so we can remove it
-            if (!(lastChild is ParagraphBlock) || ((lastChild as ParagraphBlock)?.Inline?.LastChild is TaskList))
+            var caretPosition = _view.Caret.Position.BufferPosition.Position;
+            // If the line doesn't contain any text and enter is pressed, we have an "empty text line"
+            if (isEmptyLineText)
             {
-                // We rebuild the new line up to the last parent container
+                // We preprend the line with the current stack of blocks minus 1 
+                var linePosition = _view.TextBuffer.CurrentSnapshot.GetLineFromPosition(caretPosition).LineNumber;
+
+                var block = blocks[blocks.Count - 1];
+                // special case when the last block is a ListItem that is starting on a previous line (but current line is empty, due to markdown lazy continuation)
+                bool isEmptyListItemBlockFromPreviousLine = block is ListItemBlock && block.Line < linePosition;
                 blocks.RemoveAt(blocks.Count - 1);
-                var newLine = blocks.Count == 0 ? string.Empty : BuildNewLine(blocks);
+
+                // If we have a list item not part of the current line, we can remove it
+                if (isEmptyListItemBlockFromPreviousLine && blocks.Count > 0)
+                {
+                    blocks.RemoveAt(blocks.Count - 1);
+                }
+
+                // If we don't have any pending block in the stack, we can replace the whole line by a newline
+                // otherwise we need to replace it with the current stack
+                var newLine = blocks.Count == 0 ? Environment.NewLine : BuildNewLineFromBlockStack(blocks);
 
                 using (var edit = _view.TextBuffer.CreateEdit())
                 {
                     edit.Delete(extend);
-                    edit.Insert(extend.Start, string.IsNullOrEmpty(newLine) ? Environment.NewLine : newLine);
+                    edit.Insert(extend.Start, newLine);
                     edit.Apply();
                 }
             }
             else
             {
-                var newLine = BuildNewLine(blocks);
-
-                var caretPosition = _view.Caret.Position.BufferPosition.Position;
+                // In case the line is not empty after the caret (we press enter while we have some text on the right side)
+                // We insert the pending block stack before the newline
+                // otherwise it is inserted after.
+                if (!isEmptyLineTextAfterCaret)
+                {
+                    caretPosition = _view.Caret.ContainingTextViewLine.Extent.Start.Position;
+                }
 
                 // Make 2 separate edits so the auto-insertion of list items can be undone (ctrl-z)
+                var newLine = BuildNewLineFromBlockStack(blocks);
                 _view.TextBuffer.Insert(caretPosition, Environment.NewLine);
-                _view.TextBuffer.Insert(caretPosition + Environment.NewLine.Length, newLine);
+                _view.TextBuffer.Insert(caretPosition + (isEmptyLineTextAfterCaret ? Environment.NewLine.Length : 0), newLine);
 
+                // Workaround to move back caret to previous line, better way?
+                if (!isEmptyLineTextAfterCaret)
+                {
+                    _view.Caret.MoveTo(new SnapshotPoint(_view.TextSnapshot, caretPosition + newLine.Length));
+                }
             }
             return true;
         }
 
-        private string BuildNewLine(List<Block> blocks)
+        /// <summary>
+        /// Builds a text representation of the pending blocks in the stack (with blockquotes, pending lists...etc)
+        /// </summary>
+        /// <param name="blocks">The blocks.</param>
+        /// <returns>System.String.</returns>
+        private string BuildNewLineFromBlockStack(List<Block> blocks)
         {
             var builder = new StringBuilder();
 
