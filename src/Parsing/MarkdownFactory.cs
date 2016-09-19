@@ -65,12 +65,9 @@ namespace MarkdownEditor.Parsing
                         //      ^^^^^^^^^^^^^~~~~~^
                         //      [image]: images/the-image.png
                         //
-                        //      The intension of the span is to add error curlies underneat image only
-                        //      which is shown with the tilde above. But the fallback option adds them
-                        //      to the entire span, ^ and ~.
-                        Span = new Span(
-                            link.UrlSpan?.Start ?? link.Span.Start,
-                            link.UrlSpan?.Length ?? link.Span.Length)
+                        //      The link.Reference.UrlSpan doesn't have correct values
+                        //      which forces us to use this code
+                        Span = link.Reference == null ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length) : new Span(link.Span.Start, link.Span.Length)
                     };
             }
         }
@@ -99,7 +96,7 @@ namespace MarkdownEditor.Parsing
                 string currentDir = Path.GetDirectoryName(file);
                 string path = Path.Combine(currentDir, url);
 
-                if(File.Exists(path) || (String.IsNullOrWhiteSpace(Path.GetExtension(path)) &&
+                if (File.Exists(path) || (String.IsNullOrWhiteSpace(Path.GetExtension(path)) &&
                   ContentTypeDefinition.MarkdownExtensions.Any(ext => File.Exists(path + ext))))
                     return true;
 
