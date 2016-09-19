@@ -22,7 +22,9 @@ namespace MarkdownEditor.Parsing
             Pipeline = new MarkdownPipelineBuilder()
                 .UsePragmaLines()
                 .UseDiagrams()
-                .UseAdvancedExtensions().Build();
+                .UseAdvancedExtensions()
+                .UseYamlFrontMatter()
+                .Build();
         }
 
         public static MarkdownPipeline Pipeline { get; }
