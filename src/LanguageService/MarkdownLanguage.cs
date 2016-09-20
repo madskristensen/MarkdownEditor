@@ -50,6 +50,9 @@ namespace MarkdownEditor
                     preferences.IndentSize = 2;
                     preferences.ShowNavigationBar = true;
 
+                    preferences.WordWrap = true;
+                    preferences.WordWrapGlyphs = true;
+
                     preferences.AutoListMembers = true;
                     preferences.EnableQuickInfo = true;
                     preferences.ParameterInformation = true;
