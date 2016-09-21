@@ -118,12 +118,16 @@ namespace MarkdownEditor.Outlining
                 else
                     length = GetSectionEnding(snapshot.GetLineFromLineNumber(snapshot.LineCount - 1)) - block.Span.Start;
 
-                if (snapshot.Length >= block.Span.End)
+                if (snapshot.Length >= block.Span.Start + block.Span.Length)
                 {
                     string text = snapshot.GetText(block.ToSimpleSpan());
                     var span = new SnapshotSpan(snapshot, block.Span.Start, length);
+                    var spanText = span.GetText();
 
-                    yield return CreateTag(span, text, span.GetText());
+                    if (spanText.Contains('\r') || spanText.Contains('\n'))
+                    {
+                        yield return CreateTag(span, text, spanText);
+                    }
                 }
             }
         }
