@@ -224,6 +224,7 @@ namespace MarkdownEditor
                     htmlWriter.GetStringBuilder().Clear();
                     var htmlRenderer = new HtmlRenderer(htmlWriter);
                     MarkdownFactory.Pipeline.Setup(htmlRenderer);
+                    htmlRenderer.UseNonAsciiNoEscape = true;
                     htmlRenderer.Render(_currentDocument);
                     htmlWriter.Flush();
                     html = htmlWriter.ToString();
