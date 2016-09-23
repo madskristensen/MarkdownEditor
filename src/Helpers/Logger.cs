@@ -13,21 +13,21 @@ internal static class Logger
     {
         _output = (IVsOutputWindow)provider.GetService(typeof(SVsOutputWindow));
         _name = name;
+        // Ensure the pane before using it (otherwise first log will never come)
+        EnsurePane();
     }
 
-    public static async task InitializeAsync(AsyncPackage package, string name)
-    {
-        _output = await package.GetServiceAsync(typeof(SVsOutputWindow)) as IVsOutputWindow;
-        _name = name;
-    }
-
-    public static void Log(object message)
+    public static void Log(object message, bool forceVisible = false)
     {
         try
         {
             if (EnsurePane())
             {
-                _pane.OutputString(DateTime.Now.ToString() + ": " + message + Environment.NewLine);
+                _pane.OutputString(DateTime.Now + ": " + message + Environment.NewLine);
+                if (forceVisible)
+                {
+                    _pane.Activate();
+                }
             }
         }
         catch (Exception ex)

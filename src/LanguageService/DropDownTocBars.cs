@@ -251,8 +251,16 @@ namespace MarkdownEditor
                 }
 
                 var stringWriter = new StringWriter();
-                var htmlRenderer = new HtmlRenderer(stringWriter) { EnableHtmlForInline = false };
-                htmlRenderer.Render(heading.Inline);
+                try
+                {
+                    var htmlRenderer = new HtmlRenderer(stringWriter) {EnableHtmlForInline = false};
+                    htmlRenderer.Render(heading.Inline);
+                }
+                catch (Exception ex)
+                {
+                    stringWriter = new StringWriter();
+                    stringWriter.Write($"Unexpected error while rendering the document\n{ex}\n");
+                }
                 stringWriter.Flush();
                 var headingText = stringWriter.ToString();
 

@@ -65,10 +65,25 @@ namespace MarkdownEditor
 
             provider.Tasks.Clear();
 
+            bool hasFatal = false;
             foreach (var error in errors)
             {
                 var task = CreateTask(error, provider);
+                if (error.Fatal)
+                {
+                    hasFatal = true;
+                    Logger.Log(error.Message, true);
+                }
                 provider.Tasks.Add(task);
+            }
+
+            if (hasFatal)
+            {
+                provider.Show();
+            }
+            else
+            {
+                provider.Refresh();
             }
         }
 
@@ -114,10 +129,10 @@ namespace MarkdownEditor
             {
                 Line = error.Line + 1,
                 Column = error.Column + 1,
-                ErrorCategory = TaskErrorCategory.Warning,
-                Category = TaskCategory.Html,
+                ErrorCategory = error.Fatal ? TaskErrorCategory.Error : TaskErrorCategory.Warning,
+                Category = error.Fatal ? TaskCategory.BuildCompile : TaskCategory.Html,
                 Document = error.File,
-                Priority = TaskPriority.Normal,
+                Priority = error.Fatal ? TaskPriority.High : TaskPriority.Normal,
                 Text = $"({Vsix.Name}) {error.Message}",
             };
 

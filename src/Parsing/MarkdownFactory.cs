@@ -15,6 +15,7 @@ namespace MarkdownEditor.Parsing
 {
     public static class MarkdownFactory
     {
+        private const string AttachedExceptionKey = "attached-exception";
         public static object _syncRoot = new object();
         private static readonly ConditionalWeakTable<ITextSnapshot, MarkdownDocument> CachedDocuments = new ConditionalWeakTable<ITextSnapshot, MarkdownDocument>();
 
@@ -26,9 +27,21 @@ namespace MarkdownEditor.Parsing
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter()
                 .Build();
+
+            // Use a minimalistic pipeline if we get an error while parsing with all extensions active
+            PipelineSafer = new MarkdownPipelineBuilder()
+                .UsePragmaLines()
+                .Build();
         }
 
         public static MarkdownPipeline Pipeline { get; }
+
+        public static MarkdownPipeline PipelineSafer { get; }
+
+        public static Exception GetAttachedException(this MarkdownDocument markdownDocument)
+        {
+            return markdownDocument.GetData(AttachedExceptionKey) as Exception;
+        }
 
         public static MarkdownDocument ParseToMarkdown(this ITextSnapshot snapshot, string file = null)
         {
@@ -37,11 +50,44 @@ namespace MarkdownEditor.Parsing
                 return CachedDocuments.GetValue(snapshot, key =>
                 {
                     var text = key.GetText();
-                    var markdownDocument = Markdown.Parse(text, Pipeline);
+                    var markdownDocument = ParseToMarkdown(text);
                     Parsed?.Invoke(snapshot, new ParsingEventArgs(markdownDocument, file, snapshot));
                     return markdownDocument;
                 });
             }
+        }
+
+        public static MarkdownDocument ParseToMarkdown(string text, MarkdownPipeline pipeline = null)
+        {
+            // Safe version that will always return a MarkdownDocument even if there is an exception while parsing
+            MarkdownDocument markdownDocument;
+
+            pipeline = pipeline ?? Pipeline;
+
+            // Try first to parse a document with all exceptions active
+            try
+            {
+                markdownDocument = Markdown.Parse(text, pipeline);
+            }
+            catch (Exception ex)
+            {
+                // If we have an error, try to parse with a safer/simpler pipeline
+                try
+                {
+                    markdownDocument = Markdown.Parse(text, PipelineSafer);
+                }
+                catch (Exception)
+                {
+                    // with have a serious error even when parsing with safer pipeline
+                    // return an empty document and log an error
+                    markdownDocument = new MarkdownDocument();
+                }
+                markdownDocument.Span = new SourceSpan(0, text.Length - 1);
+
+                // we attach the exception to the document that will be later displayed to the user
+                markdownDocument.SetData(AttachedExceptionKey, ex);
+            }
+            return markdownDocument;
         }
 
         public static event EventHandler<ParsingEventArgs> Parsed;
@@ -49,6 +95,21 @@ namespace MarkdownEditor.Parsing
         public static IEnumerable<Error> Validate(this MarkdownDocument doc, string file)
         {
             var descendants = doc.Descendants().OfType<LinkInline>();
+
+            var exception = doc.GetAttachedException();
+            if (exception != null)
+            {
+                yield return new Error
+                {
+                    File = file,
+                    Message = "Unexpected error occured while parsing. Please log an issue to https://github.com/madskristensen/MarkdownEditor/issues Reason: " + exception,
+                    Line = 0,
+                    Column = 0,
+                    ErrorCode = "MK0000",
+                    Fatal = true,
+                    Span = new Span(doc.Span.Start, doc.Span.Length)
+                };
+            }
 
             foreach (var link in descendants)
             {
@@ -120,7 +181,7 @@ namespace MarkdownEditor.Parsing
         {
             // Temp workaround for list items: We trim the beginning of the line to be able to parse nested list items.
             text = text.TrimStart();
-            doc = Markdown.Parse(text, Pipeline);
+            doc = ParseToMarkdown(text);
             return doc.Count != 0 && (doc[0] is QuoteBlock || doc[0] is ListBlock || (doc[0] is CodeBlock && !(doc[0] is FencedCodeBlock)) || doc[0] is FooterBlock);
         }
 
@@ -170,7 +231,7 @@ namespace MarkdownEditor.Parsing
             // and then after the hit return, the browser would have to be updated with a new snapshot
             var snapshot = view.TextBuffer.CurrentSnapshot;
             var textFromTop = snapshot.GetText(0, endLinePosition);
-            doc = Markdown.Parse(textFromTop, Pipeline);
+            doc = ParseToMarkdown(textFromTop);
             var lastChild = doc.FindBlockAtPosition(caretPosition);
             if (lastChild == null || !lastChild.ContainsPosition(caretPosition))
             {

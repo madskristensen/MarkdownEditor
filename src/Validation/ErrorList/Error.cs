@@ -11,5 +11,6 @@ namespace MarkdownEditor
         public int Column { get; set; }
         public string ErrorCode { get; set; }
         public Span  Span { get; set; }
+        public bool Fatal { get; set; }
     }
 }
