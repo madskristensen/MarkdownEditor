@@ -74,23 +74,21 @@ namespace MarkdownEditor
             }
             else
             {
-                // In case the line is not empty after the caret (we press enter while we have some text on the right side)
-                // We insert the pending block stack before the newline
-                // otherwise it is inserted after.
-                if (!isEmptyLineTextAfterCaret)
-                {
-                    caretPosition = _view.Caret.ContainingTextViewLine.Extent.Start.Position;
-                }
-
-                // Make 2 separate edits so the auto-insertion of list items can be undone (ctrl-z)
+                // Make 3 separate edits so the auto-insertion of list items can be undone (ctrl-z)
                 var newLine = BuildNewLineFromBlockStack(blocks);
+                
+                // 1) The new line
                 _view.TextBuffer.Insert(caretPosition, Environment.NewLine);
-                _view.TextBuffer.Insert(caretPosition + (isEmptyLineTextAfterCaret ? Environment.NewLine.Length : 0), newLine);
 
-                // Workaround to move back caret to previous line, better way?
-                if (!isEmptyLineTextAfterCaret)
+                // 2) An indent on the new line with only spaces
+                _view.TextBuffer.Insert(caretPosition + Environment.NewLine.Length, new string(' ', newLine.Length));
+
+                // 3) delete of the previous indent, add an indent with the current pending block structure (list items, blockquotes)
+                using (var edit = _view.TextBuffer.CreateEdit())
                 {
-                    _view.Caret.MoveTo(new SnapshotPoint(_view.TextSnapshot, caretPosition + newLine.Length));
+                    edit.Delete(new Span(caretPosition + Environment.NewLine.Length, newLine.Length));
+                    edit.Insert(caretPosition + Environment.NewLine.Length, newLine);
+                    edit.Apply();
                 }
             }
             return true;
