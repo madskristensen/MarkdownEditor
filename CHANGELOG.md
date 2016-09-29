@@ -15,6 +15,10 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
+## 1.9
+
+ - [x] Bug fixes and minor tweaks
+
 ## 1.8
 
 - [x] Generate .html file from Markdown (#39)
