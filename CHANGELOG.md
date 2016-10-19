@@ -15,9 +15,13 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
+## 1.10
+
+- [x] Fixed crash when working with links
+
 ## 1.9
 
- - [x] Bug fixes and minor tweaks
+- [x] Bug fixes and minor tweaks
 
 ## 1.8
 
