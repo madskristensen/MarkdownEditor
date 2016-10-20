@@ -114,6 +114,7 @@ namespace MarkdownEditor.Parsing
             foreach (var link in descendants)
             {
                 if (!IsUrlValid(file, link.Url))
+                {
                     yield return new Error
                     {
                         File = file,
@@ -129,8 +130,11 @@ namespace MarkdownEditor.Parsing
                         //
                         //      The link.Reference.UrlSpan doesn't have correct values
                         //      which forces us to use this code
-                        Span = link.Reference == null ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length) : new Span(link.Span.Start, link.Span.Length)
+                        Span = link.Reference == null && link.UrlSpan.HasValue
+                                ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length)
+                                : new Span(link.Span.Start, link.Span.Length)
                     };
+                }
             }
         }
 
