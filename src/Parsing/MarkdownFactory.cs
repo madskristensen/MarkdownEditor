@@ -114,6 +114,7 @@ namespace MarkdownEditor.Parsing
             foreach (var link in descendants)
             {
                 if (!IsUrlValid(file, link.Url))
+                {
                     yield return new Error
                     {
                         File = file,
@@ -129,8 +130,11 @@ namespace MarkdownEditor.Parsing
                         //
                         //      The link.Reference.UrlSpan doesn't have correct values
                         //      which forces us to use this code
-                        Span = link.Reference == null ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length) : new Span(link.Span.Start, link.Span.Length)
+                        Span = link.Reference == null && link.UrlSpan.HasValue
+                                ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length)
+                                : new Span(link.Span.Start, link.Span.Length)
                     };
+                }
             }
         }
 
@@ -206,11 +210,6 @@ namespace MarkdownEditor.Parsing
             }
 
             // Detect any literal text inside the line we parsed
-            var allLiteralsEmpty =
-                singleLineDoc.Descendants()
-                    .OfType<LiteralInline>()
-                    .All(literal => literal.Content.IsEmptyOrWhitespace());
-
             // Detect any non-whitespace chars after the caret to the end of the line
             var textLine = view.TextBuffer.CurrentSnapshot.GetText(caretPosition, view.Caret.ContainingTextViewLine.End.Position - caretPosition);
             isEmptyLineAfterCaret = true;
@@ -223,7 +222,17 @@ namespace MarkdownEditor.Parsing
                 }
             }
 
-            isEmptyLineText = allLiteralsEmpty && isEmptyLineAfterCaret;
+            // If there are any inlines in the single line, check if they are any non-empty literal
+            isEmptyLineText = isEmptyLineAfterCaret;
+            foreach (var inline in singleLineDoc.Descendants().OfType<LeafInline>())
+            {
+                var literal = inline as LiteralInline;
+                if (literal == null || !literal.Content.IsEmptyOrWhitespace())
+                {
+                    isEmptyLineText = false;
+                    break;
+                }
+            }
 
             // Parse only until the end of the line after the caret
             // Because most of the time, a user would have typed characters before typing return
