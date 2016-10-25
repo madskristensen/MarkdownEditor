@@ -1,5 +1,6 @@
 # Road map
 
+- [x] Custom HTML template support (#71)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

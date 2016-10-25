@@ -2,9 +2,12 @@
 using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using EnvDTE;
 using Markdig;
+using Markdig.Renderers;
+using Markdig.Syntax;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -93,10 +96,78 @@ namespace MarkdownEditor
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             var html = Markdown.ToHtml(content, pipeline).Replace("\n", Environment.NewLine);
 
-            string htmlFile = GetHtmlFileName(markdownFile);
+            string htmlFileName = GetHtmlFileName(markdownFile);
+            html = CreateFromHtmlTemplate(markdownFile, content, html);
 
-            File.WriteAllText(htmlFile, html, new UTF8Encoding(true));
-            ProjectHelpers.AddNestedFile(markdownFile, htmlFile);
+            File.WriteAllText(htmlFileName, html, new UTF8Encoding(true));
+            ProjectHelpers.AddNestedFile(markdownFile, htmlFileName);
+        }
+
+        private static string CreateFromHtmlTemplate(string markdownFile, string content, string html)
+        {
+            try
+            {
+                string templateFileName = GetHtmlTemplate(markdownFile);
+                string template = File.ReadAllText(templateFileName);
+
+                var doc = Markdown.Parse(content);
+                string title = GetTitle(markdownFile, doc);
+
+                return template.Replace("[title]", title).Replace("[content]", html);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return html;
+            }
+        }
+
+        private static string GetTitle(string markdownFile, MarkdownDocument doc)
+        {
+            var inline = doc.Descendants().OfType<HeadingBlock>().FirstOrDefault().Inline;
+            string title = Path.GetFileNameWithoutExtension(markdownFile);
+
+            using (var stringWriter = new StringWriter())
+            {
+                try
+                {
+                    var htmlRenderer = new HtmlRenderer(stringWriter) { EnableHtmlForInline = false };
+                    htmlRenderer.Render(inline);
+                    stringWriter.Flush();
+                    title = stringWriter.ToString();
+                }
+                catch
+                { }
+            }
+
+            return title;
+        }
+
+        private static string GetHtmlTemplate(string markdownFile)
+        {
+            var dir = new DirectoryInfo(Path.GetDirectoryName(markdownFile));
+            var name = MarkdownEditorPackage.Options.HtmlTemplateFileName;
+
+            while (dir.Parent != null)
+            {
+                string file = Path.Combine(dir.FullName, name);
+
+                if (File.Exists(file))
+                    return file;
+
+                dir = dir.Parent;
+            }
+
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string globalFile = Path.Combine(userProfile, name);
+
+            if (File.Exists(globalFile))
+                return globalFile;
+
+            string assembly = Assembly.GetExecutingAssembly().Location;
+            string assemblyDir = Path.GetDirectoryName(assembly);
+
+            return Path.Combine(assemblyDir, "Resources\\md-template.html");
         }
 
         public static bool HtmlGenerationEnabled(string markdownFile)

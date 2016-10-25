@@ -27,6 +27,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Light Bulbs
 - Brace completion with type-through
 - Lightning fast
+- Auto-generate HTML files
 
 ### Syntax highlighting
 All fonts can be changed in **Tools -> Options -> Environment -> Fonts and Colors**
@@ -146,6 +147,34 @@ It also inserts `*` and `_` characters to make typing bold and
 italic text as fast as possible.
 
 This feature can be disabled in the [settings](#settings).
+
+### Auto-generate HTML files
+By right-clicking any Markdown file in Solution Explorer,
+you can turn on automatic generation of a HTML file.
+
+![Generate HTML](art/generate-html.png)
+
+It will wrap the output rendered markdown in a HTML template 
+that looks like this:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>[title]</title>
+</head>
+<body>
+
+    [content]
+
+</body>
+</html>
+```
+
+You can provide your own HTML template by dropping a file with
+the name **md-template.html** in the same or parent folder to
+the markdown file. Just make sure to include the *[title]* and
+*[content]* tokens in the template.
 
 ### Settings
 Control the settings for this extension under

@@ -30,11 +30,18 @@ namespace MarkdownEditor
         [DefaultValue(true)]
         public bool EnableSmartIndent { get; set; } = true;
 
-        [Category("General")]
+        // HTML Generation
+        [Category("HTML Generation")]
         [DisplayName("Generate HTML files")]
         [Description("When a .html file exist in the same folder as an .md file it should automatically sync the .html file on save.")]
         [DefaultValue(true)]
         public bool GenerateHtmlFiles { get; set; } = true;
+
+        [Category("HTML Generation")]
+        [DisplayName("HTML Template file name")]
+        [Description("The file name of a custom HTML template.")]
+        [DefaultValue("md-template.html")]
+        public string HtmlTemplateFileName { get; set; } = "md-template.html";
 
         // Style
         [Category("Style")]
