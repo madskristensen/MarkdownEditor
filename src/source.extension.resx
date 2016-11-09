@@ -121,7 +121,7 @@
     <value>Markdown Editor</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>A full featured Markdown editor with live preview and syntax highligting. Supports GitHub flavored Markdown.</value>
+    <value>A full featured Markdown editor with live preview and syntax highlighting. Supports GitHub flavored Markdown.</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
