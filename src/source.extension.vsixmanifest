@@ -3,7 +3,7 @@
   <Metadata>
 	<Identity Id="9ca64947-e9ca-4543-bfb8-6cce9be19fd6" Version="1.10" Language="en-US" Publisher="Mads Kristensen" />
 	<DisplayName>Markdown Editor</DisplayName>
-	<Description xml:space="preserve">A full featured Markdown editor with live preview and syntax highligting. Supports GitHub flavored Markdown.</Description>
+	<Description xml:space="preserve">A full featured Markdown editor with live preview and syntax highlighting. Supports GitHub flavored Markdown.</Description>
 	<MoreInfo>https://github.com/madskristensen/MarkdownEditor</MoreInfo>
 	<License>Resources\LICENSE</License>
 	<ReleaseNotes>https://github.com/madskristensen/MarkdownEditor/blob/master/CHANGELOG.md</ReleaseNotes>
