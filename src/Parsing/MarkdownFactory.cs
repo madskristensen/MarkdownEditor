@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Markdig;
 using Markdig.Extensions.Footers;
-using Markdig.Extensions.TaskLists;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Microsoft.VisualStudio.Text;
@@ -102,7 +101,7 @@ namespace MarkdownEditor.Parsing
                 yield return new Error
                 {
                     File = file,
-                    Message = "Unexpected error occured while parsing. Please log an issue to https://github.com/madskristensen/MarkdownEditor/issues Reason: " + exception,
+                    Message = "Unexpected error occurred while parsing. Please log an issue to https://github.com/madskristensen/MarkdownEditor/issues Reason: " + exception,
                     Line = 0,
                     Column = 0,
                     ErrorCode = "MK0000",
@@ -159,8 +158,9 @@ namespace MarkdownEditor.Parsing
 
             try
             {
+                string decodedUrl = Uri.UnescapeDataString(url);
                 string currentDir = Path.GetDirectoryName(file);
-                string path = Path.Combine(currentDir, url);
+                string path = Path.Combine(currentDir, decodedUrl);
 
                 if (File.Exists(path) || (String.IsNullOrWhiteSpace(Path.GetExtension(path)) &&
                   ContentTypeDefinition.MarkdownExtensions.Any(ext => File.Exists(path + ext))))
@@ -191,7 +191,7 @@ namespace MarkdownEditor.Parsing
 
         public static bool TryParsePendingSmartBlock(this ITextView view, bool fullLine, out List<Block> blocks, out MarkdownDocument doc, out bool isEmptyLineText, out bool isEmptyLineAfterCaret)
         {
-            // Prematch the current line to detect a smart block
+            // Pre-match the current line to detect a smart block
             var caretPosition = view.Caret.Position.BufferPosition.Position;
             var startLinePosition = view.Caret.ContainingTextViewLine.Start.Position;
             var endLinePosition = fullLine
@@ -236,7 +236,7 @@ namespace MarkdownEditor.Parsing
 
             // Parse only until the end of the line after the caret
             // Because most of the time, a user would have typed characters before typing return
-            // it is not efficient to re-use cached MarkdownDocument from Markdownfactory, as it may be invalid,
+            // it is not efficient to re-use cached MarkdownDocument from MarkdownFactory, as it may be invalid,
             // and then after the hit return, the browser would have to be updated with a new snapshot
             var snapshot = view.TextBuffer.CurrentSnapshot;
             var textFromTop = snapshot.GetText(0, endLinePosition);

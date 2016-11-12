@@ -50,15 +50,23 @@ namespace MarkdownEditor
 
             foreach (var error in _errors)
             {
-                yield return GenerateTag(error);
+                var errorTag = GenerateTag(error);
+
+                if (errorTag != null)
+                    yield return errorTag;
             }
         }
 
         private TagSpan<IErrorTag> GenerateTag(Error error)
         {
-            var span = new SnapshotSpan(_buffer.CurrentSnapshot, error.Span);
-            var tag = new ErrorTag("Intellisense", error.Message);
-            return new TagSpan<IErrorTag>(span, tag);
+            if (_buffer.CurrentSnapshot.Length >= error.Span.End)
+            {
+                var span = new SnapshotSpan(_buffer.CurrentSnapshot, error.Span);
+                var tag = new ErrorTag("Intellisense", error.Message);
+                return new TagSpan<IErrorTag>(span, tag);
+            }
+
+            return null;
         }
 
         private async void ParseDocument()
