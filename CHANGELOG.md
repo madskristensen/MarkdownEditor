@@ -1,6 +1,7 @@
 # Road map
 
 - [x] Custom HTML template support (#71)
+- [x] Added error handling to outlining (#82)
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

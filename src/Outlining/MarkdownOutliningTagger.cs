@@ -56,11 +56,19 @@ namespace MarkdownEditor.Outlining
             var descendants = _doc.Descendants();
             var snapshot = _buffer.CurrentSnapshot;
 
-            var codeBlocks = ProcessCodeBlocks(descendants, snapshot);
-            var htmlBlocks = ProcessHtmlBlocks(descendants, snapshot);
-            var headingBlocks = ProcessHeadingBlocks(descendants, snapshot);
+            try
+            {
+                var codeBlocks = ProcessCodeBlocks(descendants, snapshot);
+                var htmlBlocks = ProcessHtmlBlocks(descendants, snapshot);
+                var headingBlocks = ProcessHeadingBlocks(descendants, snapshot);
 
-            return codeBlocks.Union(htmlBlocks).Union(headingBlocks);
+                return codeBlocks.Union(htmlBlocks).Union(headingBlocks);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return Enumerable.Empty<ITagSpan<IOutliningRegionTag>>();
+            }
         }
 
         private IEnumerable<ITagSpan<IOutliningRegionTag>> ProcessCodeBlocks(IEnumerable<MarkdownObject> descendants, ITextSnapshot snapshot)
