@@ -114,25 +114,7 @@ namespace MarkdownEditor.Parsing
             {
                 if (!IsUrlValid(file, link.Url))
                 {
-                    yield return new Error
-                    {
-                        File = file,
-                        Message = $"The file \"{link.Url}\" could not be resolved.",
-                        Line = link.Line,
-                        Column = link.Column,
-                        ErrorCode = "missing-file",
-                        // FIX: There seems to be something wrong with the Markdig parser
-                        //      when parsing a referenced image e.g.
-                        //      ![The image][image]
-                        //      ^^^^^^^^^^^^^~~~~~^
-                        //      [image]: images/the-image.png
-                        //
-                        //      The link.Reference.UrlSpan doesn't have correct values
-                        //      which forces us to use this code
-                        Span = link.Reference == null && link.UrlSpan.HasValue
-                                ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length)
-                                : new Span(link.Span.Start, link.Span.Length)
-                    };
+                    yield return LinkError.Create(file, link);
                 }
             }
         }

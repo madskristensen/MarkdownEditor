@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Tagging;
 
 namespace MarkdownEditor
 {
@@ -13,6 +14,7 @@ namespace MarkdownEditor
     {
         private readonly ITextView _view;
         private string _file;
+        internal IViewTagAggregatorFactoryService TagService;
 
         public SuggestedActionsSource(ITextView view, string file)
         {
@@ -58,7 +60,16 @@ namespace MarkdownEditor
             var convertToTaskList = new ConvertToTaskList(SelectedSpan, _view);
             list.AddRange(CreateActionSet(convertToUnorderedList, convertToOrderedList, convertToTaskList));
 
+            //AddMissingFile
+            var addMissingFileAction = AddMissingFileAction.Create(GetErrorTags(_view, SelectedSpan), _file);
+            if (addMissingFileAction!=null)
+                list.AddRange(CreateActionSet(addMissingFileAction));
             return list;
+        }
+
+        private IEnumerable<IMappingTagSpan<IErrorTag>> GetErrorTags(ITextView view, SnapshotSpan span)
+        {
+            return TagService.CreateTagAggregator<IErrorTag>(view).GetTags(span);
         }
 
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)

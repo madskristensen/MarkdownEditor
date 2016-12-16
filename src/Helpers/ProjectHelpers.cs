@@ -5,6 +5,7 @@ using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System.IO;
 
 namespace MarkdownEditor
 {
@@ -53,6 +54,38 @@ namespace MarkdownEditor
                 Logger.Log(ex);
             }
         }
+        public static void CreateSiblingFile(string file, string newFileName)
+        {
+            try
+            {
+                string fileDir = Path.GetDirectoryName(file);
+                string newFilePath = Path.GetFullPath(Path.Combine(fileDir, newFileName));
+                File.Create(newFilePath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        public static void AddSiblingFile(string file, string newFile)
+        {
+            ProjectItem item = DTE.Solution.FindProjectItem(file);
+
+            if (item == null
+                || item.ContainingProject == null
+                || item.ContainingProject.IsKind(ProjectTypes.ASPNET_5))
+                return;
+            try
+            {
+                item.ContainingProject.AddFileToProject(newFile);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
 
         public static bool DeleteFileFromProject(string file)
         {

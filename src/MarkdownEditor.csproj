@@ -82,6 +82,7 @@
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
     <Compile Include="LanguageService\EditorFactory.cs" />
     <Compile Include="Options\EmphasisStyle.cs" />
+    <Compile Include="SuggestedActions\Actions\AddMissingFileAction.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToOrderedList.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToTaskList.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToUnorderedList.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Outlining\MarkdownOutliningProvider.cs" />
     <Compile Include="Outlining\MarkdownOutliningTagger.cs" />
     <Compile Include="Parsing\ParsingEventArgs.cs" />
+    <Compile Include="Validation\ErrorList\LinkError.cs" />
     <Compile Include="Validation\MarkdownValidationProvider.cs" />
     <Compile Include="Validation\MarkdownValidationTagger.cs" />
     <Compile Include="VSCommandTable.cs">

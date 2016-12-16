@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Tagging;
 
 namespace MarkdownEditor
 {
@@ -12,5 +13,10 @@ namespace MarkdownEditor
         public string ErrorCode { get; set; }
         public Span  Span { get; set; }
         public bool Fatal { get; set; }
+
+        public virtual IErrorTag CreateTag()
+        {
+            return new ErrorTag("Intellisense", Message);
+        }
     }
 }
