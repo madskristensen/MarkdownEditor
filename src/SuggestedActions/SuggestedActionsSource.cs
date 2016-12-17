@@ -14,10 +14,11 @@ namespace MarkdownEditor
     {
         private readonly ITextView _view;
         private string _file;
-        internal IViewTagAggregatorFactoryService TagService;
+        private IViewTagAggregatorFactoryService _tagService;
 
-        public SuggestedActionsSource(ITextView view, string file)
+        public SuggestedActionsSource(IViewTagAggregatorFactoryService tagService,ITextView view, string file)
         {
+            _tagService = tagService;
             _view = view;
             _file = file;
         }
@@ -42,6 +43,11 @@ namespace MarkdownEditor
 
             var list = new List<SuggestedActionSet>();
 
+            //AddMissingFile
+            var addMissingFileAction = AddMissingFileAction.Create(GetErrorTags(_view, SelectedSpan), _file, _view);
+            if (addMissingFileAction != null)
+                list.AddRange(CreateActionSet(addMissingFileAction));
+
             if (!_view.Selection.IsEmpty && startLine == endLine)
             {
                 var convertToLink = new ConvertToLinkAction(SelectedSpan, _view);
@@ -59,17 +65,13 @@ namespace MarkdownEditor
             var convertToOrderedList = new ConvertToOrderedList(SelectedSpan, _view);
             var convertToTaskList = new ConvertToTaskList(SelectedSpan, _view);
             list.AddRange(CreateActionSet(convertToUnorderedList, convertToOrderedList, convertToTaskList));
-
-            //AddMissingFile
-            var addMissingFileAction = AddMissingFileAction.Create(GetErrorTags(_view, SelectedSpan), _file);
-            if (addMissingFileAction!=null)
-                list.AddRange(CreateActionSet(addMissingFileAction));
+            
             return list;
         }
 
         private IEnumerable<IMappingTagSpan<IErrorTag>> GetErrorTags(ITextView view, SnapshotSpan span)
         {
-            return TagService.CreateTagAggregator<IErrorTag>(view).GetTags(span);
+            return _tagService.CreateTagAggregator<IErrorTag>(view).GetTags(span);
         }
 
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)

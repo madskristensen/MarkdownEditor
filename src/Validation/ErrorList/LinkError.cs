@@ -11,7 +11,6 @@ namespace MarkdownEditor
 
         public static Error Create(string file, LinkInline link)
         {
-            //return new Error
             return new LinkError
             {
                 File = file,
@@ -29,8 +28,8 @@ namespace MarkdownEditor
                 //      which forces us to use this code
                 Span = link.Reference == null && link.UrlSpan.HasValue
                                 ? new Span(link.UrlSpan.Value.Start, link.UrlSpan.Value.Length)
-                                : new Span(link.Span.Start, link.Span.Length)
-                ,LinkUrl = link.Url
+                                : new Span(link.Span.Start, link.Span.Length),
+                LinkUrl = link.Url
             };
         }
 

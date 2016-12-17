@@ -16,12 +16,12 @@ namespace MarkdownEditor
     class AddMissingFileAction : BaseSuggestedAction
     {
         private string file;
-        //private SnapshotSpan errorSpan;
         private string linkUrl;
+        private ITextView view;
 
         public override string DisplayText
         {
-            get { return "Create file"; }
+            get { return $"Create file {linkUrl}"; }
         }
 
         public override ImageMoniker IconMoniker
@@ -31,24 +31,35 @@ namespace MarkdownEditor
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            ProjectHelpers.CreateSiblingFile(file, linkUrl);
+            string newFilePath = ProjectHelpers.CreateNewFileBesideExistingFile(linkUrl, file);
+            if (newFilePath != null)
+            {
+                RaiseBufferChange();
+                ProjectHelpers.OpenFileInPreviewTab(newFilePath);
+            }
         }
 
-        public static AddMissingFileAction Create(IEnumerable<IMappingTagSpan<IErrorTag>> errorTags, string file)
+        private void RaiseBufferChange()
         {
-            var errorTagMap = errorTags
-                .Where(m=>m.Tag.ErrorType == LinkErrorTag.ERROR_TYPE)
-                //.Where(m=>m.Tag is LinkErrorTag)
-                //.OfType<IMappingTagSpan<LinkErrorTag>>()
+            //Adding and deleting a char in order to force taggers re-evalution
+            string text = " ";
+            view.TextBuffer.Insert(0, text);
+            view.TextBuffer.Delete(new Span(0, text.Length));
+        }
+
+        public static AddMissingFileAction Create(IEnumerable<IMappingTagSpan<IErrorTag>> errorTags, string file, ITextView view)
+        {
+            var errorTag = errorTags
+                .Select(m=> m.Tag as LinkErrorTag)
+                .Where(tag=>tag !=null)
                 .FirstOrDefault();
-            if (errorTagMap == null)
+            if (errorTag == null)
                 return null;
-            var errorTag = (errorTagMap.Tag as LinkErrorTag);
             var result = new AddMissingFileAction
             {
-                //errorSpan = errorTagMap.Span,
                 linkUrl = errorTag.Url,
-                file = file
+                file = file,
+                view = view
             };
             return result;
         }

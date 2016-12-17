@@ -54,38 +54,28 @@ namespace MarkdownEditor
                 Logger.Log(ex);
             }
         }
-        public static void CreateSiblingFile(string file, string newFileName)
+        public static string CreateNewFileBesideExistingFile(string newFileName, string existingFileFullPath)
         {
             try
             {
-                string fileDir = Path.GetDirectoryName(file);
+                string fileDir = Path.GetDirectoryName(existingFileFullPath);
                 string newFilePath = Path.GetFullPath(Path.Combine(fileDir, newFileName));
-                File.Create(newFilePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(newFilePath));
+                File.WriteAllBytes(newFilePath,new byte[0]);
+
+                Project project = DTE.Solution?.FindProjectItem(existingFileFullPath)?.ContainingProject;
+                if (project == null)
+                    return null;
+
+                project.AddFileToProject(newFilePath);
+                return newFilePath;
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
+                return null;
             }
         }
-
-        public static void AddSiblingFile(string file, string newFile)
-        {
-            ProjectItem item = DTE.Solution.FindProjectItem(file);
-
-            if (item == null
-                || item.ContainingProject == null
-                || item.ContainingProject.IsKind(ProjectTypes.ASPNET_5))
-                return;
-            try
-            {
-                item.ContainingProject.AddFileToProject(newFile);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
 
         public static bool DeleteFileFromProject(string file)
         {
