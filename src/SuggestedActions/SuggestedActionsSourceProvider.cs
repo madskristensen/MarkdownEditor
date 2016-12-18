@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.Text.Tagging;
 
 namespace MarkdownEditor
 {
@@ -11,8 +12,14 @@ namespace MarkdownEditor
     [ContentType(MarkdownLanguage.LanguageName)]
     class SuggestedActionsSourceProvider : ISuggestedActionsSourceProvider
     {
-        [Import]
         ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
+        IViewTagAggregatorFactoryService ViewTagAggregatorFactoryService { get; set; }
+        [ImportingConstructor]
+        public SuggestedActionsSourceProvider(IViewTagAggregatorFactoryService viewTagAggregatorFactoryService, ITextDocumentFactoryService textDocumentFactoryService)
+        {
+            ViewTagAggregatorFactoryService = viewTagAggregatorFactoryService;
+            TextDocumentFactoryService = textDocumentFactoryService;
+        }
 
         public ISuggestedActionsSource CreateSuggestedActionsSource(ITextView textView, ITextBuffer textBuffer)
         {
@@ -20,7 +27,8 @@ namespace MarkdownEditor
 
             if (TextDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
             {
-                return textView.Properties.GetOrCreateSingletonProperty(() => new SuggestedActionsSource(textView, document.FilePath));
+                return textView.Properties.GetOrCreateSingletonProperty(() => 
+                    new SuggestedActionsSource(ViewTagAggregatorFactoryService,textView, document.FilePath));
             }
 
             return null;

@@ -62,8 +62,7 @@ namespace MarkdownEditor
             if (_buffer.CurrentSnapshot.Length >= error.Span.End)
             {
                 var span = new SnapshotSpan(_buffer.CurrentSnapshot, error.Span);
-                var tag = new ErrorTag("Intellisense", error.Message);
-                return new TagSpan<IErrorTag>(span, tag);
+                return new TagSpan<IErrorTag>(span, error.CreateTag());
             }
 
             return null;
