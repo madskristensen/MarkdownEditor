@@ -6,6 +6,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.IO;
+using System.Linq;
 
 namespace MarkdownEditor
 {
@@ -66,8 +67,17 @@ namespace MarkdownEditor
                 Project project = DTE.Solution?.FindProjectItem(existingFileFullPath)?.ContainingProject;
                 if (project == null)
                     return null;
-
-                project.AddFileToProject(newFilePath);
+                if (project.IsKind(ProjectTypes.SOLUTION_FOLDER))
+                {
+                    string relativePath = Path.GetDirectoryName(newFileName);
+                    var newFolder = project.AsSolutionFolder()
+                                      .AddNestedSolutionFolder(relativePath);
+                    newFolder.ProjectItems.AddFromFile(newFilePath);
+                }
+                else
+                {
+                    project.AddFileToProject(newFilePath);
+                }
                 return newFilePath;
             }
             catch (Exception ex)
@@ -75,6 +85,33 @@ namespace MarkdownEditor
                 Logger.Log(ex);
                 return null;
             }
+        }
+        
+        public static Project AddNestedSolutionFolder(this SolutionFolder solutionFolder, string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return solutionFolder.Parent;
+            var pathParts = path.Split(new[] { '\\', '/' }, 2);
+            string solutioFolderName = pathParts[0];
+            Project folder = solutionFolder.GetCreateSolutionFolder(solutioFolderName);
+            if (pathParts.Length <= 1)
+                return folder;
+            string pathRecedure = pathParts[1];
+            return AddNestedSolutionFolder(folder.AsSolutionFolder(), pathRecedure);
+        }
+
+        private static Project GetCreateSolutionFolder(this SolutionFolder solutionFolder, string folderName)
+        {
+            var projectItems = solutionFolder.Parent.ProjectItems.OfType<ProjectItem>();
+            var existingProjectItem = projectItems.FirstOrDefault(item => item.Name == folderName);
+            if (existingProjectItem != null)
+                return (Project)existingProjectItem.Object;
+            return solutionFolder.AddSolutionFolder(folderName);
+        }
+
+        public static SolutionFolder AsSolutionFolder(this Project project)
+        {
+            return (SolutionFolder)project.Object;
         }
 
         public static bool DeleteFileFromProject(string file)
