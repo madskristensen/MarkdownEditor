@@ -81,6 +81,8 @@
     <Compile Include="DragDrop\MarkdownDropHandler.cs" />
     <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
     <Compile Include="LanguageService\EditorFactory.cs" />
+    <Compile Include="LanguageService\MardownAuthoringScope.cs" />
+    <Compile Include="LanguageService\MarkdownObjectExtensions.cs" />
     <Compile Include="Options\EmphasisStyle.cs" />
     <Compile Include="SuggestedActions\Actions\AddMissingFileAction.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToOrderedList.cs" />
