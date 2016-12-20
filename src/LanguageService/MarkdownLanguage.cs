@@ -39,7 +39,7 @@ namespace MarkdownEditor
                     preferences.EnableMatchBraces = true;
                     preferences.EnableMatchBracesAtCaret = true;
                     preferences.EnableShowMatchingBrace = true;
-                    preferences.EnableCommenting = true; ;
+                    preferences.EnableCommenting = true;
                     preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
                     preferences.LineNumbers = false;
                     preferences.MaxErrorMessages = 100;
@@ -69,7 +69,7 @@ namespace MarkdownEditor
 
         public override AuthoringScope ParseSource(ParseRequest req)
         {
-            return null;
+            return new MardownAuthoringScope(req);
         }
 
         public override string GetFormatFilterList()
