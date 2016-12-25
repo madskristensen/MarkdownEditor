@@ -76,10 +76,13 @@ namespace MarkdownEditor
                 {
                     string file = e.Uri.LocalPath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
 
-                    // In-page section link.  Not something we can handle here so ignore it.  Note that they
-                    // don't work anyway even if this event isn't canceled.
                     if (file == "blank")
+                    {
+                        string fragment = e.Uri.Fragment?.TrimStart('#');
+                        NavigateToFragment(fragment);
                         return;
+                    }
+                        
 
                     if (!File.Exists(file))
                     {
@@ -100,6 +103,20 @@ namespace MarkdownEditor
                     if (e.Uri.IsAbsoluteUri && e.Uri.Scheme.StartsWith("http"))
                         Process.Start(e.Uri.ToString());
             };
+        }
+
+        private void NavigateToFragment(string fragmentId)
+        {
+            var elements = _htmlDocument.body.all;
+            foreach (var element in elements)
+            {
+                string id = element.GetAttribute("id");
+                if (id == fragmentId)
+                {
+                    element.ScrollIntoView(true);
+                    break;
+                }
+            }
         }
 
         /// <summary>
