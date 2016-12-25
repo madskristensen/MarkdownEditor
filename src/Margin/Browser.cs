@@ -107,16 +107,8 @@ namespace MarkdownEditor
 
         private void NavigateToFragment(string fragmentId)
         {
-            var elements = _htmlDocument.body.all;
-            foreach (var element in elements)
-            {
-                string id = element.GetAttribute("id");
-                if (id == fragmentId)
-                {
-                    element.ScrollIntoView(true);
-                    break;
-                }
-            }
+            IHTMLElement element = _htmlDocument.getElementById(fragmentId);
+            element.scrollIntoView(true);
         }
 
         /// <summary>
