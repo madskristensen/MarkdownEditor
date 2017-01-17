@@ -77,7 +77,7 @@ namespace MarkdownEditor
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0, GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(5, GridUnitType.Pixel) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(width, GridUnitType.Pixel) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(width, GridUnitType.Pixel), MinWidth = 150 });
             grid.RowDefinitions.Add(new RowDefinition());
 
             grid.Children.Add(Browser.Control);
@@ -92,6 +92,10 @@ namespace MarkdownEditor
             splitter.VerticalAlignment = VerticalAlignment.Stretch;
             splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
             splitter.DragCompleted += RightDragCompleted;
+            splitter.DragDelta += (e, s) => 
+            {
+                grid.ColumnDefinitions[2].MaxWidth = (_textView.ViewportWidth + grid.ColumnDefinitions[2].Width.Value) * 0.8;
+            };
 
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 1);
