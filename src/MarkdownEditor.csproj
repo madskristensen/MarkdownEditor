@@ -60,6 +60,10 @@
     <TemplateBuilderTargets Condition=" '$(TemplateBuilderTargets)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\TemplateBuilder.1.1.4.9-beta\tools\ligershark.templates.targets ))</TemplateBuilderTargets>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
+    <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
+    <Compile Include="BraceCompletion\BraceMatchingTagger.cs" />
+    <Compile Include="BraceCompletion\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Commands\AddCustomStylesheet.cs" />
     <Compile Include="Commands\GenerateHtmlTarget.cs" />
     <Compile Include="Commands\InlineCodeCommandTarget.cs" />
@@ -83,6 +87,7 @@
     <Compile Include="LanguageService\MardownAuthoringScope.cs" />
     <Compile Include="LanguageService\MarkdownObjectExtensions.cs" />
     <Compile Include="Options\EmphasisStyle.cs" />
+    <Compile Include="ProvideBraceCompletionAttribute.cs" />
     <Compile Include="SuggestedActions\Actions\AddMissingFileAction.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToOrderedList.cs" />
     <Compile Include="SuggestedActions\Actions\ConvertToTaskList.cs" />
@@ -131,9 +136,6 @@
     <Compile Include="SuggestedActions\Actions\ConvertToLinkAction.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
-    <Compile Include="TypeThrough\TypeThroughControllerProvider.cs" />
-    <Compile Include="TypeThrough\ProvisionalText.cs" />
-    <Compile Include="TypeThrough\TypeThroughController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\LICENSE">

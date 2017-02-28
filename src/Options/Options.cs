@@ -5,19 +5,6 @@ namespace MarkdownEditor
 {
     public class Options : DialogPage
     {
-        // General
-        [Category("General")]
-        [DisplayName("Enable outlining")]
-        [Description("Determines if outlining (code folding) should be enabled for multiline HTML and code blocks")]
-        [DefaultValue(true)]
-        public bool EnableOutlining { get; set; } = true;
-
-        [Category("General")]
-        [DisplayName("Enable typethrough")]
-        [Description("Determines if completion of braces, * and _ is enabled")]
-        [DefaultValue(true)]
-        public bool EnableTypeThrough { get; set; } = true;
-
         [Category("General")]
         [DisplayName("Enable hotkeys")]
         [Description("Enables CTRL+B for bold and CTRL+I for italic.")]

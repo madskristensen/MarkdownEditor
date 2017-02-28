@@ -137,14 +137,6 @@ in this:
 
 ![Light bulbs image](art/light-bulb-image.png)
 
-### Brace completion with type-through
-This makes typing faster. Whenever you type opening braces,
-parenthesis or brackets, a corresponding closing character is
-inserted. It is smart about when it adds the closing character
-so it doesn't become annoying.
-
-This feature can be disabled in the [settings](#settings).
-
 ### Auto-generate HTML files
 By right-clicking any Markdown file in Solution Explorer,
 you can turn on automatic generation of a HTML file.

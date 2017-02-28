@@ -22,10 +22,10 @@ namespace MarkdownEditor.Outlining
             _file = file;
             ParseDocument();
 
-            _buffer.Changed += bufferChanged;
+            _buffer.Changed += BufferChanged;
         }
 
-        private void bufferChanged(object sender, TextContentChangedEventArgs e)
+        private void BufferChanged(object sender, TextContentChangedEventArgs e)
         {
             ParseDocument();
         }
@@ -50,7 +50,7 @@ namespace MarkdownEditor.Outlining
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0 || _doc == null || !MarkdownEditorPackage.Options.EnableOutlining)
+            if (spans.Count == 0 || _doc == null)
                 return Enumerable.Empty<ITagSpan<IOutliningRegionTag>>();
 
             var descendants = _doc.Descendants();

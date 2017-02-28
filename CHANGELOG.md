@@ -1,5 +1,6 @@
 # Road map
 
+- [x] Use native brace matching/completion API
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Context-menu button to open settings
 - [ ] Show/hide the preview window when Options change

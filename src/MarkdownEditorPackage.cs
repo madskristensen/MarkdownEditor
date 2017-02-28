@@ -12,7 +12,7 @@ namespace MarkdownEditor
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
 
-    [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownLanguage.LanguageName, 100, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true)]
+    [ProvideLanguageService(typeof(MarkdownLanguage), MarkdownLanguage.LanguageName, 100, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageEditorOptionPage(typeof(Options), MarkdownLanguage.LanguageName, null, "Advanced", "#101", new[] { "markdown", "md" })]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".markdown")]
     [ProvideLanguageExtension(typeof(MarkdownLanguage), ".md")]
@@ -35,6 +35,8 @@ namespace MarkdownEditor
     [ProvideEditorExtension(typeof(EditorFactory), ".mmd", 1000)]
     [ProvideEditorExtension(typeof(EditorFactory), ".rst", 1000)]
     [ProvideEditorExtension(typeof(EditorFactory), ".*", 2, NameResourceID = 110)]
+
+    [ProvideBraceCompletion(MarkdownLanguage.LanguageName)]
 
     [ProvideAutoLoad("559ffa40-ab05-4ca2-9cc6-fb20c4a37112")]
     [ProvideUIContextRule("559ffa40-ab05-4ca2-9cc6-fb20c4a37112",
@@ -74,6 +76,12 @@ namespace MarkdownEditor
             }
         }
 
+        public static MarkdownLanguage Language
+        {
+            get;
+            private set;
+        }
+
         protected override void Initialize()
         {
             _options = (Options)GetDialogPage(typeof(Options));
@@ -85,8 +93,8 @@ namespace MarkdownEditor
             GenerateHtml.Initialize(this);
 
             var serviceContainer = this as IServiceContainer;
-            var langService = new MarkdownLanguage(this);
-            serviceContainer.AddService(typeof(MarkdownLanguage), langService, true);
+            Language = new MarkdownLanguage(this);
+            serviceContainer.AddService(typeof(MarkdownLanguage), Language, true);
 
             var editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
             RegisterEditorFactory(editorFactory);
