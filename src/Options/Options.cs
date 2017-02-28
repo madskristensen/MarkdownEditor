@@ -5,18 +5,6 @@ namespace MarkdownEditor
 {
     public class Options : DialogPage
     {
-        [Category("General")]
-        [DisplayName("Enable hotkeys")]
-        [Description("Enables CTRL+B for bold and CTRL+I for italic.")]
-        [DefaultValue(true)]
-        public bool EnableHotKeys { get; set; } = true;
-
-        [Category("General")]
-        [DisplayName("Enable smart indent")]
-        [Description("Automatically adds new list items on Enter.")]
-        [DefaultValue(true)]
-        public bool EnableSmartIndent { get; set; } = true;
-
         // HTML Generation
         [Category("HTML Generation")]
         [DisplayName("Generate HTML files")]

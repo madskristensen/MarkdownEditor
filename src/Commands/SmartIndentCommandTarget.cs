@@ -47,7 +47,7 @@ namespace MarkdownEditor
             // If the line doesn't contain any text and enter is pressed, we have an "empty text line"
             if (isEmptyLineText)
             {
-                // We preprend the line with the current stack of blocks minus 1 
+                // We preprend the line with the current stack of blocks minus 1
                 var linePosition = _view.TextBuffer.CurrentSnapshot.GetLineFromPosition(caretPosition).LineNumber;
 
                 var block = blocks[blocks.Count - 1];
@@ -76,7 +76,7 @@ namespace MarkdownEditor
             {
                 // Make 3 separate edits so the auto-insertion of list items can be undone (ctrl-z)
                 var newLine = BuildNewLineFromBlockStack(blocks);
-                
+
                 // 1) The new line
                 _view.TextBuffer.Insert(caretPosition, Environment.NewLine);
 
@@ -122,8 +122,8 @@ namespace MarkdownEditor
 
                 if (emitLastListItem && i == lastListItemIndex)
                 {
-                    var listItem = (ListItemBlock) child;
-                    var list = (ListBlock) listItem.Parent;
+                    var listItem = (ListItemBlock)child;
+                    var list = (ListBlock)listItem.Parent;
 
                     var startLength = builder.Length;
                     if (list.IsOrdered)
@@ -140,7 +140,7 @@ namespace MarkdownEditor
                         }
                         else if (c >= 'a' && c <= 'z')
                         {
-                            c = (char) (c + offset + 1);
+                            c = (char)(c + offset + 1);
                             c = c > 'z' ? 'z' : c;
                             builder.Append(c);
                         }
@@ -165,13 +165,13 @@ namespace MarkdownEditor
                 }
                 else if (child is QuoteBlock)
                 {
-                    var quoteBlock = (QuoteBlock) child;
+                    var quoteBlock = (QuoteBlock)child;
                     builder.Append(quoteBlock.QuoteChar);
                     column++;
                 }
                 else if (child is ParagraphBlock)
                 {
-                    var paragraph = (ParagraphBlock) child;
+                    var paragraph = (ParagraphBlock)child;
                     if (paragraph.Inline?.FirstChild is TaskList)
                     {
                         builder.Append("[ ] ");
@@ -180,7 +180,7 @@ namespace MarkdownEditor
                 }
                 else if (child is FooterBlock)
                 {
-                    var footerBlock = (FooterBlock) child;
+                    var footerBlock = (FooterBlock)child;
                     builder.Append(footerBlock.OpeningCharacter);
                     builder.Append(footerBlock.OpeningCharacter);
                     column += 2;
@@ -191,7 +191,7 @@ namespace MarkdownEditor
 
         protected override bool IsEnabled()
         {
-            return MarkdownEditorPackage.Options.EnableSmartIndent;
+            return MarkdownEditorPackage.Language.Preferences.IndentStyle == Microsoft.VisualStudio.Package.IndentingStyle.Smart;
         }
     }
 }

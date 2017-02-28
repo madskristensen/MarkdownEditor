@@ -12,7 +12,7 @@ namespace MarkdownEditor
         private static readonly uint _commandId = (uint)VSConstants.VSStd2KCmdID.ISEARCH; // maps to Edit.IncrementalSearch
 
         public ItalicCommandTarget(IVsTextView adapter, IWpfTextView textView, ITextStructureNavigatorSelectorService navigator)
-            :base (adapter, textView, navigator, _commandGroup, _commandId)
+            : base(adapter, textView, navigator, _commandGroup, _commandId)
         { }
 
         public override string Symbol

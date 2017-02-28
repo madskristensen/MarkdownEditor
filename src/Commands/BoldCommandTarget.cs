@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.Text.Editor;
+﻿using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
+using System;
 
 namespace MarkdownEditor
 {

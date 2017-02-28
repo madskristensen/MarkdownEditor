@@ -144,7 +144,7 @@ namespace MarkdownEditor
 
         protected override bool IsEnabled()
         {
-            return MarkdownEditorPackage.Options.EnableSmartIndent;
+            return MarkdownEditorPackage.Language.Preferences.IndentStyle == Microsoft.VisualStudio.Package.IndentingStyle.Smart;
         }
     }
 }

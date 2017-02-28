@@ -48,6 +48,7 @@ namespace MarkdownEditor
                     preferences.ShowNavigationBar = true;
                     preferences.InsertTabs = false;
                     preferences.IndentSize = 2;
+                    preferences.IndentStyle = IndentingStyle.Smart;
                     preferences.ShowNavigationBar = true;
 
                     preferences.WordWrap = true;

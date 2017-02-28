@@ -46,9 +46,6 @@ namespace MarkdownEditor
 
         public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (!MarkdownEditorPackage.Options.EnableHotKeys)
-                return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
-
             if (pguidCmdGroup != _commandGroup || _commandId != nCmdID)
                 return _nextCommandTarget.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
 
@@ -91,9 +88,6 @@ namespace MarkdownEditor
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
-            if (!MarkdownEditorPackage.Options.EnableHotKeys)
-                return _nextCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
-
             if (pguidCmdGroup != _commandGroup)
                 return _nextCommandTarget.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
 
