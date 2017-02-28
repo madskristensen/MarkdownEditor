@@ -1,6 +1,7 @@
 # Road map
 
 - [ ] Buttons to switch between Split/Source/Rendered mode
+- [ ] Context-menu button to open settings
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
 - [ ] Support for non-ASCII image URLs (#20)
@@ -22,6 +23,8 @@ on the official Visual Studio extension gallery.
 - [x] Light bulb to create missing linked file
 - [x] Fixed URL encoding issue in image light bulb
 - [x] GoToDefinition on local links
+- [x] Colorize child elements (#98)
+- [x] Option to disable system font for code blocks
 
 ## 1.10
 

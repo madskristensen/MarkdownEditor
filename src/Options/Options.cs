@@ -45,6 +45,12 @@ namespace MarkdownEditor
 
         // Style
         [Category("Style")]
+        [DisplayName("Use system font in code blocks")]
+        [Description("Determines if a system font should be used for code blocks")]
+        [DefaultValue(true)]
+        public bool CodeSystemFont { get; set; } = true;
+
+        [Category("Style")]
         [DisplayName("Bold character")]
         [Description("Determines if bold should use double asterisk or underscore. Example: **bold text**")]
         [DefaultValue(EmphasisStyle.Asterisk)]

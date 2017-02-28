@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.Composition;
-using System.Windows;
-using System.Windows.Media;
+﻿using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
+using System.ComponentModel.Composition;
+using System.Windows;
+using System.Windows.Media;
 
 namespace MarkdownEditor
 {
@@ -14,6 +15,9 @@ namespace MarkdownEditor
         public const string MarkdownCode = "md_code";
         public const string MarkdownQuote = "md_quote";
         public const string MarkdownHtml = "md_html";
+        public const string MarkdownLink = PredefinedClassificationTypeNames.Keyword;
+        public const string MarkdownComment = PredefinedClassificationTypeNames.Comment;
+        public const string MarkdownNaturalLanguage = PredefinedClassificationTypeNames.NaturalLanguage;
 
         [Export, Name(MarkdownBold)]
         public static ClassificationTypeDefinition MarkdownClassificationBold { get; set; }
@@ -37,7 +41,6 @@ namespace MarkdownEditor
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = MarkdownClassificationTypes.MarkdownBold)]
     [Name(MarkdownClassificationTypes.MarkdownBold)]
-    [UserVisible(true)]
     internal sealed class MarkdownBoldFormatDefinition : ClassificationFormatDefinition
     {
         public MarkdownBoldFormatDefinition()
@@ -50,7 +53,6 @@ namespace MarkdownEditor
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = MarkdownClassificationTypes.MarkdownItalic)]
     [Name(MarkdownClassificationTypes.MarkdownItalic)]
-    [UserVisible(true)]
     internal sealed class MarkdownItalicFormatDefinition : ClassificationFormatDefinition
     {
         public MarkdownItalicFormatDefinition()

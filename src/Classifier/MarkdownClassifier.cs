@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
+using MarkdownEditor.Parsing;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
-using Microsoft.VisualStudio.Language.StandardClassification;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
-using MarkdownEditor.Parsing;
 
 namespace MarkdownEditor
 {
@@ -29,10 +28,10 @@ namespace MarkdownEditor
             _quote = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownQuote);
             _bold = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownBold);
             _italic = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownItalic);
-            _link = registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword);
+            _link = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownLink);
             _html = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownHtml);
-            _comment = registry.GetClassificationType(PredefinedClassificationTypeNames.Comment);
-            _naturalLanguage = registry.GetClassificationType(PredefinedClassificationTypeNames.NaturalLanguage);
+            _comment = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownComment);
+            _naturalLanguage = registry.GetClassificationType(MarkdownClassificationTypes.MarkdownNaturalLanguage);
 
             ParseDocument();
 
@@ -70,11 +69,11 @@ namespace MarkdownEditor
 
                             // Literal spans may appear as children of other spans such as headings.  When this
                             // occurs, we ignore them.
-                            if (!lastSpan.Contains(snapspan))
-                            {
-                                list.Add(new ClassificationSpan(snapspan, all[range]));
-                                lastSpan = snapspan;
-                            }
+                            //if (!lastSpan.Contains(snapspan))
+                            //{
+                            list.Add(new ClassificationSpan(snapspan, all[range]));
+                            lastSpan = snapspan;
+                            //}
                         }
                     }
                 }
@@ -96,7 +95,7 @@ namespace MarkdownEditor
             {
                 spans.Add(mdobj.ToSimpleSpan(), _header);
             }
-            else if (mdobj is CodeBlock || mdobj is CodeInline)
+            else if (MarkdownEditorPackage.Options.CodeSystemFont && (mdobj is CodeBlock || mdobj is CodeInline))
             {
                 spans.Add(mdobj.ToSimpleSpan(), _code);
             }
