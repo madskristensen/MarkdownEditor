@@ -2,6 +2,8 @@
 
 - [x] Custom HTML template support (#71)
 - [x] Added error handling to outlining (#82)
+- [x] Light bulb to create missing linked file
+- [x] Fixed URL encoding issue in image light bulb
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)

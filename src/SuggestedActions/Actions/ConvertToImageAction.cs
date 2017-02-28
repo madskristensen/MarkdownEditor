@@ -41,7 +41,7 @@ namespace MarkdownEditor
 
             string relative = PackageUtilities.MakeRelative(_file, fileName).Replace("\\", "/");
 
-            string text = string.Format(_format, _span.GetText(), Uri.EscapeDataString(relative));
+            string text = string.Format(_format, _span.GetText(), Uri.EscapeUriString(relative));
 
             using (var edit = _span.Snapshot.TextBuffer.CreateEdit())
             {
