@@ -143,9 +143,6 @@ parenthesis or brackets, a corresponding closing character is
 inserted. It is smart about when it adds the closing character
 so it doesn't become annoying.
 
-It also inserts `*` and `_` characters to make typing bold and
-italic text as fast as possible.
-
 This feature can be disabled in the [settings](#settings).
 
 ### Auto-generate HTML files
