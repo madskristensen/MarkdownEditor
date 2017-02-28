@@ -1,9 +1,5 @@
 # Road map
 
-- [x] Custom HTML template support (#71)
-- [x] Added error handling to outlining (#82)
-- [x] Light bulb to create missing linked file
-- [x] Fixed URL encoding issue in image light bulb
 - [ ] Buttons to switch between Split/Source/Rendered mode
 - [ ] Show/hide the preview window when Options change
 - [ ] Format document/selection (#12)
@@ -18,6 +14,14 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.11
+
+- [x] Custom HTML template support (#71)
+- [x] Added error handling to outlining (#82)
+- [x] Light bulb to create missing linked file
+- [x] Fixed URL encoding issue in image light bulb
+- [x] GoToDefinition on local links
 
 ## 1.10
 

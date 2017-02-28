@@ -1,15 +1,14 @@
-﻿using System;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Package;
-using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.Text;
-using MarkdownEditor.Parsing;
-using Markdig.Syntax;
-using System.Linq;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Editor;
+﻿using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using MarkdownEditor.Parsing;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Package;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System;
 using System.IO;
+using System.Linq;
 
 namespace MarkdownEditor
 {
@@ -45,12 +44,12 @@ namespace MarkdownEditor
                 span = new TextSpan();
                 return null;
             }
-            var location = DocumentLocation.Build(req.FileName,textView,line,col);
+            var location = DocumentLocation.Build(req.FileName, textView, line, col);
             span = location.Span;
             return location.Url;
         }
 
-        
+
         private IWpfTextView GetWpfTextView(IVsTextView vTextView)
         {
             var userData = vTextView as IVsUserData;
@@ -109,7 +108,7 @@ namespace MarkdownEditor
             private void Build()
             {
                 if (link == null)
-                    return ;
+                    return;
                 if (link.Url.Contains("://")) // http://, https://, ftp:// ,
                     return;
 
