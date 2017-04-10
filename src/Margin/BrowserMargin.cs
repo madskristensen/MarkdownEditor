@@ -79,10 +79,9 @@ namespace MarkdownEditor
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(5, GridUnitType.Pixel) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(width, GridUnitType.Pixel), MinWidth = 150 });
             grid.RowDefinitions.Add(new RowDefinition());
-
-            grid.Children.Add(Browser.Control);
             Children.Add(grid);
 
+            grid.Children.Add(Browser.Control);
             Grid.SetColumn(Browser.Control, 2);
             Grid.SetRow(Browser.Control, 0);
 
@@ -92,14 +91,38 @@ namespace MarkdownEditor
             splitter.VerticalAlignment = VerticalAlignment.Stretch;
             splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
             splitter.DragCompleted += RightDragCompleted;
-            splitter.DragDelta += (e, s) => 
-            {
-                grid.ColumnDefinitions[2].MaxWidth = (_textView.ViewportWidth + grid.ColumnDefinitions[2].Width.Value) * 0.8;
-            };
 
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 1);
             Grid.SetRow(splitter, 0);
+
+            var fixWidth = new Action(() =>
+            {
+                // previewWindow maxWidth = current total width - textView minWidth
+                var newWidth = (_textView.ViewportWidth + grid.ActualWidth) - 150;
+
+                // preveiwWindow maxWidth < previewWindow minWidth
+                if (newWidth < 150)
+                {
+                    // Call 'get before 'set for performance
+                    if (grid.ColumnDefinitions[2].MinWidth != 0)
+                    {
+                        grid.ColumnDefinitions[2].MinWidth = 0;
+                        grid.ColumnDefinitions[2].MaxWidth = 0;
+                    }
+                }
+                else
+                {
+                    grid.ColumnDefinitions[2].MaxWidth = newWidth;
+                    // Call 'get before 'set for performance
+                    if (grid.ColumnDefinitions[2].MinWidth == 0)
+                        grid.ColumnDefinitions[2].MinWidth = 150;
+                }
+            });
+
+            // Listen sizeChanged event of both marginGrid and textView
+            grid.SizeChanged += (e, s) => fixWidth();
+            _textView.ViewportWidthChanged += (e, s) => fixWidth();
         }
 
         private void CreateBottomMarginControls()
