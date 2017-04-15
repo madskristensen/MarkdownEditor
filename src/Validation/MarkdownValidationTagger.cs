@@ -16,6 +16,7 @@ namespace MarkdownEditor
         private ITextBuffer _buffer;
         private string _file;
         private IEnumerable<Error> _errors;
+        private List<Error> _errorsCached;  // Cache errors to avoid validation on GetTags
 
         public MarkdownValidationTagger(ITextBuffer buffer, string file)
         {
@@ -32,11 +33,10 @@ namespace MarkdownEditor
                 return;
 
             var errors = e.Document.Validate(e.File);
-            var errorCount = errors.Count();
+            if (_errors == null) return;
 
-            if (errorCount == 0 && (_errors == null || !_errors.Any()))
-                return;
-
+            // Clear cache if document is updated
+            _errorsCached = null;
             _errors = errors;
 
             SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
@@ -48,8 +48,14 @@ namespace MarkdownEditor
             if (spans.Count == 0 || _errors == null || !MarkdownEditorPackage.Options.EnableValidation)
                 yield break;
 
-            foreach (var error in _errors)
+            // Check cache
+            var isBuffered = _errorsCached != null;
+            var errors = isBuffered ? _errorsCached : _errors;
+            if (!isBuffered) _errorsCached = new List<Error>();
+
+            foreach (var error in errors)
             {
+                if (!isBuffered) _errorsCached.Add(error);
                 var errorTag = GenerateTag(error);
 
                 if (errorTag != null)
