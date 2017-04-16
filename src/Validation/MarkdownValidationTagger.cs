@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Markdig.Syntax;
-using MarkdownEditor.Parsing;
+﻿using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
+using System;
+using System.Collections.Generic;
 
 namespace MarkdownEditor
 {
     public class MarkdownValidationTagger : ITagger<IErrorTag>
     {
-        private MarkdownDocument _doc;
-        private bool _isProcessing;
         private ITextBuffer _buffer;
         private string _file;
         private IEnumerable<Error> _errors;
+        private List<Error> _errorsCached;  // Cache errors to avoid validation on GetTags
 
         public MarkdownValidationTagger(ITextBuffer buffer, string file)
         {
             _buffer = buffer;
             _file = file;
 
-            ParseDocument();
             MarkdownFactory.Parsed += MarkdownParsed;
+
+            // Init parsing
+            var doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
+            _errors = doc.Validate(_file);
         }
 
         private void MarkdownParsed(object sender, ParsingEventArgs e)
@@ -31,13 +30,9 @@ namespace MarkdownEditor
             if (string.IsNullOrEmpty(e.File) || e.Snapshot != _buffer.CurrentSnapshot)
                 return;
 
-            var errors = e.Document.Validate(e.File);
-            var errorCount = errors.Count();
-
-            if (errorCount == 0 && (_errors == null || !_errors.Any()))
-                return;
-
-            _errors = errors;
+            // Clear cache if document is updated
+            _errorsCached = null;
+            _errors = e.Document.Validate(e.File);
 
             SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
             TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
@@ -48,8 +43,14 @@ namespace MarkdownEditor
             if (spans.Count == 0 || _errors == null || !MarkdownEditorPackage.Options.EnableValidation)
                 yield break;
 
-            foreach (var error in _errors)
+            // Check cache
+            var isCached = _errorsCached != null;
+            var errors = isCached ? _errorsCached : _errors;
+            if (!isCached) _errorsCached = new List<Error>();
+
+            foreach (var error in errors)
             {
+                if (!isCached) _errorsCached.Add(error);
                 var errorTag = GenerateTag(error);
 
                 if (errorTag != null)
@@ -66,25 +67,6 @@ namespace MarkdownEditor
             }
 
             return null;
-        }
-
-        private async void ParseDocument()
-        {
-            if (_isProcessing)
-                return;
-
-            _isProcessing = true;
-
-            await Task.Run(() =>
-            {
-                _doc = _buffer.CurrentSnapshot.ParseToMarkdown(_file);
-                _errors = _doc.Validate(_file);
-
-                SnapshotSpan span = new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length);
-                _isProcessing = false;
-
-                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
-            });
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
