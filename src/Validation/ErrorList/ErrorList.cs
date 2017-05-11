@@ -45,16 +45,13 @@ namespace MarkdownEditor
                 CleanErrors(Document.FullName);
         }
 
-        private static async void MarkdownParsed(object sender, ParsingEventArgs e)
+        private static void MarkdownParsed(object sender, ParsingEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.File))
             {
+                if (!_providers.ContainsKey(e.File)) return;
+
                 var errors = e.Document.Validate(e.File);
-
-                if (!_providers.ContainsKey(e.File) && !errors.Any())
-                    return;
-
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 AddErrors(e.File, errors);
             }
         }
