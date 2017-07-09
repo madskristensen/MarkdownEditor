@@ -119,12 +119,13 @@ namespace MarkdownEditor.Outlining
             foreach (var block in headingBlocks)
             {
                 var next = headingBlocks.FirstOrDefault(h => h.Level <= block.Level && h.Line > block.Line);
-                var length = 0;
 
-                if (next != null)
-                    length = GetSectionEnding(snapshot.GetLineFromLineNumber(next.Line - 1)) - block.Span.Start;
-                else
-                    length = GetSectionEnding(snapshot.GetLineFromLineNumber(snapshot.LineCount - 1)) - block.Span.Start;
+                // Treat Setext Heading or ATX Heading uniformly
+                var lineNumber = (next != null ?
+                    snapshot.GetLineNumberFromPosition(next.Span.Start) :
+                    snapshot.LineCount) - 1;
+
+                var length = GetSectionEnding(snapshot.GetLineFromLineNumber(lineNumber)) - block.Span.Start;
 
                 if (snapshot.Length >= block.Span.Start + block.Span.Length)
                 {
