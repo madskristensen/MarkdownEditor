@@ -80,7 +80,11 @@ namespace MarkdownEditor.Outlining
                 if (block.IsOpen || block.Lines.Count == 0)
                     continue;
 
-                string text = $"{block.Info.ToUpperInvariant()} Code Block".Trim();
+                var blockInfo = block.Info;  // block.Info can be null
+                if (block is Markdig.Extensions.Mathematics.MathBlock) blockInfo = "Math";
+                else if (blockInfo == null) blockInfo = "";
+
+                string text = $"{blockInfo.ToUpperInvariant()} Code Block".Trim();
                 string tooltip = new string(block.Lines.ToString().Take(800).ToArray());
 
                 if (snapshot.Length >= block.Span.End)
