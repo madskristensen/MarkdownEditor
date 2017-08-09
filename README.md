@@ -162,8 +162,10 @@ that looks like this:
 
 You can provide your own HTML template by dropping a file with
 the name **md-template.html** in the same or parent folder to
-the markdown file. Just make sure to include the *[title]* and
-*[content]* tokens in the template.
+the markdown file. If not found, it will search _%userprofile%_.
+
+Just make sure to include the *[content]* token in the template.
+And the *[title]* token is optional if you need a title.
 
 ### Settings
 Control the settings for this extension under
