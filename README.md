@@ -78,6 +78,14 @@ markdown editor document and select _Add Custom Stylesheet..._
 
 The name of the custom stylesheet can be changed in the settings.
 
+#### Preview HTML template
+The preview window also supports loading of HTML template,
+which will be detailed in **Auto-generate HTML files** section.
+
+When the markdown document is updated, the markdown editor will
+call `onMarkdownUpdate` function if it exists. With this feature,
+you can support your own scripts, for example KaTeX for LaTeX.
+
 ### Drag 'n drop images
 Drag an image directly from Solution Explorer onto the document to
 insert the appropriate markdown that will render the image.
