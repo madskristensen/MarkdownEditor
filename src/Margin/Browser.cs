@@ -82,7 +82,6 @@ namespace MarkdownEditor
                         NavigateToFragment(fragment);
                         return;
                     }
-                        
 
                     if (!File.Exists(file))
                     {
@@ -99,9 +98,8 @@ namespace MarkdownEditor
                     else
                         ProjectHelpers.OpenFileInPreviewTab(file);
                 }
-                else
-                    if (e.Uri.IsAbsoluteUri && e.Uri.Scheme.StartsWith("http"))
-                        Process.Start(e.Uri.ToString());
+                else if (e.Uri.IsAbsoluteUri && e.Uri.Scheme.StartsWith("http"))
+                    Process.Start(e.Uri.ToString());
             };
         }
 
@@ -263,8 +261,9 @@ namespace MarkdownEditor
 
                     // Makes sure that any code blocks get syntax highlighted by Prism
                     var win = _htmlDocument.parentWindow;
-                    win.execScript("Prism.highlightAll();", "javascript");
-                    win.execScript("mermaid.init(undefined, document.querySelectorAll('.mermaid'));", "javascript");
+                    try { win.execScript("Prism.highlightAll();", "javascript"); } catch { }
+                    try { win.execScript("mermaid.init(undefined, document.querySelectorAll('.mermaid'));", "javascript"); } catch { }
+                    try { win.execScript("if (typeof onMarkdownUpdate == 'function') onMarkdownUpdate();", "javascript"); } catch { }
 
                     // Adjust the anchors after and edit
                     this.AdjustAnchors();
@@ -272,8 +271,9 @@ namespace MarkdownEditor
                 else
                 {
                     var htmlTemplate = GetHtmlTemplate();
-                    var template = string.Format(CultureInfo.InvariantCulture, htmlTemplate, html);
-                    Logger.LogOnError(() => Control.NavigateToString(template));
+                    html = string.Format(CultureInfo.InvariantCulture, "{0}", html);
+                    html = htmlTemplate.Replace("[content]", html);
+                    Logger.LogOnError(() => Control.NavigateToString(html));
                 }
 
                 SyncNavigation();
@@ -299,6 +299,41 @@ namespace MarkdownEditor
             return Path.GetDirectoryName(assembly);
         }
 
+        private static string GetHtmlTemplateFileNameFromResource()
+        {
+            string assembly = Assembly.GetExecutingAssembly().Location;
+            string assemblyDir = Path.GetDirectoryName(assembly);
+
+            return Path.Combine(assemblyDir, "Resources\\md-template.html");
+        }
+
+        private static string GetHtmlTemplateFileName(string markdownFile)
+        {
+            if (!MarkdownEditorPackage.Options.EnablePreviewTemplate)
+                return GetHtmlTemplateFileNameFromResource();
+
+            var dir = new DirectoryInfo(Path.GetDirectoryName(markdownFile));
+            var name = MarkdownEditorPackage.Options.HtmlTemplateFileName;
+
+            while (dir.Parent != null)
+            {
+                string file = Path.Combine(dir.FullName, name);
+
+                if (File.Exists(file))
+                    return file;
+
+                dir = dir.Parent;
+            }
+
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string globalFile = Path.Combine(userProfile, name);
+
+            if (File.Exists(globalFile))
+                return globalFile;
+
+            return GetHtmlTemplateFileNameFromResource();
+        }
+
         private string GetHtmlTemplate()
         {
             var baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
@@ -308,24 +343,28 @@ namespace MarkdownEditor
             string scriptPrismPath = Path.Combine(folder, "margin\\prism.js");
             string scriptMermaidPath = Path.Combine(folder, "margin\\mermaid.js");
 
-            return $@"<!DOCTYPE html>
-<html lang=""en"">
-    <head>
-        <meta http-equiv=""X-UA-Compatible"" content=""IE=Edge"" />
-        <meta charset=""utf-8"" />
-        <base href=""file:///{baseHref}/"" />
-        <title>Markdown Preview</title>
-        <link rel=""stylesheet"" href=""{cssHighlightPath}"" />
-        <link rel=""stylesheet"" href=""{cssMermaidPath}"" />
-</head>
-    <body class=""markdown-body"">
-        <div id='___markdown-content___'>
-          {{0}}
-        </div>
-        <script src=""{scriptPrismPath}""></script>
-        <script src=""{scriptMermaidPath}""></script>
-    </body>
-</html>";
+            var defaultHeadBeg = $@"
+<head>
+    <meta http-equiv=""X-UA-Compatible"" content=""IE=Edge"" />
+    <meta charset=""utf-8"" />
+    <base href=""file:///{baseHref}/"" />
+    <link rel=""stylesheet"" href=""{cssHighlightPath}"" />
+    <link rel=""stylesheet"" href=""{cssMermaidPath}"" />
+";
+            var defaultContent = $@"
+    <div id=""___markdown-content___"" class=""markdown-body"">
+        [content]
+    </div>
+    <script src=""{scriptPrismPath}""></script>
+    <script src=""{scriptMermaidPath}""></script>
+";
+
+            var templateFileName = GetHtmlTemplateFileName(_file);
+            var template = File.ReadAllText(templateFileName);
+            return template
+                .Replace("<head>", defaultHeadBeg)
+                .Replace("[content]", defaultContent)
+                .Replace("[title]", "Markdown Preview");
         }
 
         private static string GetCustomStylesheet(string markdownFile)
