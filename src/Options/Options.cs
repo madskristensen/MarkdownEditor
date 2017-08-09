@@ -63,6 +63,12 @@ namespace MarkdownEditor
         public string CustomStylesheetFileName { get; set; } = "md-styles.css";
 
         [Category("Preview Window")]
+        [DisplayName("Enable Preview Template")]
+        [Description("Enable loading HTML Template in preview window.")]
+        [DefaultValue(true)]
+        public bool EnablePreviewTemplate { get; set; } = true;
+
+        [Category("Preview Window")]
         [DefaultValue(600)]
         [Browsable(false)]
         public double PreviewWindowWidth { get; set; } = 600;
