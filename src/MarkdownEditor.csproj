@@ -179,12 +179,6 @@
     <Content Include="Margin\highlight.css">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Margin\mermaid.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Margin\mermaid.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Margin\prism.js">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
