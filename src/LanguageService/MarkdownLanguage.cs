@@ -22,7 +22,14 @@ namespace MarkdownEditor
 
         public override TypeAndMemberDropdownBars CreateDropDownHelper(IVsTextView forView)
         {
-            return new DropDownTocBars(this, forView);
+            if (preferences.ShowNavigationBar)
+            {
+                return new DropDownTocBars(this, forView);
+            }
+            else
+            {
+                return base.CreateDropDownHelper(forView);
+            }
         }
 
         public override LanguagePreferences GetLanguagePreferences()
@@ -45,11 +52,9 @@ namespace MarkdownEditor
                     preferences.MaxErrorMessages = 100;
                     preferences.AutoOutlining = false;
                     preferences.MaxRegionTime = 2000;
-                    preferences.ShowNavigationBar = true;
                     preferences.InsertTabs = false;
                     preferences.IndentSize = 2;
                     preferences.IndentStyle = IndentingStyle.Smart;
-                    preferences.ShowNavigationBar = true;
 
                     preferences.WordWrap = true;
                     preferences.WordWrapGlyphs = true;
