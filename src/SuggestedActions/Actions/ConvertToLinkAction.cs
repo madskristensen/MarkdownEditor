@@ -39,7 +39,7 @@ namespace MarkdownEditor
                 edit.Apply();
             }
 
-            var start = _span.Start.Position + text.IndexOf('(') + 1;
+            var start = _span.Start.Position + text.LastIndexOf('(') + 1;
             var end = _span.Start.Position + text.LastIndexOf(')');
             var length = end - start;
 
