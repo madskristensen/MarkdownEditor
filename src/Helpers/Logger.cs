@@ -54,7 +54,7 @@ internal static class Logger
         {
             ThreadHelper.Generic.BeginInvoke(() =>
             {
-                Guid guid = Guid.NewGuid();
+                var guid = Guid.NewGuid();
                 _output.CreatePane(ref guid, _name, 1, 1);
                 _output.GetPane(ref guid, out _pane);
             });

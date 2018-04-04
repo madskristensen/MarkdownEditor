@@ -8,7 +8,7 @@ namespace MarkdownEditor
     public class MarkdownLanguage : LanguageService
     {
         public const string LanguageName = "Markdown";
-        private LanguagePreferences preferences = null;
+        private LanguagePreferences _preferences = null;
 
         public MarkdownLanguage(object site)
         {
@@ -22,7 +22,7 @@ namespace MarkdownEditor
 
         public override TypeAndMemberDropdownBars CreateDropDownHelper(IVsTextView forView)
         {
-            if (preferences.ShowNavigationBar)
+            if (_preferences.ShowNavigationBar)
             {
                 return new DropDownTocBars(this, forView);
             }
@@ -34,38 +34,38 @@ namespace MarkdownEditor
 
         public override LanguagePreferences GetLanguagePreferences()
         {
-            if (preferences == null)
+            if (_preferences == null)
             {
-                preferences = new LanguagePreferences(Site, typeof(MarkdownLanguage).GUID, Name);
+                _preferences = new LanguagePreferences(Site, typeof(MarkdownLanguage).GUID, Name);
 
-                if (preferences != null)
+                if (_preferences != null)
                 {
-                    preferences.Init();
+                    _preferences.Init();
 
-                    preferences.EnableCodeSense = true;
-                    preferences.EnableMatchBraces = true;
-                    preferences.EnableMatchBracesAtCaret = true;
-                    preferences.EnableShowMatchingBrace = true;
-                    preferences.EnableCommenting = true;
-                    preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
-                    preferences.LineNumbers = false;
-                    preferences.MaxErrorMessages = 100;
-                    preferences.AutoOutlining = false;
-                    preferences.MaxRegionTime = 2000;
-                    preferences.InsertTabs = false;
-                    preferences.IndentSize = 2;
-                    preferences.IndentStyle = IndentingStyle.Smart;
+                    _preferences.EnableCodeSense = true;
+                    _preferences.EnableMatchBraces = true;
+                    _preferences.EnableMatchBracesAtCaret = true;
+                    _preferences.EnableShowMatchingBrace = true;
+                    _preferences.EnableCommenting = true;
+                    _preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
+                    _preferences.LineNumbers = false;
+                    _preferences.MaxErrorMessages = 100;
+                    _preferences.AutoOutlining = false;
+                    _preferences.MaxRegionTime = 2000;
+                    _preferences.InsertTabs = false;
+                    _preferences.IndentSize = 2;
+                    _preferences.IndentStyle = IndentingStyle.Smart;
 
-                    preferences.WordWrap = true;
-                    preferences.WordWrapGlyphs = true;
+                    _preferences.WordWrap = true;
+                    _preferences.WordWrapGlyphs = true;
 
-                    preferences.AutoListMembers = true;
-                    preferences.EnableQuickInfo = true;
-                    preferences.ParameterInformation = true;
+                    _preferences.AutoListMembers = true;
+                    _preferences.EnableQuickInfo = true;
+                    _preferences.ParameterInformation = true;
                 }
             }
 
-            return preferences;
+            return _preferences;
         }
 
         public override IScanner GetScanner(IVsTextLines buffer)
@@ -89,10 +89,10 @@ namespace MarkdownEditor
         {
             try
             {
-                if (preferences != null)
+                if (_preferences != null)
                 {
-                    preferences.Dispose();
-                    preferences = null;
+                    _preferences.Dispose();
+                    _preferences = null;
                 }
             }
             finally

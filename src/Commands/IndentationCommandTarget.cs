@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using Markdig.Syntax;
 using MarkdownEditor.Parsing;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 
@@ -19,21 +18,17 @@ namespace MarkdownEditor
 
         protected override bool Execute(VSConstants.VSStd2KCmdID commandId, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            var extend = _view.Caret.ContainingTextViewLine.Extent;
+            SnapshotSpan extend = _view.Caret.ContainingTextViewLine.Extent;
 
             if (extend.IsEmpty)
                 return false;
 
             //var text = _view.Caret.ContainingTextViewLine.Extent.GetText();
 
-            List<Block> blocks;
-            MarkdownDocument doc;
-            bool isEmptyLineText;
-            bool isEmptyLineTextAfterCaret;
-            if (!_view.TryParsePendingSmartBlock(true, out blocks, out doc, out isEmptyLineText, out isEmptyLineTextAfterCaret))
+            if (!_view.TryParsePendingSmartBlock(true, out List<Block> blocks, out MarkdownDocument doc, out bool isEmptyLineText, out bool isEmptyLineTextAfterCaret))
                 return false;
 
-            var text = extend.GetText();
+            string text = extend.GetText();
             int currentColumn = 0;
             for (; currentColumn < text.Length; currentColumn++)
             {
@@ -43,7 +38,7 @@ namespace MarkdownEditor
                 }
             }
 
-            var position = extend.Start.Position;
+            int position = extend.Start.Position;
 
             if (commandId == VSConstants.VSStd2KCmdID.TAB)
             {
@@ -51,20 +46,19 @@ namespace MarkdownEditor
 
                 // This loop will try to find the next column stop based on the current syntax tree stack
                 int nextColumnStop = 0;
-                foreach (var block in blocks)
+                foreach (Block block in blocks)
                 {
-                    var nextBlock = block;
+                    Block nextBlock = block;
                     while (nextBlock != null)
                     {
                         // If we are on a block that is the current line
                         if (nextBlock.Span.Start >= extend.Span.Start)
                         {
                             // If this is a list item, we should process the previews list item instead
-                            if (nextBlock is ListItemBlock)
+                            if (nextBlock is ListItemBlock listItem)
                             {
-                                var listItem = (ListItemBlock)nextBlock;
                                 var list = (ListBlock)listItem.Parent;
-                                var index = list.IndexOf(listItem);
+                                int index = list.IndexOf(listItem);
                                 if (index > 0)
                                 {
                                     nextBlock = list[index - 1];
@@ -98,7 +92,7 @@ namespace MarkdownEditor
                     builder.Append(' ');
                 }
 
-                using (var edit = _view.TextBuffer.CreateEdit())
+                using (ITextEdit edit = _view.TextBuffer.CreateEdit())
                 {
                     edit.Insert(position, builder.ToString());
                     edit.Apply();
@@ -110,10 +104,10 @@ namespace MarkdownEditor
                     return false;
 
                 // Try to find any previous tab stops
-                var deleteCount = 0;
+                int deleteCount = 0;
                 for (int i = blocks.Count - 1; i >= 0; i--)
                 {
-                    var block = blocks[i];
+                    Block block = blocks[i];
                     if (currentColumn > block.Column && block.Span.Start < position)
                     {
                         deleteCount = currentColumn - block.Column;
@@ -129,7 +123,7 @@ namespace MarkdownEditor
 
                 if (deleteCount > 0)
                 {
-                    using (var edit = _view.TextBuffer.CreateEdit())
+                    using (ITextEdit edit = _view.TextBuffer.CreateEdit())
                     {
 
                         edit.Delete(position, deleteCount);

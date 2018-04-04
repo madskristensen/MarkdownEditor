@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Task = System.Threading.Tasks.Task;
 
 namespace MarkdownEditor
 {
@@ -38,21 +41,21 @@ namespace MarkdownEditor
 
     [ProvideBraceCompletion(MarkdownLanguage.LanguageName)]
 
-    [ProvideAutoLoad("559ffa40-ab05-4ca2-9cc6-fb20c4a37112")]
-    [ProvideUIContextRule("559ffa40-ab05-4ca2-9cc6-fb20c4a37112",
-    name: Vsix.Name,
-    expression: "(markdown | md | mdown | mdwn | mkd | mmd | rst)",
-    termNames: new[] { "markdown", "md", "mdown", "mdwn", "mkd", "mkdn", "mmd", "rst" },
-    termValues: new[] {
-        "HierSingleSelectionName:.markdown$",
-        "HierSingleSelectionName:.md$",
-        "HierSingleSelectionName:.mdown$",
-        "HierSingleSelectionName:.mdwn$",
-        "HierSingleSelectionName:.mkd$",
-        "HierSingleSelectionName:.mkdn$",
-        "HierSingleSelectionName:.mmd$",
-        "HierSingleSelectionName:.rst$"})]
-    public sealed class MarkdownEditorPackage : Package
+    //[ProvideAutoLoad("559ffa40-ab05-4ca2-9cc6-fb20c4a37112", PackageAutoLoadFlags.BackgroundLoad)]
+    //[ProvideUIContextRule("559ffa40-ab05-4ca2-9cc6-fb20c4a37112",
+    //name: Vsix.Name,
+    //expression: "(markdown | md | mdown | mdwn | mkd | mmd | rst)",
+    //termNames: new[] { "markdown", "md", "mdown", "mdwn", "mkd", "mkdn", "mmd", "rst" },
+    //termValues: new[] {
+    //    "HierSingleSelectionName:.markdown$",
+    //    "HierSingleSelectionName:.md$",
+    //    "HierSingleSelectionName:.mdown$",
+    //    "HierSingleSelectionName:.mdwn$",
+    //    "HierSingleSelectionName:.mkd$",
+    //    "HierSingleSelectionName:.mkdn$",
+    //    "HierSingleSelectionName:.mmd$",
+    //    "HierSingleSelectionName:.rst$"})]
+    public sealed class MarkdownEditorPackage : AsyncPackage
     {
         private static Options _options;
         private static object _syncRoot = new object();
@@ -82,8 +85,15 @@ namespace MarkdownEditor
             private set;
         }
 
-        protected override void Initialize()
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            Language = new MarkdownLanguage(this);
+        
+            var editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
+            RegisterEditorFactory(editorFactory);
+
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+
             _options = (Options)GetDialogPage(typeof(Options));
 
             Logger.Initialize(this, Vsix.Name);
@@ -91,22 +101,13 @@ namespace MarkdownEditor
             CopyAsHtmlCommand.Initialize(this);
             AddCustomStylesheet.Initialize(this);
             GenerateHtml.Initialize(this);
-
-            var serviceContainer = this as IServiceContainer;
-            Language = new MarkdownLanguage(this);
-            serviceContainer.AddService(typeof(MarkdownLanguage), Language, true);
-
-            var editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
-            RegisterEditorFactory(editorFactory);
         }
 
         private static void LoadPackage()
         {
             var shell = (IVsShell)GetGlobalService(typeof(SVsShell));
 
-            IVsPackage package;
-
-            if (shell.IsPackageLoaded(ref PackageGuids.guidPackage, out package) != VSConstants.S_OK)
+            if (shell.IsPackageLoaded(ref PackageGuids.guidPackage, out IVsPackage package) != VSConstants.S_OK)
                 ErrorHandler.Succeeded(shell.LoadPackage(ref PackageGuids.guidPackage, out package));
         }
     }

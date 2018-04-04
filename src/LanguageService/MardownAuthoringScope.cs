@@ -14,11 +14,11 @@ namespace MarkdownEditor
 {
     internal class MardownAuthoringScope : AuthoringScope
     {
-        private ParseRequest req;
+        private ParseRequest _req;
 
         public MardownAuthoringScope(ParseRequest req)
         {
-            this.req = req;
+            _req = req;
         }
 
         public override string GetDataTipText(int line, int col, out TextSpan span)
@@ -44,7 +44,7 @@ namespace MarkdownEditor
                 span = new TextSpan();
                 return null;
             }
-            var location = DocumentLocation.Build(req.FileName, textView, line, col);
+            var location = DocumentLocation.Build(_req.FileName, textView, line, col);
             span = location.Span;
             return location.Url;
         }
@@ -52,24 +52,24 @@ namespace MarkdownEditor
 
         private IWpfTextView GetWpfTextView(IVsTextView vTextView)
         {
-            var userData = vTextView as IVsUserData;
-            if (userData == null)
+            if (!(vTextView is IVsUserData userData))
                 return null;
-            object holder;
+
             Guid guidViewHost = DefGuidList.guidIWpfTextViewHost;
-            userData.GetData(ref guidViewHost, out holder);
+            userData.GetData(ref guidViewHost, out object holder);
             var viewHost = (IWpfTextViewHost)holder;
+
             return viewHost.TextView;
         }
 
         class DocumentLocation
         {
-            private LinkInline link;
-            private string fileName;
+            private LinkInline _link;
+            private string _fileName;
 
             private DocumentLocation() { }
 
-            public String Url { get; private set; }
+            public string Url { get; private set; }
             public TextSpan Span { get; private set; }
 
             public static DocumentLocation Empty()
@@ -84,8 +84,8 @@ namespace MarkdownEditor
                 LinkInline link = FindLinkAtPos(markdownDocument, col, line);
                 var location = new DocumentLocation
                 {
-                    link = link,
-                    fileName = fileName
+                    _link = link,
+                    _fileName = fileName
                 };
                 location.Build();
                 return location;
@@ -94,29 +94,26 @@ namespace MarkdownEditor
 
             private static string GetTextUpToLine(IVsTextView vstextView, int line)
             {
-                string text;
-                IVsTextLines buffer;
-                vstextView.GetBuffer(out buffer);
-                int lineLength;
-                buffer.GetLengthOfLine(line, out lineLength);
-                buffer.GetLineText(0, 0, line, lineLength, out text);
+                vstextView.GetBuffer(out IVsTextLines buffer);
+                buffer.GetLengthOfLine(line, out int lineLength);
+                buffer.GetLineText(0, 0, line, lineLength, out string text);
                 return text;
             }
 
             private void Build()
             {
-                if (link == null)
+                if (_link == null)
                     return;
-                if (link.Url.Contains("://")) // http://, https://, ftp:// ,
+                if (_link.Url.Contains("://")) // http://, https://, ftp:// ,
                     return;
 
-                string[] linkParts = link.Url.Split(new[] { '#' }, 2);
+                string[] linkParts = _link.Url.Split(new[] { '#' }, 2);
                 string urlLinkPart = linkParts[0];
                 bool isLocalHeadingLink = string.IsNullOrEmpty(urlLinkPart) && linkParts.Length > 1;
                 if (isLocalHeadingLink)
                     Span = GetHeadingSpan(linkParts[1]);
                 else
-                    Url = Path.Combine(Path.GetDirectoryName(fileName), urlLinkPart);
+                    Url = Path.Combine(Path.GetDirectoryName(_fileName), urlLinkPart);
 
                 // todo add support for links with anchors e.g. [something](some.md#thing)
                 // will it require parsing also target file???
