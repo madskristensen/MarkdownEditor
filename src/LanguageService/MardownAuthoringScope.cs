@@ -64,7 +64,6 @@ namespace MarkdownEditor
 
         class DocumentLocation
         {
-            private MarkdownDocument document;
             private LinkInline link;
             private string fileName;
 
@@ -85,7 +84,6 @@ namespace MarkdownEditor
                 LinkInline link = FindLinkAtPos(markdownDocument, col, line);
                 var location = new DocumentLocation
                 {
-                    document = markdownDocument,
                     link = link,
                     fileName = fileName
                 };
