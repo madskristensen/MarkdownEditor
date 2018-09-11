@@ -58,7 +58,7 @@ namespace MarkdownEditor
     public sealed class MarkdownEditorPackage : AsyncPackage
     {
         private static Options _options;
-        private static object _syncRoot = new object();
+        private static readonly object _syncRoot = new object();
 
         public static Options Options
         {
@@ -88,7 +88,7 @@ namespace MarkdownEditor
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             Language = new MarkdownLanguage(this);
-        
+
             var editorFactory = new EditorFactory(this, typeof(MarkdownLanguage).GUID);
             RegisterEditorFactory(editorFactory);
 
