@@ -11,6 +11,12 @@ namespace MarkdownEditor
         [Description("When a .html file exist in the same folder as an .md file it should automatically sync the .html file on save.")]
         [DefaultValue(true)]
         public bool GenerateHtmlFiles { get; set; } = true;
+        
+        [Category("HTML Generation")]
+        [DisplayName("HTML file extension")]
+        [Description("The file extension to use for the HTML file synced with the .md file in the HTML Generation process. Default is .html. Use .cshtml to generate html that can be incorporated with the Razor templating engine.")]
+        [DefaultValue(".html")]
+        public string HtmlFileExtension { get; set; } = ".html";
 
         [Category("HTML Generation")]
         [DisplayName("HTML Template file name")]
