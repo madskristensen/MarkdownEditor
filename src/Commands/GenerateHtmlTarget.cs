@@ -18,12 +18,16 @@ namespace MarkdownEditor
     {
         private readonly Package _package;
         private ProjectItem _item;
-        private string htmlExtension = ".html";
+        private string htmlExtension;
 
         private GenerateHtml(Package package)
         {
             _package = package;
             
+            //Default to .html
+            htmlExtension = ".html"
+                
+            //Get Option value    
             htmlExtension = MarkdownEditorPackage.Options.HtmlFileExtension;
 
             var commandService = (OleMenuCommandService)ServiceProvider.GetService(typeof(IMenuCommandService));
