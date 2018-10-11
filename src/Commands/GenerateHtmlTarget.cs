@@ -18,10 +18,14 @@ namespace MarkdownEditor
     {
         private readonly Package _package;
         private ProjectItem _item;
+        private static string _htmlExtension = ".html";
 
         private GenerateHtml(Package package)
         {
             _package = package;
+            
+            //Get Option value    
+            _htmlExtension = MarkdownEditorPackage.Options.HtmlFileExtension;
 
             var commandService = (OleMenuCommandService)ServiceProvider.GetService(typeof(IMenuCommandService));
             if (commandService != null)
@@ -65,7 +69,7 @@ namespace MarkdownEditor
             if (!ContentTypeDefinition.MarkdownExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
                 return;
 
-            var htmlFile = GetHtmlFileName(markdownFile);
+            var htmlFile = GetHtmlFileName(markdownFile, _htmlExtension);
 
             button.Checked = File.Exists(htmlFile);
             button.Visible = button.Enabled = true;
@@ -74,7 +78,7 @@ namespace MarkdownEditor
         private void Execute(object sender, EventArgs e)
         {
             string markdownFile = _item.FileNames[1];
-            string htmlFile = GetHtmlFileName(markdownFile);
+            string htmlFile = GetHtmlFileName(markdownFile, _htmlExtension);
 
             if (File.Exists(htmlFile))
             {
@@ -96,7 +100,7 @@ namespace MarkdownEditor
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             var html = Markdown.ToHtml(content, pipeline).Replace("\n", Environment.NewLine);
 
-            string htmlFileName = GetHtmlFileName(markdownFile);
+            string htmlFileName = GetHtmlFileName(markdownFile, _htmlExtension);
             html = CreateFromHtmlTemplate(markdownFile, content, html);
 
             File.WriteAllText(htmlFileName, html, new UTF8Encoding(true));
@@ -172,7 +176,7 @@ namespace MarkdownEditor
 
         public static bool HtmlGenerationEnabled(string markdownFile)
         {
-            string htmlFile = GetHtmlFileName(markdownFile);
+            string htmlFile = GetHtmlFileName(markdownFile, _htmlExtension);
 
             return File.Exists(htmlFile);
         }
@@ -180,6 +184,11 @@ namespace MarkdownEditor
         private static string GetHtmlFileName(string markdownFile)
         {
             return Path.ChangeExtension(markdownFile, ".html");
+        }
+        
+         private static string GetHtmlFileName(string markdownFile, string extension)
+        {
+            return Path.ChangeExtension(markdownFile, extension);
         }
     }
 }
