@@ -25,7 +25,7 @@ namespace MarkdownEditor
             _package = package;
             
             //Default to .html
-            htmlExtension = ".html"
+            htmlExtension = ".html";
                 
             //Get Option value    
             htmlExtension = MarkdownEditorPackage.Options.HtmlFileExtension;
