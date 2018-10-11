@@ -24,7 +24,7 @@ namespace MarkdownEditor
         {
             _package = package;
             
-            htmlExtension = MarkdownEditorPackage.Options.HTMLFileExtension;
+            htmlExtension = MarkdownEditorPackage.Options.HtmlFileExtension;
 
             var commandService = (OleMenuCommandService)ServiceProvider.GetService(typeof(IMenuCommandService));
             if (commandService != null)
