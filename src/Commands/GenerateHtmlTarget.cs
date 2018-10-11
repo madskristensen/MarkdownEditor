@@ -18,15 +18,12 @@ namespace MarkdownEditor
     {
         private readonly Package _package;
         private ProjectItem _item;
-        private string _htmlExtension;
+        private static string _htmlExtension = ".html";
 
         private GenerateHtml(Package package)
         {
             _package = package;
             
-            //Default to .html
-            _htmlExtension = ".html";
-                
             //Get Option value    
             _htmlExtension = MarkdownEditorPackage.Options.HtmlFileExtension;
 
