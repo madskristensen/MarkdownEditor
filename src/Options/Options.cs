@@ -90,5 +90,13 @@ namespace MarkdownEditor
         [Description("Enable validation to run on local link and image references.")]
         [DefaultValue(true)]
         public bool EnableValidation { get; set; } = true;
+
+        // Markdown Flavour
+        [Category("Markdown Flavour")]
+        [DisplayName("Use Softline Break As Hardline Break")]
+        [Description("Uses the softline break as hardline break extension.")]
+        [DefaultValue(false)]
+        public bool UseSoftlineBreakAsHardlineBreak { get; set; } = false;
+
     }
 }
