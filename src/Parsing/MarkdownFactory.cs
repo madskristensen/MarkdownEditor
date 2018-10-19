@@ -20,12 +20,15 @@ namespace MarkdownEditor.Parsing
 
         static MarkdownFactory()
         {
-            Pipeline = new MarkdownPipelineBuilder()
+            var builder = new MarkdownPipelineBuilder()
                 .UsePragmaLines()
                 .UseDiagrams()
                 .UseAdvancedExtensions()
-                .UseYamlFrontMatter()
-                .Build();
+                .UseYamlFrontMatter();
+
+            if (MarkdownEditorPackage.Options.UseSoftlineBreakAsHardlineBreak)
+                builder.UseSoftlineBreakAsHardlineBreak();
+            Pipeline = builder.Build();
 
             // Use a minimalistic pipeline if we get an error while parsing with all extensions active
             PipelineSafer = new MarkdownPipelineBuilder()
