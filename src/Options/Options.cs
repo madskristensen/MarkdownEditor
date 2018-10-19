@@ -91,12 +91,11 @@ namespace MarkdownEditor
         [DefaultValue(true)]
         public bool EnableValidation { get; set; } = true;
 
-        // Markdown Flavour
-        [Category("Markdown Flavour")]
+        // Markdown Flavor
+        [Category("Markdown Flavor")]
         [DisplayName("Use Softline Break As Hardline Break")]
         [Description("Uses the softline break as hardline break extension.")]
         [DefaultValue(false)]
         public bool UseSoftlineBreakAsHardlineBreak { get; set; } = false;
-
     }
 }
