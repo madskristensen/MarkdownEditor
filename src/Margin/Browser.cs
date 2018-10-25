@@ -357,6 +357,12 @@ namespace MarkdownEditor
     </div>
     <script src=""{scriptPrismPath}""></script>
     <script src=""{scriptMermaidPath}""></script>
+    <script>
+        mermaid.initialize({{
+            startOnLoad: true,
+            flowchart: {{ htmlLabels: false }}
+        }});
+    </script>
 ";
 
             var templateFileName = GetHtmlTemplateFileName(_file);
