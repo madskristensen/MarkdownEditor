@@ -65,6 +65,7 @@
     <Compile Include="BraceCompletion\BraceMatchingTagger.cs" />
     <Compile Include="BraceCompletion\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Commands\AddCustomStylesheet.cs" />
+    <Compile Include="Commands\FormatTableCommandTarget.cs" />
     <Compile Include="Commands\GenerateHtmlTarget.cs" />
     <Compile Include="Commands\InlineCodeCommandTarget.cs" />
     <Compile Include="Commands\ItalicCommandTarget.cs" />

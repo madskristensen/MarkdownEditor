@@ -46,6 +46,8 @@ namespace MarkdownEditor
                 textView.Properties.GetOrCreateSingletonProperty(() => new IndentationCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new ToogleTaskCommandTarget(textViewAdapter, textView));
                 textView.Properties.GetOrCreateSingletonProperty(() => new Navigate(textViewAdapter, textView));
+                textView.Properties.GetOrCreateSingletonProperty(() => new FormatTableCommandTarget(textViewAdapter, textView, NavigatorService));
+
 
                 document.FileActionOccurred += Document_FileActionOccurred;
             });
