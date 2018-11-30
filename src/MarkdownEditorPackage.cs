@@ -102,7 +102,6 @@ namespace MarkdownEditor
             CopyAsHtmlCommand.Initialize(this);
             AddCustomStylesheet.Initialize(this);
             GenerateHtml.Initialize(this);
-            FormatTableCommand.Initialize(this);
         }
 
         private static void LoadPackage()
