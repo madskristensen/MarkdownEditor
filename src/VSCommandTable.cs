@@ -31,5 +31,6 @@ namespace MarkdownEditor
         public const int GenerateHtml = 0x0300;
         public const int EditorBold = 0x0400;
         public const int EditorInlineCode = 0x0420;
+        public const int FormatTable = 0x0500;
     }
 }

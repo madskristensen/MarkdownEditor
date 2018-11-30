@@ -28,6 +28,18 @@
         </Strings>
       </Button>
 
+      <Button guid="guidPackageCmdSet" id="FormatTable" priority="0x0500" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT"/>
+        <Icon guid="ImageCatalogGuid" id="MarkdownFile" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Format table</ButtonText>
+        </Strings>
+      </Button>
+
       <Button guid="guidPackageCmdSet" id="AddCustomStylesheet" priority="0x0300" type="Button">
         <Parent guid="guidPackageCmdSet" id="ContextGroup"/>
         <Icon guid="ImageCatalogGuid" id="StyleSheet" />
@@ -91,6 +103,7 @@
       <IDSymbol name="ContextGroup" value="0x0010" />
       <IDSymbol name="SolutionExplorerGroup" value="0x0020" />
       <IDSymbol name="CopyAsHtml" value="0x0100" />
+      <IDSymbol name="FormatTable" value="0x0500" />
       <IDSymbol name="AddCustomStylesheet" value="0x0200" />
       <IDSymbol name="GenerateHtml" value="0x0300" />
       <IDSymbol name="EditorBold" value="0x0400" />
