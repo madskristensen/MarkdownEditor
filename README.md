@@ -28,6 +28,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Brace completion with type-through
 - Lightning fast
 - Auto-generate HTML files
+- Automatic formatting of tables
 
 ### Syntax highlighting
 All fonts can be changed in **Tools -> Options -> Environment -> Fonts and Colors**
@@ -180,6 +181,87 @@ Control the settings for this extension under
 **Tools -> Options -> Text Editor -> Markdown**
 
 ![Options](art/options.png)
+
+### Automatic table formatting
+Markdown Editor supports table preview, but layouting them manually in the 
+text editor is a cumbersome endeavour. But there exists an automatic table 
+formatting function, which makes the tables look nice in the plain text 
+view and and allows easy formatting after you typed the contents. 
+Also reformatting an existing table is no problem.
+
+Select the source code, which belongs to the table and choose "Format table" 
+from the context menu:
+![Format Table](art/format-table.png)
+ 
+The markdown language supports two types of tables:
+
+#### Pipe Tables: 
+They are one line of text per row and the columns are stretched to 
+accomodate the text. Using automatic table formatting you can simply 
+type the table entries without having to care about the appearance:
+
+```<language>
+Header 1|Header 2|Header 3
+row 1 col 1|row 1 col 2|row 1 col 3 and some more text
+```
+
+After formatting the table, the source code looks like this
+
+```<language>
+Header 1   |Header 2   |Header 3                      
+-----------|-----------|------------------------------
+row 1 col 1|row 1 col 2|row 1 col 3 and some more text
+```
+
+And here is the rendered version of the table:
+
+Header 1   |Header 2   |Header 3                      
+-----------|-----------|------------------------------
+row 1 col 1|row 1 col 2|row 1 col 3 and some more text
+
+#### Grid tables:
+Grid tables allow more than one line of text which is word wrapped 
+to fit into the specified column width.
+The column width are specified by the first separator line and again 
+it is not necessary to care about the layout while typing. Just indicate 
+column boundaries by a pipe '\|', and a row boundaries by a line starting 
+with '+'.
+
+```<language>
++---------------+-------------+-------------------+
+Header 1   |Header 2   |Header 3                      
+row 1 col 1|row 1 col 2|row 1 col 3 and some more text
++
+Header 1   |Header 2   |Header 3                      
+row 1 col 1|row 1 col 2|row 1 col 3 and some more text
++
+```
+
+After formatting:
+
+```<language>
++---------------+-------------+-------------------+
+| Header 1 row  | Header 2    | Header 3 row 1    |
+|1 col 1        |row 1 col 2  |col 3 and some     |
+|               |             |more text          |
++---------------+-------------+-------------------+
+| Header 1 row  | Header 2    | Header 3 row 1    |
+|1 col 1        |row 1 col 2  |col 3 and some     |
+|               |             |more text          |
++---------------+-------------+-------------------+
+```
+
+And the rendered version:
+
++---------------+-------------+-------------------+
+| Header 1 row  | Header 2    | Header 3 row 1    |
+|1 col 1        |row 1 col 2  |col 3 and some     |
+|               |             |more text          |
++---------------+-------------+-------------------+
+| Header 1 row  | Header 2    | Header 3 row 1    |
+|1 col 1        |row 1 col 2  |col 3 and some     |
+|               |             |more text          |
++---------------+-------------+-------------------+
 
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)

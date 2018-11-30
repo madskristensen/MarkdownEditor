@@ -72,7 +72,7 @@
 
       <Button guid="guidPackageCmdSet" id="EditorFormatTable" priority="0x0500" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT"/>
-        <Icon guid="ImageCatalogGuid" id="MarkdownFile" />
+        <!--Icon guid="ImageCatalogGuid" id="MarkdownFile" /-->
         <CommandFlag>IconIsMoniker</CommandFlag>
         <CommandFlag>DefaultDisabled</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
@@ -94,7 +94,7 @@
   <KeyBindings>
     <KeyBinding guid="guidPackageCmdSet" id="EditorBold" mod1="Control" key1="B" editor="guidMarkdownEditor"/>
     <KeyBinding guid="guidPackageCmdSet" id="EditorInlineCode" mod1="Control Shift" key1="C" editor="guidMarkdownEditor"/>
-    <KeyBinding guid="guidPackageCmdSet" id="EditorFormatTable" mod1="Control" key1="F" editor="guidMarkdownEditor"/>
+    <!-- KeyBinding guid="guidPackageCmdSet" id="EditorFormatTable" mod1="Control" key1="F" editor="guidMarkdownEditor"/-->
   </KeyBindings>
 
 

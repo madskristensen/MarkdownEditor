@@ -44,6 +44,9 @@ namespace MarkdownEditor
 
             string text = _view.TextBuffer.CurrentSnapshot.GetText(span);
             TableDescriptor tableDesc = new TableDescriptor(text);
+            if (!tableDesc.isValidTable())
+                return VSConstants.S_OK;
+
             StringBuilder newTable;
             if (tableDesc.isGrid)
                 newTable = tableDesc.generateGridTable();
@@ -190,6 +193,17 @@ namespace MarkdownEditor
             }
         }
 
+        public bool isValidTable()
+        {
+            if (table.Count == 0)
+                return false;
+            if (size.Width < 2)
+                return false;
+            if (size.Height < 2)
+                return false;
+            return true;
+        }
+
         private int[] calcColumnWidthFromContent()
         {
             int[] colWidth = new int[size.Width];
@@ -244,8 +258,12 @@ namespace MarkdownEditor
 
         public StringBuilder generateGridTable()
         {
-            int[] colWidth = calcColumnWidths();
-            for (int i = 0; i < colWidth.Length; i++) colWidth[i] = 120 / colWidth.Length;
+            if (size.Width > colWidthsFromRuler.Count)
+                throw new Exception("More columns in text than in ruler.");
+            if (size.Width < colWidthsFromRuler.Count)
+                size.Width = colWidthsFromRuler.Count;
+
+            int[] colWidth = colWidthsFromRuler.ToArray();
 
             StringBuilder sb = new StringBuilder();
 
