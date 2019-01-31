@@ -85,7 +85,6 @@ namespace MarkdownEditor
     {
         public MarkdownCodeFormatDefinition()
         {
-            FontTypeface = new Typeface("Courier New");
             DisplayName = "Markdown Code";
         }
     }
