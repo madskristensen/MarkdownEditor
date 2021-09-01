@@ -93,6 +93,7 @@
     </VSCTCompile>
     <Content Include="..\MarkdownEditor.Shared\LanguageService\Registry.pkgdef">
       <Link>LanguageService\Registry.pkgdef</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\MarkdownEditor.Shared\Margin\highlight.css">
       <Link>Margin\highlight.css</Link>

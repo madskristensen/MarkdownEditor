@@ -47,7 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DeployExtension>False</DeployExtension>
+    <DeployExtension>True</DeployExtension>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -93,6 +93,7 @@
     </VSCTCompile>
     <Content Include="..\MarkdownEditor.Shared\LanguageService\Registry.pkgdef">
       <Link>LanguageService\Registry.pkgdef</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\MarkdownEditor.Shared\Margin\highlight.css">
       <Link>Margin\highlight.css</Link>
@@ -148,6 +149,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.TextTemplating.VSHost.15.0">
       <Version>17.0.0-previews-3-31605-261</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools">
+      <Version>17.0.4201-preview4</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Composition">
       <Version>5.0.0</Version>
