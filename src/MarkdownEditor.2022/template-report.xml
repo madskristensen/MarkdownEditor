@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TemplateReport>
+  <ItemTemplates>
+    <ItemTemplate Path="ItemTemplates\General\_Definitions\CSharp.vstemplate" Name="Markdown File" Description="Markdown File" ProjectType="CSharp" ProjectSubType="" />
+    <ItemTemplate Path="ItemTemplates\NetCore\_Definitions\CSharp.vstemplate" Name="Markdown File" Description="Markdown File" ProjectType="DNX" ProjectSubType="" />
+    <ItemTemplate Path="ItemTemplates\General\_Definitions\VB.vstemplate" Name="Markdown File" Description="Markdown File" ProjectType="VisualBasic" ProjectSubType="" />
+    <ItemTemplate Path="ItemTemplates\General\_Definitions\Web.csharp.vstemplate" Name="Markdown File" Description="Markdown File" ProjectType="Web" ProjectSubType="CSharp" />
+  </ItemTemplates>
+  <ProjectTemplates />
+  <Snippets />
+</TemplateReport>

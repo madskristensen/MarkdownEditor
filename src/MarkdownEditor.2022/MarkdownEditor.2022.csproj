@@ -26,12 +26,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{C5BAC666-56F1-4A66-9363-D8C86188E21A}</ProjectGuid>
+    <ProjectGuid>{C5BAC666-56F1-4A66-9363-D8C86188E21B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MarkdownEditor</RootNamespace>
     <AssemblyName>MarkdownEditor</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
@@ -47,6 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,89 +61,26 @@
     <TemplateBuilderTargets Condition=" '$(TemplateBuilderTargets)'=='' ">$([System.IO.Path]::GetFullPath( $(MSBuildProjectDirectory)\..\packages\TemplateBuilder.1.1.4.9-beta\tools\ligershark.templates.targets ))</TemplateBuilderTargets>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
-    <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
-    <Compile Include="BraceCompletion\BraceMatchingTagger.cs" />
-    <Compile Include="BraceCompletion\BraceMatchingTaggerProvider.cs" />
-    <Compile Include="Commands\AddCustomStylesheet.cs" />
-    <Compile Include="Commands\GenerateHtmlTarget.cs" />
-    <Compile Include="Commands\InlineCodeCommandTarget.cs" />
-    <Compile Include="Commands\ItalicCommandTarget.cs" />
-    <Compile Include="Commands\CommandTargetBase.cs" />
-    <Compile Include="Commands\BoldCommandTarget.cs" />
-    <Compile Include="Commands\IndentationCommandTarget.cs" />
-    <Compile Include="Commands\NavigateCommandTarget.cs" />
-    <Compile Include="Commands\HotkeyCommandBase.cs" />
-    <Compile Include="Commands\ToogleTaskCommandTarget.cs" />
-    <Compile Include="Commands\SmartIndentCommandTarget.cs" />
-    <Compile Include="Commands\PasteImageCommandTarget.cs" />
-    <Compile Include="Commands\CommandRegistration.cs" />
-    <Compile Include="Classifier\MarkdownClassifier.cs" />
-    <Compile Include="Classifier\MarkdownClassificationTypes.cs" />
-    <Compile Include="Classifier\MarkdownClassifierProvider.cs" />
-    <Compile Include="Commands\CopyAsHtmlCommand.cs" />
-    <Compile Include="DragDrop\MarkdownDropHandler.cs" />
-    <Compile Include="DragDrop\MarkdownDropHandlerProvider.cs" />
-    <Compile Include="LanguageService\EditorFactory.cs" />
-    <Compile Include="LanguageService\MardownAuthoringScope.cs" />
-    <Compile Include="LanguageService\MarkdownObjectExtensions.cs" />
-    <Compile Include="Options\EmphasisStyle.cs" />
-    <Compile Include="ProvideBraceCompletionAttribute.cs" />
-    <Compile Include="SuggestedActions\Actions\AddMissingFileAction.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToOrderedList.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToTaskList.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToUnorderedList.cs" />
-    <Compile Include="Validation\ErrorList\Error.cs" />
-    <Compile Include="Validation\ErrorList\ErrorList.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Helpers\ImageHelper.cs" />
-    <Compile Include="Helpers\Logger.cs" />
-    <Compile Include="Helpers\ProjectHelpers.cs" />
-    <Compile Include="LanguageService\ContentTypeDefinition.cs" />
-    <Compile Include="LanguageService\DropDownTocBars.cs" />
-    <Compile Include="LanguageService\MarkdownColorizer.cs" />
-    <Compile Include="LanguageService\MarkdownLanguage.cs" />
-    <Compile Include="LanguageService\MarkdownSource.cs" />
-    <Compile Include="Margin\Browser.cs" />
-    <Compile Include="Margin\BrowserMargin.cs" />
-    <Compile Include="Margin\BrowserMarginProvider.cs" />
-    <Compile Include="Margin\CssCreationListener.cs" />
-    <Compile Include="Margin\LiveSyncMargin.cs" />
-    <Compile Include="MarkdownEditorPackage.cs" />
-    <Compile Include="Outlining\MarkdownOutliningProvider.cs" />
-    <Compile Include="Outlining\MarkdownOutliningTagger.cs" />
-    <Compile Include="Parsing\ParsingEventArgs.cs" />
-    <Compile Include="Validation\ErrorList\LinkError.cs" />
-    <Compile Include="Validation\MarkdownValidationProvider.cs" />
-    <Compile Include="Validation\MarkdownValidationTagger.cs" />
+    <Compile Include="source.extension1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Compile>
     <Compile Include="VSCommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VSCommandTable.vsct</DependentUpon>
     </Compile>
-    <Compile Include="Options\Options.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Parsing\MarkdownDocumentView.cs" />
-    <Compile Include="Parsing\MarkdownFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="SuggestedActions\Actions\BaseSuggestedAction.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToCodeBlockAction.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToQuoteAction.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToImageAction.cs" />
-    <Compile Include="SuggestedActions\Actions\ConvertToLinkAction.cs" />
-    <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
-    <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\LICENSE">
+    <Content Include="..\..\LICENSE">
       <Link>Resources\LICENSE</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="ItemTemplates\NetCore\file.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
@@ -150,46 +88,31 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ItemTemplates\General\icon.png" />
-    <Content Include="ItemTemplates\General\preview.png" />
-    <None Include="ItemTemplates\General\file.md" />
-    <Content Include="ItemTemplates\General\_Definitions\CSharp.vstemplate" />
-    <Content Include="ItemTemplates\General\_Definitions\VB.vstemplate">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="ItemTemplates\General\_Definitions\Web.csharp.vstemplate">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="ItemTemplates\General\_preprocess.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="ItemTemplates\NetCore\icon.png" />
-    <Content Include="ItemTemplates\NetCore\preview.png" />
-    <Content Include="ItemTemplates\NetCore\_Definitions\CSharp.vstemplate" />
-    <Content Include="ItemTemplates\NetCore\_preprocess.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="LanguageService\Registry.pkgdef">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Margin\highlight.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Margin\mermaid.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Margin\mermaid.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Margin\prism.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <VSCTCompile Include="VSCommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
       <LastGenOutput>VSCommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
+    <Content Include="..\MarkdownEditor.Shared\LanguageService\Registry.pkgdef">
+      <Link>LanguageService\Registry.pkgdef</Link>
+    </Content>
+    <Content Include="..\MarkdownEditor.Shared\Margin\highlight.css">
+      <Link>Margin\highlight.css</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\MarkdownEditor.Shared\Margin\mermaid.css">
+      <Link>Margin\mermaid.css</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\MarkdownEditor.Shared\Margin\mermaid.js">
+      <Link>Margin\mermaid.js</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\MarkdownEditor.Shared\Margin\prism.js">
+      <Link>Margin\prism.js</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Icon.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -220,15 +143,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="source.extension.resx">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Madskristensen.VisualStudio.SDK">
       <Version>14.0.66-pre</Version>
     </PackageReference>
@@ -241,6 +155,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
+  <Import Project="..\MarkdownEditor.Shared\MarkdownEditor.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(TemplateBuilderTargets)" Condition="Exists('$(TemplateBuilderTargets)')" Label="TemplateBuilder" />
