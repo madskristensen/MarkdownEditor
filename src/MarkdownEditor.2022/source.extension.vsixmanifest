@@ -8,7 +8,7 @@
     <License>Resources\LICENSE</License>
     <ReleaseNotes>https://github.com/madskristensen/MarkdownEditor/blob/master/CHANGELOG.md</ReleaseNotes>
     <Icon>Resources\Icon.png</Icon>
-    <PreviewImage>Resources\Preview.png</PreviewImage>
+    <PreviewImage>Resources\Icon.png</PreviewImage>
     <Tags>markdown, editor, live preview</Tags>
   </Metadata>
   <Installation>
