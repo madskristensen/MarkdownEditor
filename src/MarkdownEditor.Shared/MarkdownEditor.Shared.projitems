@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>3c3eaad2-1d00-4dc4-8e40-93daa5699559</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>MarkdownEditor.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BraceCompletion\BraceCompletionContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BraceCompletion\BraceCompletionContextProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BraceCompletion\BraceMatchingTagger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BraceCompletion\BraceMatchingTaggerProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Classifier\MarkdownClassificationTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Classifier\MarkdownClassifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Classifier\MarkdownClassifierProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\AddCustomStylesheet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\BoldCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandRegistration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommandTargetBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CopyAsHtmlCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\GenerateHtmlTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\HotkeyCommandBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\IndentationCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\InlineCodeCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ItalicCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\NavigateCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\PasteImageCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SmartIndentCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ToogleTaskCommandTarget.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DragDrop\MarkdownDropHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DragDrop\MarkdownDropHandlerProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ImageHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Logger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ProjectHelpers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\ContentTypeDefinition.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\DropDownTocBars.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\EditorFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\MardownAuthoringScope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\MarkdownColorizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\MarkdownLanguage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\MarkdownObjectExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LanguageService\MarkdownSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Margin\Browser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Margin\BrowserMargin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Margin\BrowserMarginProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Margin\CssCreationListener.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Margin\LiveSyncMargin.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MarkdownEditorPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\EmphasisStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\Options.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Outlining\MarkdownOutliningProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Outlining\MarkdownOutliningTagger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parsing\MarkdownDocumentView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parsing\MarkdownFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parsing\ParsingEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ProvideBraceCompletionAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\AddMissingFileAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\BaseSuggestedAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToCodeBlockAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToImageAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToLinkAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToOrderedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToQuoteAction.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToTaskList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\Actions\ConvertToUnorderedList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\SuggestedActionsSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SuggestedActions\SuggestedActionsSourceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validation\ErrorList\Error.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validation\ErrorList\ErrorList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validation\ErrorList\LinkError.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validation\MarkdownValidationProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Validation\MarkdownValidationTagger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\General\icon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\General\preview.png" />
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\General\_Definitions\CSharp.vstemplate" />
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\General\_Definitions\VB.vstemplate">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\General\_Definitions\Web.csharp.vstemplate">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\General\_preprocess.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\NetCore\icon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\NetCore\preview.png" />
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\NetCore\_Definitions\CSharp.vstemplate" />
+    <Content Include="$(MSBuildThisFileDirectory)ItemTemplates\NetCore\_preprocess.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)ItemTemplates\General\file.md" />
+    <None Include="$(MSBuildThisFileDirectory)ItemTemplates\NetCore\file.md" />
+  </ItemGroup>
+</Project>

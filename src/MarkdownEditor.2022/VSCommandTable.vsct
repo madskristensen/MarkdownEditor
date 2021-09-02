@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
+
+  <Commands package="guidPackage">
+    <Groups>
+      <Group guid="guidPackageCmdSet" id="ContextGroup" priority="0x0800">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
+      </Group>
+      <Group guid="guidPackageCmdSet" id="SolutionExplorerGroup" priority="0x0500">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+      </Group>
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidPackageCmdSet" id="CopyAsHtml" priority="0x0300" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CODEWIN_TEXTEDIT"/>
+        <Icon guid="ImageCatalogGuid" id="MarkdownFile" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Copy as HTML</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidPackageCmdSet" id="AddCustomStylesheet" priority="0x0300" type="Button">
+        <Parent guid="guidPackageCmdSet" id="ContextGroup"/>
+        <Icon guid="ImageCatalogGuid" id="StyleSheet" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Add Custom Stylesheet...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidPackageCmdSet" id="GenerateHtml" priority="0x0100" type="Button">
+        <Parent guid="guidPackageCmdSet" id="SolutionExplorerGroup"/>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <Strings>
+          <ButtonText>Generate HTML File</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidPackageCmdSet" id="EditorBold" priority="0x0100" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Bold</ButtonText>
+          <CommandName>Format.Bold</CommandName>
+          <LocCanonicalName>Format.Bold</LocCanonicalName>
+          <CanonicalName>Format.Bold</CanonicalName>
+        </Strings>
+      </Button>
+
+      <Button guid="guidPackageCmdSet" id="EditorInlineCode" priority="0x0100" type="Button">
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Inline Code</ButtonText>
+          <CommandName>Format.InlineCode</CommandName>
+          <LocCanonicalName>Format.InlineCode</LocCanonicalName>
+          <CanonicalName>Format.InlineCode</CanonicalName>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="guidPackageCmdSet" id="SolutionExplorerGroup" priority="0x0500">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBITEMNODE"/>
+    </CommandPlacement>
+  </CommandPlacements>
+
+  <KeyBindings>
+    <KeyBinding guid="guidPackageCmdSet" id="EditorBold" mod1="Control" key1="B" editor="guidMarkdownEditor"/>
+    <KeyBinding guid="guidPackageCmdSet" id="EditorInlineCode" mod1="Control Shift" key1="C" editor="guidMarkdownEditor"/>
+  </KeyBindings>
+
+  <Symbols>
+    <GuidSymbol name="guidPackage" value="{9ca64947-e9ca-4543-bfb8-6cce9be19fd6}" />
+    <GuidSymbol name="guidMarkdownEditor" value="{b3984fb3-6a50-488a-a8a5-1ea6929adf43}" />
+
+    <GuidSymbol name="guidPackageCmdSet" value="{82e1d55b-7e76-4319-ad60-94cc79c643c1}">
+      <IDSymbol name="ContextGroup" value="0x0010" />
+      <IDSymbol name="SolutionExplorerGroup" value="0x0020" />
+      <IDSymbol name="CopyAsHtml" value="0x0100" />
+      <IDSymbol name="AddCustomStylesheet" value="0x0200" />
+      <IDSymbol name="GenerateHtml" value="0x0300" />
+      <IDSymbol name="EditorBold" value="0x0400" />
+      <IDSymbol name="EditorInlineCode" value="0x0420" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
