@@ -1,11 +1,13 @@
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 install:
 - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
 
 before_build:
-  - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
-  - ps: Vsix-TokenReplacement src\MarkdownEditor\source.extension.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: Vsix-IncrementVsixVersion .\src\MarkdownEditor.2019\source.extension.vsixmanifest | Vsix-UpdateBuildVersion
+  - ps: Vsix-IncrementVsixVersion .\src\MarkdownEditor.2022\source.extension.vsixmanifest
+  - ps: Vsix-TokenReplacement src\MarkdownEditor.2019\source.extension.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: Vsix-TokenReplacement src\MarkdownEditor.2022\source.extension.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
 
 build_script:
   - nuget restore -Verbosity quiet
@@ -13,13 +15,3 @@ build_script:
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
-
-before_deploy:
-  - ps: Vsix-CreateChocolatyPackage -packageId markdowneditor
-
-deploy:
-  - provider: Environment
-    name: Chocolatey
-    on:
-      branch: master
-      appveyor_repo_commit_message_extended: /\[release\]/
