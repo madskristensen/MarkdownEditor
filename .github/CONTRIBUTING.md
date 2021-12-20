@@ -155,6 +155,6 @@ included in the project:
   `Place 'System' directives first when sorting usings` option is enabled (checked).
 - Before committing, organize usings for each updated C# source file. Either you can
   right-click editor and select `Organize Usings > Remove and sort` OR use extension
-  like [BatchFormat](http://visualstudiogallery.msdn.microsoft.com/a7f75c34-82b4-4357-9c66-c18e32b9393e).
+  like [BatchFormat](https://marketplace.visualstudio.com/items?itemName=vs-publisher-147549.BatchFormat).
 - Before committing, run Code Analysis in `Debug` configuration and follow the guidelines
   to fix CA issues. Code Analysis commits can be made separately.
