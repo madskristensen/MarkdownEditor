@@ -151,7 +151,7 @@ namespace MarkdownEditor
             }
 
             var project = ProjectHelpers.DTE.Solution?.FindProjectItem(_fileName)?.ContainingProject;
-            project.AddFileToProject(existingFile);
+            project?.AddFileToProject(existingFile);
         }
 
         public static ImageFormat GetImageFormat(string extension)
