@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using MarkdownEditor.Parsing;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -14,6 +15,8 @@ namespace MarkdownEditor
     {
         private readonly ITextDocument _document;
         private readonly ITextView _textView;
+        //
+        private readonly System.Drawing.Color DarkTheme_DarkColor = System.Drawing.Color.FromArgb(0, 66, 66, 66);
 
         public BrowserMargin(ITextView textview, ITextDocument document)
         {
@@ -27,11 +30,24 @@ namespace MarkdownEditor
             else
                 CreateRightMarginControls();
 
+            Browser.IsDarkTheme = IsShellInDarkTheme();
             UpdateBrowser();
 
             var documentView = MarkdownDocumentView.Get(textview);
             documentView.DocumentChanged += UpdaterDocumentOnTick;
             documentView.PositionChanged += UpdaterPositionOnTick;
+
+            VSColorTheme.ThemeChanged += (e) =>
+            {
+                Browser.IsDarkTheme = IsShellInDarkTheme();
+                Browser.HtmlTemplateLoaded = false;
+                UpdateBrowser();
+            };
+        }
+
+        private bool IsShellInDarkTheme()
+        {
+            return VSColorTheme.GetThemedColor(EnvironmentColors.DarkColorKey) == DarkTheme_DarkColor;
         }
 
         public bool Enabled => true;
@@ -92,6 +108,8 @@ namespace MarkdownEditor
             splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
             splitter.DragCompleted += RightDragCompleted;
 
+            splitter.Opacity = 0;  //Avoid a white splitter in Dark theme.
+
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 1);
             Grid.SetRow(splitter, 0);
@@ -147,6 +165,8 @@ namespace MarkdownEditor
             splitter.VerticalAlignment = VerticalAlignment.Stretch;
             splitter.HorizontalAlignment = HorizontalAlignment.Stretch;
             splitter.DragCompleted += BottomDragCompleted;
+
+            splitter.Opacity = 0;  //Avoid a white splitter in Dark theme.
 
             grid.Children.Add(splitter);
             Grid.SetColumn(splitter, 0);

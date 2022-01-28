@@ -42,6 +42,8 @@ namespace MarkdownEditor
 
             CssCreationListener.StylesheetUpdated += OnStylesheetUpdated;
         }
+        public bool HtmlTemplateLoaded { get; set; }
+        public bool IsDarkTheme { get; set; }
 
         public WebBrowser Control { get; private set; }
 
@@ -255,7 +257,7 @@ namespace MarkdownEditor
                     content = _htmlDocument.getElementById("___markdown-content___");
 
                 // Content may be null if the Refresh context menu option is used.  If so, reload the template.
-                if (content != null)
+                if (content != null && HtmlTemplateLoaded)
                 {
                     content.innerHTML = html;
 
@@ -274,6 +276,7 @@ namespace MarkdownEditor
                     html = string.Format(CultureInfo.InvariantCulture, "{0}", html);
                     html = htmlTemplate.Replace("[content]", html);
                     Logger.LogOnError(() => Control.NavigateToString(html));
+                    HtmlTemplateLoaded = true;
                 }
 
                 SyncNavigation();
@@ -336,9 +339,22 @@ namespace MarkdownEditor
 
         private string GetHtmlTemplate()
         {
+            string cssHightlightFile;
+            string mermaidJsParameters;
+            if (IsDarkTheme)
+            {
+                cssHightlightFile = "highlight-dark.css";
+                mermaidJsParameters = "{ 'securityLevel': 'loose', 'theme': 'dark', startOnLoad: true, flowchart: { htmlLabels: false } }";
+            }
+            else
+            {
+                cssHightlightFile = "highlight.css";
+                mermaidJsParameters = "{ 'securityLevel': 'loose', 'theme': 'forest', startOnLoad: true, flowchart: { htmlLabels: false } }";
+            }
+
             var baseHref = Path.GetDirectoryName(_file).Replace("\\", "/");
             string folder = GetFolder();
-            string cssHighlightPath = GetCustomStylesheet(_file) ?? Path.Combine(folder, "margin\\highlight.css");
+            string cssHighlightPath = GetCustomStylesheet(_file) ?? Path.Combine(folder, $"margin\\{cssHightlightFile}");
             string cssMermaidPath = Path.Combine(folder, "margin\\mermaid.css");
             string scriptPrismPath = Path.Combine(folder, "margin\\prism.js");
             string scriptMermaidPath = Path.Combine(folder, "margin\\mermaid.js");
@@ -358,10 +374,7 @@ namespace MarkdownEditor
     <script src=""{scriptPrismPath}""></script>
     <script src=""{scriptMermaidPath}""></script>
     <script>
-        mermaid.initialize({{
-            startOnLoad: true,
-            flowchart: {{ htmlLabels: false }}
-        }});
+        mermaid.initialize({mermaidJsParameters});
     </script>
 ";
 
