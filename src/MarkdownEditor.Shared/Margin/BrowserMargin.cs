@@ -30,12 +30,15 @@ namespace MarkdownEditor
             else
                 CreateRightMarginControls();
 
-            Browser.IsDarkTheme = IsShellInDarkTheme();
-            UpdateBrowser();
+            Browser.Control.CoreWebView2InitializationCompleted += (s, e) =>
+            {
+                Browser.IsDarkTheme = IsShellInDarkTheme();
+                UpdateBrowser();
 
-            var documentView = MarkdownDocumentView.Get(textview);
-            documentView.DocumentChanged += UpdaterDocumentOnTick;
-            documentView.PositionChanged += UpdaterPositionOnTick;
+                var documentView = MarkdownDocumentView.Get(textview);
+                documentView.DocumentChanged += UpdaterDocumentOnTick;
+                documentView.PositionChanged += UpdaterPositionOnTick;
+            };
 
             VSColorTheme.ThemeChanged += (e) =>
             {
@@ -69,11 +72,7 @@ namespace MarkdownEditor
         {
             var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(_textView.TextViewLines.FirstVisibleLine.Start.Position);
             Trace.WriteLine($"UpdatePosition {lineNumber}");
-            await Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Browser.UpdatePosition(lineNumber);
-
-            }), DispatcherPriority.ApplicationIdle, null);
+            await Browser.UpdatePosition(lineNumber);
         }
 
         private async void UpdateBrowser()
